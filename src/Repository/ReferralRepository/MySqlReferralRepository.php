@@ -64,8 +64,10 @@ class MySqlReferralRepository extends AbstractRepository
         $sql = "UPDATE `referrals` SET `pointer`=:pointer,`name`=:name,`disabled`=:disabled WHERE `owner_user_id`=:owner_user_id AND `code`=:code";
 
 //        $stmt = $this->pdo->prepare($sql);
-//        $stmt->bindValue(':pointer', $referral->asString());
+//        $stmt->bindValue(':pointer', $referral->getPointer()->asString());
+//        $stmt->bindValue(':name', $referral->getName()->asString());
 //        $stmt->bindValue(':owner_user_id', $ownerUserId->asInt());
+//        $stmt->bindValue("")
 //        $stmt->execute();
 
         return false;

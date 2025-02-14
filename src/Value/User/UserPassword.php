@@ -7,12 +7,13 @@ namespace Nebalus\Webapi\Value\User;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
 
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr;
 use function strlen;
 
 readonly class UserPassword
 {
-    private const int MIN_LENGTH = 8;
-    private const int MAX_LENGTH = 64;
+    public const int MIN_LENGTH = 8;
+    public const int MAX_LENGTH = 64;
 
     private function __construct(
         private string $passwordHash
@@ -24,12 +25,11 @@ readonly class UserPassword
      */
     public static function fromPlain(string $plainPassword, int $cost = 10): self
     {
-        if (strlen($plainPassword) < self::MIN_LENGTH) {
-            throw new ApiInvalidArgumentException('Invalid password: must be longer than ' . self::MIN_LENGTH . ' characters');
-        }
+        $schema = Sanitizr::string()->min(self::MIN_LENGTH)->max(self::MAX_LENGTH);
+        $validData = $schema->safeParse($plainPassword);
 
-        if (strlen($plainPassword) > self::MAX_LENGTH) {
-            throw new ApiInvalidArgumentException('Invalid password: cannot be longer than ' . self::MAX_LENGTH . ' characters');
+        if ($validData->isError()) {
+            throw new ApiInvalidArgumentException("Invalid password: " . $validData->getErrorMessage());
         }
 
         $passwordHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => $cost]);

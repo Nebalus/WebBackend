@@ -3,8 +3,9 @@
 namespace Nebalus\Webapi\Api\Module\Referral\Delete;
 
 use Nebalus\Webapi\Api\AbstractValidator;
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr as S;
+use Nebalus\Webapi\Value\Internal\Validation\ValidatedData;
 use Nebalus\Webapi\Value\Referral\ReferralCode;
-use Nebalus\Webapi\Value\ValidatedData;
 
 class DeleteReferralValidator extends AbstractValidator
 {
@@ -13,9 +14,9 @@ class DeleteReferralValidator extends AbstractValidator
     public function __construct()
     {
         $rules = [
-            "path_args" => [
-                'code' => [ 'required' => true, 'nullable' => false, 'type' => "string" ]
-            ],
+            "path_args" => S::object([
+                'code' => S::string()->required()->length(ReferralCode::CODE_LENGTH)->regex(ReferralCode::REGEX)
+            ]),
         ];
         parent::__construct($rules);
     }

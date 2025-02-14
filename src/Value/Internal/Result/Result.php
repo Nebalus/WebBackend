@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Value\Result;
+namespace Nebalus\Webapi\Value\Internal\Result;
 
 use InvalidArgumentException;
 use Nebalus\Webapi\Exception\ApiException;

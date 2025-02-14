@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Edit;
 
-use Nebalus\Webapi\Value\Result\ResultInterface;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 
 readonly class EditLinktreeService
 {

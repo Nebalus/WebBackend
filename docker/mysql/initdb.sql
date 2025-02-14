@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Erstellungszeit: 21. Dez 2024 um 01:14
+-- Erstellungszeit: 13. Jan 2025 um 18:44
 -- Server-Version: 9.1.0
 -- PHP-Version: 8.2.23
 
@@ -87,7 +87,7 @@ CREATE TABLE `account_punishments` (
                                        `pardoner_account_id` int UNSIGNED DEFAULT NULL,
                                        `punished_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
                                        `pardoned_reason` text,
-                                       `disable_account_while_punisment` bit(1) NOT NULL DEFAULT b'1',
+                                       `disable_account_while_punishment` bit(1) NOT NULL DEFAULT b'1',
                                        `starts_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                        `ends_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -96,7 +96,7 @@ CREATE TABLE `account_punishments` (
 -- Daten für Tabelle `account_punishments`
 --
 
-INSERT INTO `account_punishments` (`punishment_id`, `punishment_type`, `punished_account_id`, `punisher_account_id`, `pardoner_account_id`, `punished_reason`, `pardoned_reason`, `disable_account_while_punisment`, `starts_at`, `ends_at`) VALUES
+INSERT INTO `account_punishments` (`punishment_id`, `punishment_type`, `punished_account_id`, `punisher_account_id`, `pardoner_account_id`, `punished_reason`, `pardoned_reason`, `disable_account_while_punishment`, `starts_at`, `ends_at`) VALUES
     (1, 'PERMABAN', 3, 1, NULL, 'Just for Existence', NULL, b'1', '2024-11-07 08:13:47', NULL);
 
 -- --------------------------------------------------------
@@ -164,6 +164,40 @@ CREATE TABLE `form_submits` (
                                 `form_id` int UNSIGNED NOT NULL,
                                 `submit_content` json NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `girl_game_instances`
+--
+
+CREATE TABLE `girl_game_instances` (
+                                       `girl_game_id` int UNSIGNED NOT NULL,
+                                       `account_id` int UNSIGNED NOT NULL,
+                                       `girl_game_type` varchar(32) NOT NULL,
+                                       `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `girl_game_types`
+--
+
+CREATE TABLE `girl_game_types` (
+                                   `girl_game_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                   `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Daten für Tabelle `girl_game_types`
+--
+
+INSERT INTO `girl_game_types` (`girl_game_type`, `description`) VALUES
+                                                                    ('CAPTURE_THE_FLAG', ''),
+                                                                    ('HIDE_AND_SEEK', ''),
+                                                                    ('TAG', ''),
+                                                                    ('ZOMBIE', '');
 
 -- --------------------------------------------------------
 
@@ -236,6 +270,17 @@ INSERT INTO `linktree_entrys` (`linktree_entry_id`, `linktree_id`, `name`, `url`
                                                                                                                                                   (2, 1, 'Github', 'https://github.com/Nebalus', NULL, 2, '2024-11-12 19:21:38', '2024-11-12 19:21:38'),
                                                                                                                                                   (3, 1, 'Crunchyroll', 'https://www.crunchyroll.com/', NULL, 3, '2024-11-12 19:22:36', '2024-11-12 19:22:36'),
                                                                                                                                                   (4, 3, 'ChatGPT', 'https://chatgpt.com/', NULL, 1, '2024-11-12 19:26:10', '2024-11-12 19:26:10');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `privileges`
+--
+
+CREATE TABLE `privileges` (
+                              `privilege_node` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                              `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -497,7 +542,142 @@ INSERT INTO `referral_click_metric` (`click_id`, `referral_id`, `clicked_at`) VA
                                                                                   (168, 3, '2024-12-21 01:14:09'),
                                                                                   (169, 3, '2024-12-21 01:14:09'),
                                                                                   (170, 3, '2024-12-21 01:14:09'),
-                                                                                  (171, 3, '2024-12-21 01:14:10');
+                                                                                  (171, 3, '2024-12-21 01:14:10'),
+                                                                                  (172, 3, '2025-01-05 05:02:58'),
+                                                                                  (173, 3, '2025-01-05 05:02:58'),
+                                                                                  (174, 3, '2025-01-05 05:03:11'),
+                                                                                  (175, 3, '2025-01-05 05:03:11'),
+                                                                                  (176, 12, '2025-01-05 05:03:25'),
+                                                                                  (177, 12, '2025-01-05 05:03:25'),
+                                                                                  (178, 12, '2025-01-05 05:03:45'),
+                                                                                  (179, 12, '2025-01-05 05:03:45'),
+                                                                                  (180, 12, '2025-01-05 05:03:48'),
+                                                                                  (181, 12, '2025-01-05 05:03:48'),
+                                                                                  (182, 12, '2025-01-05 05:04:24'),
+                                                                                  (183, 12, '2025-01-05 05:04:24'),
+                                                                                  (184, 12, '2025-01-05 05:04:48'),
+                                                                                  (185, 12, '2025-01-05 05:04:48'),
+                                                                                  (186, 12, '2025-01-05 05:05:51'),
+                                                                                  (187, 12, '2025-01-05 05:05:51'),
+                                                                                  (188, 12, '2025-01-05 05:05:56'),
+                                                                                  (189, 12, '2025-01-05 05:05:56'),
+                                                                                  (190, 12, '2025-01-05 05:06:07'),
+                                                                                  (191, 12, '2025-01-05 05:06:07'),
+                                                                                  (192, 12, '2025-01-05 05:06:14'),
+                                                                                  (193, 12, '2025-01-05 05:06:14'),
+                                                                                  (194, 12, '2025-01-05 05:06:31'),
+                                                                                  (195, 12, '2025-01-05 05:06:31'),
+                                                                                  (196, 12, '2025-01-05 05:06:49'),
+                                                                                  (197, 12, '2025-01-05 05:06:49'),
+                                                                                  (198, 12, '2025-01-05 05:07:00'),
+                                                                                  (199, 12, '2025-01-05 05:07:00'),
+                                                                                  (200, 12, '2025-01-05 05:07:33'),
+                                                                                  (201, 12, '2025-01-05 05:07:33'),
+                                                                                  (202, 12, '2025-01-05 05:07:44'),
+                                                                                  (203, 12, '2025-01-05 05:07:44'),
+                                                                                  (204, 12, '2025-01-05 05:08:51'),
+                                                                                  (205, 12, '2025-01-05 05:08:56'),
+                                                                                  (206, 12, '2025-01-05 05:08:56'),
+                                                                                  (207, 12, '2025-01-05 05:09:14'),
+                                                                                  (208, 12, '2025-01-05 05:09:19'),
+                                                                                  (209, 12, '2025-01-05 05:09:19'),
+                                                                                  (210, 12, '2025-01-05 05:11:42'),
+                                                                                  (211, 6, '2025-01-13 16:14:01'),
+                                                                                  (212, 6, '2025-01-13 16:14:02'),
+                                                                                  (213, 6, '2025-01-13 16:14:02'),
+                                                                                  (214, 6, '2025-01-13 16:14:02'),
+                                                                                  (215, 6, '2025-01-13 16:14:03'),
+                                                                                  (216, 6, '2025-01-13 16:14:03'),
+                                                                                  (217, 6, '2025-01-13 16:14:03'),
+                                                                                  (218, 6, '2025-01-13 16:14:03'),
+                                                                                  (219, 6, '2025-01-13 16:14:03'),
+                                                                                  (220, 6, '2025-01-13 16:14:04'),
+                                                                                  (221, 6, '2025-01-13 16:14:04'),
+                                                                                  (222, 6, '2025-01-13 16:14:04'),
+                                                                                  (223, 6, '2025-01-13 16:14:04'),
+                                                                                  (224, 6, '2025-01-13 16:14:05'),
+                                                                                  (225, 6, '2025-01-13 16:14:05'),
+                                                                                  (226, 12, '2025-01-13 16:14:11'),
+                                                                                  (227, 12, '2025-01-13 16:14:11'),
+                                                                                  (228, 12, '2025-01-13 16:14:11'),
+                                                                                  (229, 12, '2025-01-13 16:14:12'),
+                                                                                  (230, 12, '2025-01-13 16:14:12'),
+                                                                                  (231, 12, '2025-01-13 16:14:12'),
+                                                                                  (232, 12, '2025-01-13 16:14:12'),
+                                                                                  (233, 12, '2025-01-13 16:14:12'),
+                                                                                  (234, 12, '2025-01-13 16:14:12'),
+                                                                                  (235, 12, '2025-01-13 16:14:13'),
+                                                                                  (236, 12, '2025-01-13 16:14:13'),
+                                                                                  (237, 3, '2025-01-13 16:14:19'),
+                                                                                  (238, 3, '2025-01-13 16:14:19'),
+                                                                                  (239, 3, '2025-01-13 16:14:20'),
+                                                                                  (240, 3, '2025-01-13 16:14:20'),
+                                                                                  (241, 3, '2025-01-13 16:14:20'),
+                                                                                  (242, 3, '2025-01-13 16:14:20'),
+                                                                                  (243, 3, '2025-01-13 16:14:21'),
+                                                                                  (244, 3, '2025-01-13 16:14:21'),
+                                                                                  (245, 3, '2025-01-13 16:14:21'),
+                                                                                  (246, 3, '2025-01-13 16:14:21'),
+                                                                                  (247, 3, '2025-01-13 16:14:22'),
+                                                                                  (248, 3, '2025-01-13 16:14:22'),
+                                                                                  (249, 3, '2025-01-13 16:14:22'),
+                                                                                  (250, 3, '2025-01-13 16:14:23'),
+                                                                                  (251, 3, '2025-01-13 16:14:24'),
+                                                                                  (252, 3, '2025-01-13 16:14:25'),
+                                                                                  (253, 3, '2025-01-13 16:14:25'),
+                                                                                  (254, 3, '2025-01-13 16:14:25'),
+                                                                                  (255, 3, '2025-01-13 16:14:25'),
+                                                                                  (256, 3, '2025-01-13 16:14:26'),
+                                                                                  (257, 3, '2025-01-13 16:14:26'),
+                                                                                  (258, 3, '2025-01-13 16:14:26'),
+                                                                                  (259, 3, '2025-01-13 16:14:26'),
+                                                                                  (260, 3, '2025-01-13 16:14:26'),
+                                                                                  (261, 3, '2025-01-13 16:14:26'),
+                                                                                  (262, 3, '2025-01-13 16:14:27'),
+                                                                                  (263, 3, '2025-01-13 16:14:27'),
+                                                                                  (264, 3, '2025-01-13 16:14:27'),
+                                                                                  (265, 3, '2025-01-13 16:14:27'),
+                                                                                  (266, 3, '2025-01-13 16:14:27'),
+                                                                                  (267, 3, '2025-01-13 16:14:28'),
+                                                                                  (268, 3, '2025-01-13 16:14:28'),
+                                                                                  (269, 3, '2025-01-13 16:14:29'),
+                                                                                  (270, 3, '2025-01-13 16:14:29'),
+                                                                                  (271, 3, '2025-01-13 16:14:29'),
+                                                                                  (272, 3, '2025-01-13 16:14:29'),
+                                                                                  (273, 3, '2025-01-13 16:14:29'),
+                                                                                  (274, 3, '2025-01-13 16:14:29'),
+                                                                                  (275, 3, '2025-01-13 16:14:30'),
+                                                                                  (276, 3, '2025-01-13 16:14:30'),
+                                                                                  (277, 1, '2025-01-13 16:14:35'),
+                                                                                  (278, 1, '2025-01-13 16:14:35'),
+                                                                                  (279, 1, '2025-01-13 16:14:36'),
+                                                                                  (280, 1, '2025-01-13 16:14:36'),
+                                                                                  (281, 1, '2025-01-13 16:14:36'),
+                                                                                  (282, 1, '2025-01-13 16:14:36'),
+                                                                                  (283, 1, '2025-01-13 16:14:36'),
+                                                                                  (284, 1, '2025-01-13 16:14:37'),
+                                                                                  (285, 1, '2025-01-13 16:14:37'),
+                                                                                  (286, 1, '2025-01-13 16:14:37'),
+                                                                                  (287, 1, '2025-01-13 16:14:37'),
+                                                                                  (288, 6, '2025-01-13 16:14:42'),
+                                                                                  (289, 6, '2025-01-13 16:14:43'),
+                                                                                  (290, 6, '2025-01-13 16:14:43'),
+                                                                                  (291, 6, '2025-01-13 16:14:43'),
+                                                                                  (292, 6, '2025-01-13 16:14:43'),
+                                                                                  (293, 6, '2025-01-13 16:14:43'),
+                                                                                  (294, 6, '2025-01-13 16:14:43'),
+                                                                                  (295, 6, '2025-01-13 16:14:44'),
+                                                                                  (296, 6, '2025-01-13 16:14:44'),
+                                                                                  (297, 6, '2025-01-13 16:14:44'),
+                                                                                  (298, 6, '2025-01-13 16:14:44'),
+                                                                                  (299, 6, '2025-01-13 16:14:44'),
+                                                                                  (300, 6, '2025-01-13 16:14:45'),
+                                                                                  (301, 6, '2025-01-13 16:14:45'),
+                                                                                  (302, 6, '2025-01-13 16:14:45'),
+                                                                                  (303, 6, '2025-01-13 16:14:45'),
+                                                                                  (304, 6, '2025-01-13 16:14:45'),
+                                                                                  (305, 6, '2025-01-13 16:14:46'),
+                                                                                  (306, 6, '2025-01-13 16:14:46');
 
 -- --------------------------------------------------------
 
@@ -508,7 +688,6 @@ INSERT INTO `referral_click_metric` (`click_id`, `referral_id`, `clicked_at`) VA
 CREATE TABLE `roles` (
                          `role_id` int UNSIGNED NOT NULL,
                          `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                         `privileges` json NOT NULL,
                          `apply_on_user_creation` bit(1) NOT NULL DEFAULT b'0',
                          `deletable` bit(1) NOT NULL DEFAULT b'1',
                          `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -519,9 +698,20 @@ CREATE TABLE `roles` (
 -- Daten für Tabelle `roles`
 --
 
-INSERT INTO `roles` (`role_id`, `name`, `privileges`, `apply_on_user_creation`, `deletable`, `created_at`, `updated_at`) VALUES
-                                                                                                                             (1, 'administrator', '{}', b'0', b'0', '2024-12-06 19:39:38', '2024-12-06 19:44:34'),
-                                                                                                                             (2, 'user', '{}', b'1', b'0', '2024-12-06 19:40:22', '2024-12-06 19:44:34');
+INSERT INTO `roles` (`role_id`, `name`, `apply_on_user_creation`, `deletable`, `created_at`, `updated_at`) VALUES
+                                                                                                               (1, 'administrator', b'0', b'0', '2024-12-06 19:39:38', '2024-12-06 19:44:34'),
+                                                                                                               (2, 'user', b'1', b'0', '2024-12-06 19:40:22', '2024-12-06 19:44:34');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `role_privilege_map`
+--
+
+CREATE TABLE `role_privilege_map` (
+                                      `role_id` int UNSIGNED NOT NULL,
+                                      `privilege_node` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -553,27 +743,27 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `totp_secret_ke
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_access_history`
+-- Tabellenstruktur für Tabelle `user_access_log`
 --
 
-CREATE TABLE `user_access_history` (
-                                       `access_history_id` int UNSIGNED NOT NULL,
-                                       `user_id` int UNSIGNED NOT NULL,
-                                       `ip_address` tinyblob NOT NULL,
-                                       `success` bit(1) NOT NULL DEFAULT b'0',
-                                       `user_agent` text NOT NULL,
-                                       `happend_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `user_access_log` (
+                                   `access_log_id` int UNSIGNED NOT NULL,
+                                   `user_id` int UNSIGNED NOT NULL,
+                                   `ip_address` tinyblob NOT NULL,
+                                   `success` bit(1) NOT NULL DEFAULT b'0',
+                                   `user_agent` text NOT NULL,
+                                   `happend_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Daten für Tabelle `user_access_history`
+-- Daten für Tabelle `user_access_log`
 --
 
-INSERT INTO `user_access_history` (`access_history_id`, `user_id`, `ip_address`, `success`, `user_agent`, `happend_at`) VALUES
-                                                                                                                            (2, 1, 0x32313330373036343333, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-11-07 08:02:42'),
-                                                                                                                            (3, 2, 0x31383737343331383433, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0', '2024-11-07 08:17:36'),
-                                                                                                                            (4, 1, 0x30, b'0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-11-12 08:17:37'),
-                                                                                                                            (5, 1, 0x33323332323336303037, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-10-08 08:17:37');
+INSERT INTO `user_access_log` (`access_log_id`, `user_id`, `ip_address`, `success`, `user_agent`, `happend_at`) VALUES
+                                                                                                                    (2, 1, 0x32313330373036343333, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-11-07 08:02:42'),
+                                                                                                                    (3, 2, 0x31383737343331383433, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0', '2024-11-07 08:17:36'),
+                                                                                                                    (4, 1, 0x30, b'0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-11-12 08:17:37'),
+                                                                                                                    (5, 1, 0x33323332323336303037, b'1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36', '2024-10-08 08:17:37');
 
 -- --------------------------------------------------------
 
@@ -583,20 +773,19 @@ INSERT INTO `user_access_history` (`access_history_id`, `user_id`, `ip_address`,
 
 CREATE TABLE `user_role_map` (
                                  `user_id` int UNSIGNED NOT NULL,
-                                 `role_id` int UNSIGNED NOT NULL,
-                                 `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                 `role_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Daten für Tabelle `user_role_map`
 --
 
-INSERT INTO `user_role_map` (`user_id`, `role_id`, `created_at`) VALUES
-                                                                     (1, 1, '2024-12-06 19:46:53'),
-                                                                     (1, 2, '2024-12-06 19:51:08'),
-                                                                     (2, 2, '2024-12-06 19:46:53'),
-                                                                     (3, 2, '2024-12-06 19:46:53'),
-                                                                     (4, 2, '2024-12-06 19:46:53');
+INSERT INTO `user_role_map` (`user_id`, `role_id`) VALUES
+                                                       (1, 1),
+                                                       (1, 2),
+                                                       (2, 2),
+                                                       (3, 2),
+                                                       (4, 2);
 
 --
 -- Indizes der exportierten Tabellen
@@ -661,6 +850,20 @@ ALTER TABLE `form_submits`
     ADD KEY `form_id` (`form_id`);
 
 --
+-- Indizes für die Tabelle `girl_game_instances`
+--
+ALTER TABLE `girl_game_instances`
+    ADD PRIMARY KEY (`girl_game_id`),
+    ADD KEY `account_id` (`account_id`),
+    ADD KEY `girl_game_type` (`girl_game_type`);
+
+--
+-- Indizes für die Tabelle `girl_game_types`
+--
+ALTER TABLE `girl_game_types`
+    ADD PRIMARY KEY (`girl_game_type`);
+
+--
 -- Indizes für die Tabelle `linktrees`
 --
 ALTER TABLE `linktrees`
@@ -680,6 +883,12 @@ ALTER TABLE `linktree_click_metric`
 ALTER TABLE `linktree_entrys`
     ADD PRIMARY KEY (`linktree_entry_id`),
     ADD UNIQUE KEY `linktree_id` (`linktree_id`,`display_order`);
+
+--
+-- Indizes für die Tabelle `privileges`
+--
+ALTER TABLE `privileges`
+    ADD UNIQUE KEY `privilege_node` (`privilege_node`);
 
 --
 -- Indizes für die Tabelle `projects`
@@ -719,6 +928,13 @@ ALTER TABLE `roles`
     ADD UNIQUE KEY `group_name` (`name`);
 
 --
+-- Indizes für die Tabelle `role_privilege_map`
+--
+ALTER TABLE `role_privilege_map`
+    ADD PRIMARY KEY (`privilege_node`,`role_id`),
+    ADD KEY `role_id` (`role_id`);
+
+--
 -- Indizes für die Tabelle `users`
 --
 ALTER TABLE `users`
@@ -727,10 +943,10 @@ ALTER TABLE `users`
     ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indizes für die Tabelle `user_access_history`
+-- Indizes für die Tabelle `user_access_log`
 --
-ALTER TABLE `user_access_history`
-    ADD PRIMARY KEY (`access_history_id`),
+ALTER TABLE `user_access_log`
+    ADD PRIMARY KEY (`access_log_id`),
     ADD KEY `user_id` (`user_id`);
 
 --
@@ -781,6 +997,12 @@ ALTER TABLE `form_submits`
     MODIFY `form_submit_id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT für Tabelle `girl_game_instances`
+--
+ALTER TABLE `girl_game_instances`
+    MODIFY `girl_game_id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT für Tabelle `linktrees`
 --
 ALTER TABLE `linktrees`
@@ -820,7 +1042,7 @@ ALTER TABLE `referrals`
 -- AUTO_INCREMENT für Tabelle `referral_click_metric`
 --
 ALTER TABLE `referral_click_metric`
-    MODIFY `click_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+    MODIFY `click_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=307;
 
 --
 -- AUTO_INCREMENT für Tabelle `roles`
@@ -835,10 +1057,10 @@ ALTER TABLE `users`
     MODIFY `user_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT für Tabelle `user_access_history`
+-- AUTO_INCREMENT für Tabelle `user_access_log`
 --
-ALTER TABLE `user_access_history`
-    MODIFY `access_history_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `user_access_log`
+    MODIFY `access_log_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints der exportierten Tabellen
@@ -891,6 +1113,13 @@ ALTER TABLE `form_submits`
     ADD CONSTRAINT `form_submits_ibfk_1` FOREIGN KEY (`form_id`) REFERENCES `forms` (`form_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
+-- Constraints der Tabelle `girl_game_instances`
+--
+ALTER TABLE `girl_game_instances`
+    ADD CONSTRAINT `girl_game_instances_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`account_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    ADD CONSTRAINT `girl_game_instances_ibfk_2` FOREIGN KEY (`girl_game_type`) REFERENCES `girl_game_types` (`girl_game_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Constraints der Tabelle `linktrees`
 --
 ALTER TABLE `linktrees`
@@ -927,10 +1156,17 @@ ALTER TABLE `referral_click_metric`
     ADD CONSTRAINT `referral_click_metric_ibfk_1` FOREIGN KEY (`referral_id`) REFERENCES `referrals` (`referral_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
--- Constraints der Tabelle `user_access_history`
+-- Constraints der Tabelle `role_privilege_map`
 --
-ALTER TABLE `user_access_history`
-    ADD CONSTRAINT `user_access_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+ALTER TABLE `role_privilege_map`
+    ADD CONSTRAINT `role_privilege_map_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+    ADD CONSTRAINT `role_privilege_map_ibfk_3` FOREIGN KEY (`privilege_node`) REFERENCES `privileges` (`privilege_node`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `user_access_log`
+--
+ALTER TABLE `user_access_log`
+    ADD CONSTRAINT `user_access_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints der Tabelle `user_role_map`

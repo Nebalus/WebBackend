@@ -5,8 +5,8 @@ namespace Nebalus\Webapi\Api\User\Register;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
-use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\Result\ResultInterface;
+use Nebalus\Webapi\Value\Internal\Result\Result;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\User\User;
 
 readonly class RegisterUserService
@@ -29,7 +29,7 @@ readonly class RegisterUserService
         }
 
         if ($invitationToken->isExpired()) {
-            return Result::createError('Registration failed: The Invitation Token you provided is already expired', 403);
+            return Result::createError('Registration failed: The Invitation Token you provided is expired', 403);
         }
 
         $userFoundByUsername = $this->mySqlUserRepository->findUserFromUsername($validator->getUsername());

@@ -2,8 +2,8 @@
 
 namespace Nebalus\Webapi\Api\User\Register;
 
-use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\Result\ResultInterface;
+use Nebalus\Webapi\Value\Internal\Result\Result;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\User\User;
 
 class RegisterUserView

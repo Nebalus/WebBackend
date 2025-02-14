@@ -9,6 +9,8 @@ use Nebalus\Webapi\Value\Account\AccountId;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationTokens;
 use Nebalus\Webapi\Value\Account\InvitationToken\PureInvitationToken;
+use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserId;
 use PDO;
 use PDOException;
 
@@ -18,6 +20,20 @@ class MySqlAccountRepository extends AbstractRepository
         private readonly PDO $pdo
     ) {
         parent::__construct($pdo);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function insertAccount(UserId $userId): AccountId
+    {
+        $sql = "INSERT INTO accounts(user_id) VALUES (:user_id)";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return AccountId::from($this->pdo->lastInsertId());
     }
 
     /**

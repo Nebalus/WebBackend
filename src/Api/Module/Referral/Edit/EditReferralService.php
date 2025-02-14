@@ -3,7 +3,7 @@
 namespace Nebalus\Webapi\Api\Module\Referral\Edit;
 
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
-use Nebalus\Webapi\Value\Result\ResultInterface;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\User\User;
 
 readonly class EditReferralService

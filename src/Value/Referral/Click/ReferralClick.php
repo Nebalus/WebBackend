@@ -5,12 +5,12 @@ namespace Nebalus\Webapi\Value\Referral\Click;
 use Nebalus\Webapi\Value\Referral\ReferralId;
 use DateTimeImmutable;
 
-class ReferralClick
+readonly class ReferralClick
 {
     private function __construct(
-        private readonly ReferralClickId $referralClickId,
-        private readonly ReferralId $referralId,
-        private readonly DateTimeImmutable $clickedAt
+        private ReferralClickId $referralClickId,
+        private ReferralId $referralId,
+        private DateTimeImmutable $clickedAt
     ) {
     }
 

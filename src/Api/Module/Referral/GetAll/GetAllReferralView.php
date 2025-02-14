@@ -2,9 +2,9 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\GetAll;
 
+use Nebalus\Webapi\Value\Internal\Result\Result;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\Referral\Referrals;
-use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\Result\ResultInterface;
 
 class GetAllReferralView
 {

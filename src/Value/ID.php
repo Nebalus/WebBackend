@@ -4,6 +4,7 @@ namespace Nebalus\Webapi\Value;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr;
 
 trait ID
 {
@@ -15,29 +16,16 @@ trait ID
     /**
      * @throws ApiException
      */
-    public static function from(int $id): self
+    public static function from(mixed $id): self
     {
-        if ($id < 0) {
-            throw new ApiInvalidArgumentException(
-                'Invalid id: must be a non-negative integer'
-            );
+        $schema = Sanitizr::number()->integer()->positive();
+        $validData = $schema->safeParse($id);
+
+        if ($validData->isError()) {
+            throw new ApiInvalidArgumentException('Invalid id: ' . $validData->getErrorMessage());
         }
 
         return new self($id);
-    }
-
-    /**
-     * @throws ApiException
-     */
-    public static function fromString(string $id): self
-    {
-        if (is_numeric($id) === false) {
-            throw new ApiInvalidArgumentException(
-                'Invalid id: must be a number'
-            );
-        }
-
-        return self::from($id);
     }
 
     public function asInt(): int

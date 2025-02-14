@@ -2,8 +2,8 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Get;
 
-use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\Result\ResultInterface;
+use Nebalus\Webapi\Value\Internal\Result\Result;
+use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 
 class GetLinktreeView
 {

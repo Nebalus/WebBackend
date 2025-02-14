@@ -32,7 +32,8 @@ class MySqlUserRepository extends AbstractRepository
     {
         $this->pdo->beginTransaction();
         $newUser = $this->insertUser($user);
-        $preInvitationToken = $invitationToken->setInvitedAccountId($newUser->getUserId());
+        $newAccount = $this->accountRepository->insertAccount($newUser->getUserId());
+        $preInvitationToken = $invitationToken->setInvitedAccountId($newAccount);
         $this->accountRepository->updateInvitationToken($preInvitationToken);
         $this->pdo->commit();
         return $newUser;
@@ -56,7 +57,7 @@ class MySqlUserRepository extends AbstractRepository
         $stmt->execute();
 
         $userToArray = $user->asArray();
-        $userToArray["user_id"] = UserId::fromString($this->pdo->lastInsertId())->asInt();
+        $userToArray["user_id"] = UserId::from($this->pdo->lastInsertId())->asInt();
 
         return User::fromDatabase($userToArray);
     }

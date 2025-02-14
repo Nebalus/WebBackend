@@ -2,11 +2,11 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\Create;
 
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr as S;
 use Nebalus\Webapi\Api\AbstractValidator;
-use Nebalus\Webapi\Value\Referral\ReferralCode;
+use Nebalus\Webapi\Value\Internal\Validation\ValidatedData;
 use Nebalus\Webapi\Value\Referral\ReferralName;
 use Nebalus\Webapi\Value\Referral\ReferralPointer;
-use Nebalus\Webapi\Value\ValidatedData;
 
 class CreateReferralValidator extends AbstractValidator
 {
@@ -17,11 +17,11 @@ class CreateReferralValidator extends AbstractValidator
     public function __construct()
     {
         $rules = [
-            "body" => [
-                'name' => [ 'required' => true, 'nullable' => false, 'type' => "string" ],
-                'pointer' => [ 'required' => true, 'nullable' => false, 'type' => "string" ],
-                'disabled' => [ 'required' => false, 'nullable' => false, 'default' => false, 'type' => "boolean" ],
-            ]
+            "body" => S::object([
+                'name' => S::string()->required(),
+                'pointer' => S::string()->required()->url(),
+                'disabled' => S::boolean()->default(false),
+            ])
         ];
         parent::__construct($rules);
     }

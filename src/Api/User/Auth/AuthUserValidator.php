@@ -3,9 +3,10 @@
 namespace Nebalus\Webapi\Api\User\Auth;
 
 use Nebalus\Webapi\Api\AbstractValidator;
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr as S;
+use Nebalus\Webapi\Value\Internal\Validation\ValidatedData;
 use Nebalus\Webapi\Value\User\Totp\TOTPCode;
 use Nebalus\Webapi\Value\User\Username;
-use Nebalus\Webapi\Value\ValidatedData;
 
 class AuthUserValidator extends AbstractValidator
 {
@@ -17,12 +18,12 @@ class AuthUserValidator extends AbstractValidator
     public function __construct()
     {
         $rules = [
-            'body' => [
-                'username' => [ 'required' => true, 'nullable' => false, 'type' => "string" ],
-                'password' => [ 'required' => true, 'nullable' => false, 'type' => "string" ],
-                'remember_me' => [ 'required' => false, 'nullable' => false, 'default' => false, 'type' => "boolean" ],
-                'totp' => [ 'required' => false, 'nullable' => true, 'type' => "integer" ],
-            ]
+            'body' => S::object([
+                'username' => S::string()->required(),
+                'password' => S::string()->required(),
+                'remember_me' => S::boolean()->default(false),
+                'totp' => S::string()->nullable(),
+            ])
         ];
         parent::__construct($rules);
     }

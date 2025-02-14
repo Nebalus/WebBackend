@@ -20,7 +20,7 @@ class ClickHistoryReferralAction extends AbstractAction
     {
         $this->validator->validate($request, $pathArgs);
 
-        $result = $this->service->execute($this->validator);
+        $result = $this->service->execute($this->validator, $request->getAttribute('user'));
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

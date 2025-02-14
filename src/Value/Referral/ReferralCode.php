@@ -4,11 +4,12 @@ namespace Nebalus\Webapi\Value\Referral;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
+use Nebalus\Webapi\Utils\Sanitizr\Sanitizr;
 
 class ReferralCode
 {
-    private const int CODE_LENGTH = 8;
-    private const string REGEX = '/^[0-9A-Za-z]+$/';
+    public const int CODE_LENGTH = 8;
+    public const string REGEX = '/^[0-9A-Za-z]+$/';
 
     private function __construct(
         private readonly string $code
@@ -26,10 +27,11 @@ class ReferralCode
      */
     public static function from(string $code): self
     {
-        if (preg_match(self::REGEX, $code) === false) {
-            throw new ApiInvalidArgumentException(
-                'Invalid referral code: can only contain alphanumeric characters'
-            );
+        $schema = Sanitizr::string()->length(self::CODE_LENGTH)->regex(self::REGEX);
+        $validData = $schema->safeParse($code);
+
+        if ($validData->isError()) {
+            throw new ApiInvalidArgumentException('Invalid referral code: ' . $validData->getErrorMessage());
         }
 
         return new self($code);

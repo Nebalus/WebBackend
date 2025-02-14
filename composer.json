@@ -1,7 +1,16 @@
 {
     "name": "nebalus/webapi",
     "description": "The web api for 'https://api.nebalus.dev'",
-    
+    "keywords": [
+        "web",
+        "api",
+        "rest-api",
+        "mysql",
+        "redis",
+        "rest",
+        "slim"
+    ],
+
     "authors": [
         {
             "name": "Nebalus"
@@ -38,6 +47,6 @@
     "require-dev": {
         "phpmd/phpmd": "^2.15",
         "squizlabs/php_codesniffer": "^3.9",
-        "phpunit/phpunit": "^11.0"
+        "phpunit/phpunit": "^12.0"
     }
 }
