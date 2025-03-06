@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Factory;
 
 use Nebalus\Webapi\Option\EnvData;
+use Nebalus\Webapi\Option\MySqlEnv;
 use PDO;
 
 readonly class PdoFactory
 {
     public function __construct(
-        private EnvData $env
+        private MySqlEnv $mySqlEnv
     ) {
     }
 
     public function __invoke(): Pdo
     {
-        $host = $this->env->getMySqlHost();
-        $port = $this->env->getMySqlPort();
-        $database = $this->env->getMySqlDatabase();
-        $username = $this->env->getMySqlUser();
-        $password = $this->env->getMySqlPasswd();
+        $host = $this->mySqlEnv->getMySqlHost();
+        $port = $this->mySqlEnv->getMySqlPort();
+        $database = $this->mySqlEnv->getMySqlDatabase();
+        $username = $this->mySqlEnv->getMySqlUser();
+        $password = $this->mySqlEnv->getMySqlPasswd();
 
         $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8', $host, $port, $database);
         $pdo = new PDO($dsn, $username, $password);

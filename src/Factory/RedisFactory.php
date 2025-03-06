@@ -3,12 +3,13 @@
 namespace Nebalus\Webapi\Factory;
 
 use Nebalus\Webapi\Option\EnvData;
+use Nebalus\Webapi\Option\RedisEnv;
 use Redis;
 
 readonly class RedisFactory
 {
     public function __construct(
-        private EnvData $envData
+        private RedisEnv $redisEnv
     ) {
     }
 
@@ -21,7 +22,7 @@ readonly class RedisFactory
             'retryInterval' => 5,
         ];
         $redis = new Redis($options);
-        $redis->connect($this->envData->getRedisHost(), $this->envData->getRedisPort());
+        $redis->connect($this->redisEnv->getRedisHost(), $this->redisEnv->getRedisPort());
 
         return $redis;
     }
