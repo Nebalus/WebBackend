@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Repository\UserRepository;
+namespace Nebalus\Webapi\Repository\User;
 
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
+use Nebalus\Webapi\Repository\Account\MySqlAccountRepository;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
 use Nebalus\Webapi\Value\User\User;
 use Nebalus\Webapi\Value\User\UserEmail;

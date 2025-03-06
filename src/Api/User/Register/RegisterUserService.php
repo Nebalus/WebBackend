@@ -3,8 +3,8 @@
 namespace Nebalus\Webapi\Api\User\Register;
 
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
-use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
+use Nebalus\Webapi\Repository\Account\MySqlAccountRepository;
+use Nebalus\Webapi\Repository\User\MySqlUserRepository;
 use Nebalus\Webapi\Value\Internal\Result\Result;
 use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\User\User;

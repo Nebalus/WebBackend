@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Repository\ReferralRepository;
+namespace Nebalus\Webapi\Repository\Referral;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\Module\Referral\Referral;

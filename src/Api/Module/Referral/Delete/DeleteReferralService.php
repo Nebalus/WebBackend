@@ -3,7 +3,7 @@
 namespace Nebalus\Webapi\Api\Module\Referral\Delete;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
+use Nebalus\Webapi\Repository\Referral\MySqlReferralRepository;
 use Nebalus\Webapi\Value\Internal\Result\Result;
 use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\User\User;

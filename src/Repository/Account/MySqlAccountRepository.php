@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Repository\AccountRepository;
+namespace Nebalus\Webapi\Repository\Account;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\Account\AccountId;

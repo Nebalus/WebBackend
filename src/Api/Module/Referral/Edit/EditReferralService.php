@@ -4,7 +4,7 @@ namespace Nebalus\Webapi\Api\Module\Referral\Edit;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
+use Nebalus\Webapi\Repository\Referral\MySqlReferralRepository;
 use Nebalus\Webapi\Value\Internal\Result\Result;
 use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 use Nebalus\Webapi\Value\Module\Referral\Referral;

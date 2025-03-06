@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Repository\ReferralRepository;
+namespace Nebalus\Webapi\Repository\Referral;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Utils\IpUtils;

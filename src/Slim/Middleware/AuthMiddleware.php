@@ -7,7 +7,7 @@ namespace Nebalus\Webapi\Slim\Middleware;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Option\EnvData;
-use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
+use Nebalus\Webapi\Repository\User\MySqlUserRepository;
 use Nebalus\Webapi\Value\Internal\Result\Result;
 use Nebalus\Webapi\Value\User\UserId;
 use Override;
