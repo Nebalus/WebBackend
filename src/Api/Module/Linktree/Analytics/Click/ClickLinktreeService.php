@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Module\Linktree\Click;
+namespace Nebalus\Webapi\Api\Module\Linktree\Analytics\Click;
 
 use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
 
@@ -10,7 +10,7 @@ readonly class ClickLinktreeService
     {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(ClickLinktreeValidator $validator): ResultInterface
     {
         return ClickLinktreeView::render();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Module\Linktree\Click;
+namespace Nebalus\Webapi\Api\Module\Linktree\Analytics\Click;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Value\Internal\Result\Result;

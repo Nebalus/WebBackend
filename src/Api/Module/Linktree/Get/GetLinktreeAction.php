@@ -12,15 +12,16 @@ class GetLinktreeAction extends AbstractAction
 {
     public function __construct(
         private readonly GetLinktreeService $service,
+        private readonly GetLinktreeValidator $validator,
     ) {
     }
 
 
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
-        $params = $request->getParams() ?? [];
+        $this->validator->validate($request, $pathArgs);
 
-        $result = $this->service->execute($params);
+        $result = $this->service->execute($this->validator);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

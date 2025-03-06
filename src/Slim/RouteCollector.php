@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Slim;
 
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
-use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
+use Nebalus\Webapi\Api\Module\Linktree\Analytics\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Get\GetLinktreeAction;

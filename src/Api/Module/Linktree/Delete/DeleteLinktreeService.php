@@ -10,7 +10,7 @@ readonly class DeleteLinktreeService
     ) {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(DeleteLinktreeValidator $validator): ResultInterface
     {
         return DeleteLinktreeView::render();
     }

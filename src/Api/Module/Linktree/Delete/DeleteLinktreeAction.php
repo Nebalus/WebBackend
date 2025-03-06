@@ -12,13 +12,15 @@ class DeleteLinktreeAction extends AbstractAction
 {
     public function __construct(
         private readonly DeleteLinktreeService $service,
+        private readonly DeleteLinktreeValidator $validator
     ) {
     }
 
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
-        $params = $request->getParams() ?? [];
-        $result = $this->service->execute($params);
+        $this->validator->validate($request, $pathArgs);
+
+        $result = $this->service->execute($this->validator);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

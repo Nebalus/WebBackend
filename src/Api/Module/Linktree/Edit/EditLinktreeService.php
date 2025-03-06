@@ -10,7 +10,7 @@ readonly class EditLinktreeService
     ) {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(EditLinktreeValidator $validator): ResultInterface
     {
         return EditLinktreeView::render();
     }

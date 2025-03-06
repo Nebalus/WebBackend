@@ -10,7 +10,7 @@ readonly class CreateLinktreeService
     {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(CreateLinktreeValidator $validator): ResultInterface
     {
         return CreateLinktreeView::render();
     }
