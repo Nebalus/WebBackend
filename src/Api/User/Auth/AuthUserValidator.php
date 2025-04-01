@@ -13,7 +13,7 @@ class AuthUserValidator extends AbstractValidator
     private Username $username;
     private string $password;
     private bool $rememberMe;
-    private ?TOTPCode $TOTPCode;
+    private ?TOTPCode $totpCode;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class AuthUserValidator extends AbstractValidator
         $this->username = Username::from($validatedData->getBodyData()['username']);
         $this->password = $validatedData->getBodyData()['password'];
         $this->rememberMe = $validatedData->getBodyData()['remember_me'];
-        $this->TOTPCode = is_null($validatedData->getBodyData()['totp']) ? null : TOTPCode::from($validatedData->getBodyData()['totp']);
+        $this->totpCode = is_null($validatedData->getBodyData()['totp']) ? null : TOTPCode::from($validatedData->getBodyData()['totp']);
     }
 
     public function getUsername(): Username
@@ -53,6 +53,6 @@ class AuthUserValidator extends AbstractValidator
 
     public function getTOTPCode(): ?TOTPCode
     {
-        return $this->TOTPCode;
+        return $this->totpCode;
     }
 }
