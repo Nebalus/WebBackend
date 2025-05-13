@@ -40,7 +40,7 @@
         "spomky-labs/otphp": "^11.3.0",
         "promphp/prometheus_client_php": "^2.12",
         "nebalus/sanitizr": "dev-dev",
-        "elasticsearch/elasticsearch": "^8.17",
+        "elasticsearch/elasticsearch": "^9.0",
         "latitude/latitude": "^4.2"
     },
     
