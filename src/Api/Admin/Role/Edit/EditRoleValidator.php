@@ -6,6 +6,7 @@ use Nebalus\Sanitizr\Sanitizr as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Api\RequestParamTypes;
 use Nebalus\Webapi\Value\User\AccessControl\Privilege\PrivilegeNodeCollection;
+use Nebalus\Webapi\Value\User\AccessControl\Privilege\PurePrivilegeNode;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleDescription;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleName;
@@ -26,10 +27,10 @@ class EditRoleValidator extends AbstractValidator
             ]),
             RequestParamTypes::BODY => S::object([
                 "name" => RoleName::getSchema(),
-                "applies_to_everyone" => S::boolean()->default(false),
-                "description" => RoleDescription::getSchema()->nullable(),
+                "applies_to_everyone" => S::boolean()->optional()->default(false),
+                "description" => RoleDescription::getSchema()->nullable()->optional(),
                 "privileges" => S::array(S::object([
-                    "node" => S::string()->min(RoleName::MIN_LENGTH)->max(RoleName::MAX_LENGTH),
+                    "node" => PurePrivilegeNode::getSchema(),
                     "value" => S::number()->nonNegative()->nullable()->default(null),
                 ]))->optional()->nullable()->default([]),
             ])

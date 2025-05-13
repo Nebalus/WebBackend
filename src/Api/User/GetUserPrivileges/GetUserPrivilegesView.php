@@ -11,6 +11,7 @@ class GetUserPrivilegesView
     public function render(): ResultInterface
     {
         return Result::createSuccess("Here the privileges for the requested user", StatusCodeInterface::STATUS_OK, [
+            "user_id" => 1,
             "privileges" => [
                 "feature.referral.show_interface",
                 "feature.referral.create",

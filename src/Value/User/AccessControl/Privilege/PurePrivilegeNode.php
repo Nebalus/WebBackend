@@ -53,7 +53,6 @@ class PurePrivilegeNode
         foreach (explode('.', $this->node) as $key) {
             $ref = &$ref[$key];
         }
-        $ref = $this->getValue();
         return $finalArray; // DO NOT REMOVE // THIS IS THE FINAL RETURN VALUE
     }
 

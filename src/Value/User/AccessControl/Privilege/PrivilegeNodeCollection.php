@@ -6,12 +6,12 @@ use IteratorAggregate;
 
 class PrivilegeNodeCollection implements IteratorAggregate
 {
-    private array $nodeIndex = [];
+    private array $privilegeNodeIndex = [];
     private array $privilegeNodes = [];
 
-    private function __construct(array $nodeIndex, PrivilegeNode ...$privilegeNodes)
+    private function __construct(array $privilegeNodeIndex, PrivilegeNode ...$privilegeNodes)
     {
-        $this->nodeIndex = $nodeIndex;
+        $this->privilegeNodeIndex = $privilegeNodeIndex;
         $this->privilegeNodes = $privilegeNodes;
     }
 
@@ -22,15 +22,17 @@ class PrivilegeNodeCollection implements IteratorAggregate
             $cache[] = $privilegeNode->getNode()->asDestructured();
         }
 
-        $nodeIndex = array_replace_recursive([], ...$cache);
+        $privilegeNodeIndex = array_replace_recursive([], ...$cache);
 
-        return new self($nodeIndex, ...$privilegeNodes);
+        var_dump($privilegeNodeIndex);
+
+        return new self($privilegeNodeIndex, ...$privilegeNodes);
     }
 
-    public function contains(PrivilegeNode $node): bool
+    public function contains(PurePrivilegeNode $node): bool
     {
         foreach ($this->privilegeNodes as $privilegeNode) {
-            if ($node->getNode()->isParentOf($privilegeNode->getNode())) {
+            if ($node->isParentOf($privilegeNode->getNode())) {
                 return true;
             }
         }
