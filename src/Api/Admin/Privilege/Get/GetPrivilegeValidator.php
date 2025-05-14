@@ -9,7 +9,6 @@ use Nebalus\Webapi\Value\User\AccessControl\Privilege\PrivilegeNode;
 
 class GetPrivilegeValidator extends AbstractValidator
 {
-
     protected function __construct()
     {
         parent::__construct(S::object([

@@ -9,7 +9,6 @@ use Slim\Http\ServerRequest as Request;
 
 class EditRoleAction extends AbstractAction
 {
-
     public function __construct(
         private readonly EditRoleService $service,
         private readonly EditRoleValidator $validator
@@ -25,6 +24,5 @@ class EditRoleAction extends AbstractAction
     {
         $this->validator->validate($request, $pathArgs);
         return $response;
-        // TODO: Implement execute() method.
     }
 }

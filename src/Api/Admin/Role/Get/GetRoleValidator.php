@@ -18,9 +18,8 @@ class GetRoleValidator extends AbstractValidator
         ]));
     }
 
-
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        // TODO: Implement onValidate() method.
+
     }
 }

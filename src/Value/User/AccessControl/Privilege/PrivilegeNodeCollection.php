@@ -24,14 +24,15 @@ class PrivilegeNodeCollection implements IteratorAggregate
 
         $privilegeNodeIndex = array_replace_recursive([], ...$cache);
 
-        var_dump($privilegeNodeIndex);
-
         return new self($privilegeNodeIndex, ...$privilegeNodes);
     }
 
     public function contains(PurePrivilegeNode $node): bool
     {
-        foreach ($this->privilegeNodes as $privilegeNode) {
+        $fields = $node->asDestructured();
+
+        $cache = $this->privilegeNodeIndex;
+        foreach ($fields as $privilegeNode) {
             if ($node->isParentOf($privilegeNode->getNode())) {
                 return true;
             }
@@ -39,10 +40,19 @@ class PrivilegeNodeCollection implements IteratorAggregate
         return false;
     }
 
+    private function containsNodeRecursive(array $currentLayer, array $searchPath): null|int {
+        if (key_exists($searchPath[0], $currentLayer)) {
+            $nextLayer = $currentLayer[$searchPath[0]];
+
+            return $this->findNodeRecursive($nextLayer, array_slice($searchPath, 1));
+        }
+        return null;
+    }
+
     // TODO: NOT FINISHED
     public function containsSomeNodes(PrivilegeNodeCollection $nodeCollection): bool
     {
-        $nodeCollection->privilegeNodes = array_filter($nodeCollection->privilegeNodes, function (PrivilegeNode $node) {
+        $privilegeNodes = array_filter($nodeCollection->privilegeNodes, function (PrivilegeNode $node) {
             return $this->contains($node);
         });
         foreach ($this->privilegeNodes as $privilegeNode) {
