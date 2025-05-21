@@ -21,6 +21,7 @@ class CreateReferralAction extends AbstractAction
     {
         return PrivilegeNodeCollection::fromObjects();
     }
+    
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
         $this->validator->validate($request, $pathArgs);
