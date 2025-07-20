@@ -9,10 +9,10 @@ use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 use Nebalus\Webapi\Value\User\User;
-use Nebalus\Webapi\Value\User\UserId;
 
 readonly class CreateReferralService
 {
@@ -36,6 +36,6 @@ readonly class CreateReferralService
             return $this->responder->render($referral);
         }
 
-        return Result::createError("Not enough permissions", StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
+        return ResultBuilder::buildNoPermissionResult();
     }
 }

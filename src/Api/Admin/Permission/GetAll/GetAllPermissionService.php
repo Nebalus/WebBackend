@@ -8,6 +8,7 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\PermissionsRepository\MySqlPermissionRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
@@ -25,7 +26,7 @@ readonly class GetAllPermissionService
     public function execute(UserPermissionIndex $userPerms): ResultInterface
     {
         if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true)) === false) {
-            return Result::createError("You do not have enough permissions to access this resource", StatusCodeInterface::STATUS_FORBIDDEN);
+            return ResultBuilder::buildNoPermissionResult();
         }
 
         $requestedPermissions = $this->permissionRepository->getAllPermissions();

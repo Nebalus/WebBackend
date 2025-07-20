@@ -22,7 +22,8 @@ class DeleteReferralAction extends AbstractAction
         $this->validator->validate($request, $pathArgs);
 
         $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
-        $result = $this->service->execute($this->validator, $requestingUser);
+        $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
+        $result = $this->service->execute($this->validator, $requestingUser, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

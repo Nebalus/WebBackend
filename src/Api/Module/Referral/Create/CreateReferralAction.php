@@ -23,7 +23,7 @@ class CreateReferralAction extends AbstractAction
 
         $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
         $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
-        $result = $this->service->execute($this->validator, $userPerms, $requestingUser);
+        $result = $this->service->execute($this->validator, $requestingUser, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

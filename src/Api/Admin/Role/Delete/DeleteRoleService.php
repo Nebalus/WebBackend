@@ -10,6 +10,7 @@ use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
 use Nebalus\Webapi\Repository\RoleRepository\MySqlRoleRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
@@ -29,7 +30,7 @@ readonly class DeleteRoleService
     public function execute(DeleteRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
-            return Result::createError("You do not have enough permissions to access this resource", StatusCodeInterface::STATUS_FORBIDDEN);
+            return ResultBuilder::buildNoPermissionResult();
         }
 
         $role = $this->roleRepository->findRoleById($validator->getRoleId());

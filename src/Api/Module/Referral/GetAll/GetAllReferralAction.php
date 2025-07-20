@@ -13,7 +13,8 @@ use Slim\Http\ServerRequest as Request;
 class GetAllReferralAction extends AbstractAction
 {
     public function __construct(
-        private readonly GetAllReferralService $service
+        private readonly GetAllReferralService $service,
+        private readonly GetAllReferralValidator $validator
     ) {
     }
 
@@ -23,8 +24,11 @@ class GetAllReferralAction extends AbstractAction
      */
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
+        $this->validator->validate($request, $pathArgs);
+
         $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
-        $result = $this->service->execute($requestingUser);
+        $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
+        $result = $this->service->execute($this->validator, $requestingUser, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }

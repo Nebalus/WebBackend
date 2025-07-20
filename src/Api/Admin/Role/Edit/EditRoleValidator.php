@@ -35,14 +35,14 @@ class EditRoleValidator extends AbstractValidator
             ]),
             RequestParamTypes::BODY => S::object([
                 "name" => RoleName::getSchema(),
-                "description" => RoleDescription::getSchema()->nullable(),
+                "description" => S::nullable(RoleDescription::getSchema()),
                 "color" => RoleHexColor::getSchema(),
                 "access_level" => RoleAccessLevel::getSchema(),
                 "applies_to_everyone" => S::boolean(),
                 "disabled" => S::boolean(),
                 "permissions" => S::array(S::object([
                     "node" => PermissionNode::getSchema(),
-                    "value" => PermissionNode::getSchema()->nullable()->default(null),
+                    "value" => S::nullable(PermissionNode::getSchema()->default(null)),
                     "affects_all_sub_permissions" => S::boolean(),
                 ])),
             ])
