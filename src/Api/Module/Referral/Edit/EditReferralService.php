@@ -24,13 +24,13 @@ readonly class EditReferralService
     /**
      * @throws ApiException
      */
-    public function execute(EditReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPermissionIndex): ResultInterface
+    public function execute(EditReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($validator->getUserId() === $requestingUser->getUserId() && $userPermissionIndex->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN_EDIT, true))) {
+        if ($validator->getUserId() === $requestingUser->getUserId() && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN_EDIT, true))) {
             $updatedReferral = $this->referralRepository->updateReferralFromOwner($requestingUser->getUserId(), $validator->getCode(), $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());
         }
 
-        if ($userPermissionIndex->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER_EDIT, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER_EDIT, true))) {
         }
 
         if ($updatedReferral instanceof Referral) {

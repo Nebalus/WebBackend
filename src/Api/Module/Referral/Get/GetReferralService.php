@@ -21,7 +21,7 @@ readonly class GetReferralService
     /**
      * @throws ApiException
      */
-    public function execute(GetReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPermissionIndex): ResultInterface
+    public function execute(GetReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $referral = $this->referralRepository->findReferralByCodeFromOwner($requestingUser->getUserId(), $validator->getReferralCode());
 

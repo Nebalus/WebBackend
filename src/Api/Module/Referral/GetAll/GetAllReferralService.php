@@ -19,7 +19,7 @@ readonly class GetAllReferralService
     /**
      * @throws ApiException
      */
-    public function execute(GetAllReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPermissionIndex): ResultInterface
+    public function execute(GetAllReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $referrals = $this->referralRepository->getReferralsFromOwner($requestingUser->getUserId());
         return $this->responder->render($referrals);

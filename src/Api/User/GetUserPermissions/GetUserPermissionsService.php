@@ -19,12 +19,12 @@ readonly class GetUserPermissionsService
     /**
      * @throws ApiException
      */
-    public function execute(GetUserPermissionsValidator $validator, User $requestingUser, UserPermissionIndex $userPermissionIndex): ResultInterface
+    public function execute(GetUserPermissionsValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $userId = $validator->getUserId();
 
         if ($userId === $requestingUser->getUserId()) {
-            return $this->responder->render($requestingUser->getUserId(), $userPermissionIndex);
+            return $this->responder->render($requestingUser->getUserId(), $userPerms);
         }
 
         $otherUserPermissionIndex = $this->roleRepository->getPermissionIndexFromUserId($userId);

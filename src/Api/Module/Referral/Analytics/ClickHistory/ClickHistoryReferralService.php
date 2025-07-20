@@ -27,13 +27,13 @@ readonly class ClickHistoryReferralService
     /**
      * @throws ApiException
      */
-    public function execute(ClickHistoryReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPermissionIndex): ResultInterface
+    public function execute(ClickHistoryReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt() && $userPermissionIndex->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN, true))) {
+        if ($validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt() && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN, true))) {
             return $this->run($requestingUser->getUserId(), $validator->getReferralCode(), $validator->getRange());
         }
 
-        if ($userPermissionIndex->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER, true))) {
             return $this->run($validator->getUserId(), $validator->getReferralCode(), $validator->getRange());
         }
 
