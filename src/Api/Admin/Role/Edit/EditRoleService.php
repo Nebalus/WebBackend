@@ -29,17 +29,15 @@ readonly class EditRoleService
      */
     public function execute(EditRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true)) === false) {
-            return ResultBuilder::buildNoPermissionResult();
-        }
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
+            $role = $this->roleRepository->findRoleById($validator->getRoleId());
 
-        $role = $this->roleRepository->findRoleById($validator->getRoleId());
+            if ($role === null) {
+                return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+            }
 
-        if ($role === null) {
             return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
-
-
-        return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+        return ResultBuilder::buildNoPermissionResult();
     }
 }

@@ -2,13 +2,11 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\Create;
 
-use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
-use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;

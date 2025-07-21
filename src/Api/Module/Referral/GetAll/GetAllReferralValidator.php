@@ -2,7 +2,6 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\GetAll;
 
-use Nebalus\Sanitizr\Sanitizr;
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
@@ -26,7 +25,7 @@ class GetAllReferralValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        $this->userId = UserId::from($queryParamsData["user_id"]);
+        $this->userId = UserId::from($pathArgsData["user_id"]);
     }
 
     public function getUserId(): UserId

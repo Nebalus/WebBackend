@@ -154,7 +154,7 @@ readonly class MySqlReferralRepository
     /**
      * @throws ApiException
      */
-    public function getReferralsFromOwner(UserId $ownerUserId): ReferralCollection
+    public function findReferralsFromOwner(UserId $ownerUserId): ReferralCollection
     {
         $sql = <<<SQL
             SELECT 

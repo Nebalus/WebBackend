@@ -28,16 +28,16 @@ class GetPermissionService extends AbstractService
      */
     public function execute(GetPermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true)) === false) {
-            return ResultBuilder::buildNoPermissionResult();
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true))) {
+            $requestedPermission = $this->permissionRepository->findPermissionByPermissionId($validator->getPermissionId());
+
+            if ($requestedPermission === null) {
+                return Result::createError("Permission not found", StatusCodeInterface::STATUS_NOT_FOUND);
+            }
+
+            return $this->responder->render($requestedPermission);
         }
 
-        $requestedPermission = $this->permissionRepository->findPermissionByPermissionId($validator->getPermissionId());
-
-        if ($requestedPermission === null) {
-            return Result::createError("Permission not found", StatusCodeInterface::STATUS_NOT_FOUND);
-        }
-
-        return $this->responder->render($requestedPermission);
+        return ResultBuilder::buildNoPermissionResult();
     }
 }

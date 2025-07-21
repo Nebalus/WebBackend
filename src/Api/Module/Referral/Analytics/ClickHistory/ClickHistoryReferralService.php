@@ -2,13 +2,11 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\Analytics\ClickHistory;
 
-use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
-use Nebalus\Webapi\Value\Range;
 use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
@@ -29,11 +27,13 @@ readonly class ClickHistoryReferralService
      */
     public function execute(ClickHistoryReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt() && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN, true))) {
+        $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
+
+        if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN, true))) {
             return $this->run($requestingUser->getUserId(), $validator->getReferralCode(), $validator->getRange());
         }
 
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER, true))) {
+        if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER, true))) {
             return $this->run($validator->getUserId(), $validator->getReferralCode(), $validator->getRange());
         }
 

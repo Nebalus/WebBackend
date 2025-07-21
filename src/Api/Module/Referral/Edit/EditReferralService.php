@@ -7,11 +7,15 @@ use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
-use Nebalus\Webapi\Value\Module\Referral\Referral;
+use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
+use Nebalus\Webapi\Value\Module\Referral\ReferralLabel;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\Result\ResultBuilder;
+use Nebalus\Webapi\Value\Url;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserId;
 
 readonly class EditReferralService
 {
@@ -26,17 +30,28 @@ readonly class EditReferralService
      */
     public function execute(EditReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($validator->getUserId() === $requestingUser->getUserId() && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN_EDIT, true))) {
-            $updatedReferral = $this->referralRepository->updateReferralFromOwner($requestingUser->getUserId(), $validator->getCode(), $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());
+        $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
+
+        if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN_EDIT, true))) {
+            return $this->run($requestingUser->getUserId(), $validator->getCode(), $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());
         }
 
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER_EDIT, true))) {
+        if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER_EDIT, true))) {
+            return $this->run($validator->getUserId(), $validator->getCode(), $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());
         }
 
-        if ($updatedReferral instanceof Referral) {
-            return $this->responder->render($updatedReferral);
-        }
+        return ResultBuilder::buildNoPermissionResult();
+    }
 
-        return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+    /**
+     * @throws ApiException
+     */
+    private function run(UserId $ownerId, ReferralCode $code, Url $url, ReferralLabel $label, bool $disabled): ResultInterface
+    {
+        $updatedReferral = $this->referralRepository->updateReferralFromOwner($ownerId, $code, $url, $label, $disabled);
+        if ($updatedReferral === null) {
+            return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+        return $this->responder->render($updatedReferral);
     }
 }
