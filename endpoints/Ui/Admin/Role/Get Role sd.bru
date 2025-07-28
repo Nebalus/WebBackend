@@ -1,0 +1,21 @@
+meta {
+  name: Get Role sd
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permissions
+  body: json
+  auth: apikey
+}
+
+params:path {
+  roleId: 2
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{auth_jwt}}
+  placement: header
+}

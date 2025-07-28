@@ -9,6 +9,8 @@ use Nebalus\Webapi\Api\Admin\Permission\GetAll\GetAllPermissionAction;
 use Nebalus\Webapi\Api\Admin\Role\Create\CreateRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Delete\DeleteRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleAction;
+use Nebalus\Webapi\Api\Admin\Role\EditPermission\EditPermissionRoleAction;
+use Nebalus\Webapi\Api\Admin\Role\EditPermission\EditPermissionRoleResponder;
 use Nebalus\Webapi\Api\Admin\Role\Get\GetRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\GetAll\GetAllRoleAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
@@ -78,6 +80,9 @@ readonly class RouteCollector
                         $group->map(["GET"], "", GetRoleAction::class);
                         $group->map(["PUT"], "", EditRoleAction::class);
                         $group->map(["DELETE"], "", DeleteRoleAction::class);
+                        $group->group("/permissions", function (RouteCollectorProxy $group) {
+                            $group->map(["GET", "PUT", "DELETE"], "", EditPermissionRoleAction::class);
+                        });
                     });
                 });
             })->add(PermissionMiddleware::class)->add(AuthMiddleware::class);

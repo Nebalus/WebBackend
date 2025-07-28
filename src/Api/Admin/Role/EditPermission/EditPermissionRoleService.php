@@ -1,8 +1,11 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Edit;
+namespace Nebalus\Webapi\Api\Admin\Role\EditPermission;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
+use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleValidator;
+use Nebalus\Webapi\Api\Admin\Role\Get\GetRoleResponder;
 use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
@@ -14,11 +17,11 @@ use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
-readonly class EditRoleService
+readonly class EditPermissionRoleService
 {
     public function __construct(
-        private MySQlRoleRepository $roleRepository,
-        private EditRoleResponder $responder,
+        private MySqlRoleRepository $roleRepository,
+        private EditPermissionRoleResponder $responder
     ) {
     }
 
@@ -27,9 +30,9 @@ readonly class EditRoleService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(EditRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(EditPermissionRoleValidator $validator, string $httpMethod, UserPermissionIndex $userPerms): ResultInterface
     {
-        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
         }
 
@@ -43,6 +46,11 @@ readonly class EditRoleService
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+        return match ($httpMethod) {
+            RequestMethodInterface::METHOD_GET => $this->responder->renderGet(),
+            RequestMethodInterface::METHOD_PUT => $this->responder->renderPut(),
+            RequestMethodInterface::METHOD_DELETE => $this->responder->renderDelete(),
+            default => Result::createError('Invalid HTTP method', StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED),
+        };
     }
 }

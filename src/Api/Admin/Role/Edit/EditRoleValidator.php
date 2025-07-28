@@ -25,7 +25,6 @@ class EditRoleValidator extends AbstractValidator
     private RoleAccessLevel $accessLevel;
     private bool $appliesToEveryone;
     private bool $disabled;
-    private PermissionRoleLinkCollection $permissionRoleLinks;
 
     public function __construct()
     {
@@ -38,13 +37,8 @@ class EditRoleValidator extends AbstractValidator
                 "description" => S::nullable(RoleDescription::getSchema()),
                 "color" => RoleHexColor::getSchema(),
                 "access_level" => RoleAccessLevel::getSchema(),
-                "applies_to_everyone" => S::boolean(),
+                "applies_to_everyone" => S::boolean()->getDefaultValue(),
                 "disabled" => S::boolean(),
-                "permissions" => S::array(S::object([
-                    "node" => PermissionNode::getSchema(),
-                    "value" => S::nullable(PermissionNode::getSchema()->default(null)),
-                    "affects_all_sub_permissions" => S::boolean(),
-                ])),
             ])
         ]));
     }
@@ -62,16 +56,6 @@ class EditRoleValidator extends AbstractValidator
         $this->accessLevel = RoleAccessLevel::from($bodyData["access_level"]);
         $this->appliesToEveryone = $bodyData["applies_to_everyone"];
         $this->disabled = $bodyData["disabled"];
-        $this->permissionRoleLinks = PermissionRoleLinkCollection::fromObjects(
-            ...array_map(
-                fn(array $permission) => PermissionRoleLink::from(
-                    PermissionNode::from($permission["node"]),
-                    $permission["affects_all_sub_permissions"],
-                    array_key_exists("value", $bodyData) ? PermissionValue::from($permission["value"]) : null
-                ),
-                $bodyData["permissions"]
-            )
-        );
     }
 
     public function getRoleId(): RoleId
@@ -107,10 +91,5 @@ class EditRoleValidator extends AbstractValidator
     public function isDisabled(): bool
     {
         return $this->disabled;
-    }
-
-    public function getPermissionRoleLinks(): PermissionRoleLinkCollection
-    {
-        return $this->permissionRoleLinks;
     }
 }

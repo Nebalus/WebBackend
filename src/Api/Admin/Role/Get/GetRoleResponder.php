@@ -10,7 +10,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 
 class GetRoleResponder
 {
-    public function render(Role $role, ?PermissionRoleLinkCollection $permissionRoleLinkCollection = null): ResultInterface
+    public function render(Role $role): ResultInterface
     {
         $fields = [
             'role_id' => $role->getRoleId()->asInt(),
@@ -25,20 +25,6 @@ class GetRoleResponder
             "created_at" => $role->getCreatedAtDate()->format(DATE_ATOM),
             "updated_at" => $role->getUpdatedAtDate()->format(DATE_ATOM),
         ];
-
-        if ($permissionRoleLinkCollection !== null) {
-            $permissions = [];
-
-            foreach ($permissionRoleLinkCollection as $permissionRoleLink) {
-                $permissions[] = [
-                    "node" => $permissionRoleLink->getNode()->asString(),
-                    "allow_all_sub_permissions" => $permissionRoleLink->getMetadata()->allowAllSubPermissions(),
-                    "value" => $permissionRoleLink->getMetadata()->getValue()?->asInt(),
-                ];
-            }
-
-            $fields["permissions"] = $permissions;
-        }
 
         return Result::createSuccess("Role Fetched", StatusCodeInterface::STATUS_OK, $fields);
     }
