@@ -6,11 +6,16 @@ use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 use Nebalus\Webapi\Exception\ApiException;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkMetadata;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 
 class EditPermissionRoleValidator extends AbstractValidator
 {
     private RoleId $roleId;
+    private PermissionNodeCollection $permissionNodes;
 
     public function __construct()
     {
@@ -18,6 +23,7 @@ class EditPermissionRoleValidator extends AbstractValidator
             RequestParamTypes::PATH_ARGS => S::object([
                 "role_id" => RoleId::getSchema(),
             ]),
+            RequestParamTypes::BODY => S::array(PermissionNode::getSchema())
         ]));
     }
 
@@ -28,10 +34,21 @@ class EditPermissionRoleValidator extends AbstractValidator
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
         $this->roleId = RoleId::from($pathArgsData["role_id"]);
+        $this->permissionNodes = PermissionNodeCollection::fromObjects(
+            ...array_map(
+                fn(string $node) => PermissionNode::from($node),
+                $bodyData
+            )
+        );
     }
 
     public function getRoleId(): RoleId
     {
         return $this->roleId;
+    }
+
+    public function getPermissionNodes(): PermissionNodeCollection
+    {
+        return $this->permissionNodes;
     }
 }

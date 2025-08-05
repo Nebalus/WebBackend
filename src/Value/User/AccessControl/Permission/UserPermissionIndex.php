@@ -44,12 +44,12 @@ class UserPermissionIndex implements IteratorAggregate
         foreach ($parts as $index => $part) {
             $currentNode = $index === 0 ? $part : "$currentNode.$part";
             if (!array_key_exists($currentNode, $this->permissionNodeIndexList)) {
-               continue;
+                continue;
             }
 
             $permissionMetadata = $this->permissionNodeIndexList[$currentNode];
             if (!$permissionMetadata instanceof PermissionRoleLinkMetadata) {
-               continue;
+                continue;
             }
 
             if ($permissionAccess->isAllowAccessWithSubPermission() && str_starts_with($currentNode, $permissionAccess->getNode()->asString())) {
@@ -61,7 +61,7 @@ class UserPermissionIndex implements IteratorAggregate
                 }
                 return true;
             }
-            
+
             if ($permissionMetadata->allowAllSubPermissions()) {
                 return true;
             }

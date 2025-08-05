@@ -37,7 +37,7 @@ class EditRoleValidator extends AbstractValidator
                 "description" => S::nullable(RoleDescription::getSchema()),
                 "color" => RoleHexColor::getSchema(),
                 "access_level" => RoleAccessLevel::getSchema(),
-                "applies_to_everyone" => S::boolean()->getDefaultValue(),
+                "applies_to_everyone" => S::boolean(),
                 "disabled" => S::boolean(),
             ])
         ]));

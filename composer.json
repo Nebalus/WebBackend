@@ -41,7 +41,7 @@
         "promphp/prometheus_client_php": "^2.12",
         "elasticsearch/elasticsearch": "^9.0",
         "latitude/latitude": "^4.2",
-        "nebalus/sanitizr": "dev-dev"
+        "nebalus/sanitizr": "v1.0.2"
     },
     
     "autoload-dev": {
