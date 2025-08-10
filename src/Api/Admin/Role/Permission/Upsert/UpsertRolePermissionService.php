@@ -34,7 +34,7 @@ readonly class UpsertRolePermissionService
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        $role = $this->roleRepository->findRoleById($validator->getRoleId());
+        $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
         if ($role === null) {
             return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
@@ -43,6 +43,11 @@ readonly class UpsertRolePermissionService
         if ($role->isEditable() === false) {
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
+
+        $this->roleRepository->upsertPermissionLinksToRoleByRoleId(
+            $validator->getRoleId(),
+            $validator->getPermissionRoleLinks()
+        );
 
         return $this->responder->render();
     }

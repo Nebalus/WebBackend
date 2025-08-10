@@ -10,8 +10,12 @@ use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleAccessLevel;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleDescription;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleHexColor;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleName;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleSortedCollection;
 use Nebalus\Webapi\Value\User\UserId;
 use PDO;
@@ -23,8 +27,9 @@ readonly class MySqlRoleRepository
     ) {
     }
 
-    public function insertPrivilegeIntoRole()
+    public function upsertPermissionLinksToRoleByRoleId(RoleId $roleId, PermissionRoleLinkCollection $permissionRoleLinkCollection): void
     {
+        
     }
 
     /**
@@ -94,7 +99,7 @@ readonly class MySqlRoleRepository
         $sortedRoles = RoleSortedCollection::fromRoleCollectionByAccessLevel($unsortedRoles);
         $sortedRoleLinkCollections = [];
         foreach ($sortedRoles as $role) {
-            $sortedRoleLinkCollections[] = $this->getAllPermissionLinksFromRoleId($role->getRoleId());
+            $sortedRoleLinkCollections[] = $this->getAllPermissionLinksByRoleId($role->getRoleId());
         }
         return UserPermissionIndex::fromPermissionRoleLinkCollections(...$sortedRoleLinkCollections);
     }
@@ -102,7 +107,7 @@ readonly class MySqlRoleRepository
     /**
      * @throws ApiException
      */
-    public function getAllPermissionLinksFromRoleId(RoleId $roleId): PermissionRoleLinkCollection
+    public function getAllPermissionLinksByRoleId(RoleId $roleId): PermissionRoleLinkCollection
     {
         $sql = <<<SQL
             SELECT 
@@ -199,39 +204,36 @@ readonly class MySqlRoleRepository
         return Role::fromArray($roleToArray);
     }
 
-    /**
-     * @throws ApiException
-     */
-//    public function updateRoleFromRoleId(RoleId $roleId, RoleName $name, RoleDescription $description, RoleHexColor $color, RoleAccessLevel $accessLevel, bool $appliesToEveryone, bool $disabled): ?Role
-//    {
-//        $sql = <<<SQL
-//            UPDATE roles
-//            SET
-//                name = :name,
-//                description = :description,
-//                color = UNHEX(:color),
-//                access_level = :access_level,
-//                applies_to_everyone = :applies_to_everyone,
-//                disabled = :disabled,
-//            WHERE
-//                role_id = :role_id
-//                AND editable = true
-//        SQL;
-//
-//        $stmt = $this->pdo->prepare($sql);
-//        $stmt->bindValue(':name', $name->asString());
-//        $stmt->bindValue(':description', $description->asString());
-//        $stmt->bindValue(':color', $color->asString());
-//        $stmt->bindValue(':access_level', $accessLevel->asInt(), PDO::PARAM_INT);
-//        $stmt->bindValue(':applies_to_everyone', $appliesToEveryone, PDO::PARAM_BOOL);
-//        $stmt->bindValue(':disabled', $disabled, PDO::PARAM_BOOL);
-//        $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
-//        $stmt->execute();
-//
-//        return $this->findRoleById($roleId);
-//    }
+    public function updateRoleByRoleId(RoleId $roleId, RoleName $name, RoleDescription $description, RoleHexColor $color, RoleAccessLevel $accessLevel, bool $appliesToEveryone, bool $disabled): ?Role
+    {
+        $sql = <<<SQL
+            UPDATE roles
+            SET
+                name = :name,
+                description = :description,
+                color = UNHEX(:color),
+                access_level = :access_level,
+                applies_to_everyone = :applies_to_everyone,
+                disabled = :disabled
+            WHERE
+                role_id = :role_id
+                AND editable = true
+        SQL;
 
-    public function deleteRoleFromRoleId(RoleId $roleId): bool
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':name', $name->asString());
+        $stmt->bindValue(':description', $description->asString());
+        $stmt->bindValue(':color', $color->asString());
+        $stmt->bindValue(':access_level', $accessLevel->asInt(), PDO::PARAM_INT);
+        $stmt->bindValue(':applies_to_everyone', $appliesToEveryone, PDO::PARAM_BOOL);
+        $stmt->bindValue(':disabled', $disabled, PDO::PARAM_BOOL);
+        $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->findRoleByRoleId($roleId);
+    }
+
+    public function deleteRoleByRoleId(RoleId $roleId): bool
     {
         $sql = <<<SQL
             DELETE FROM roles 
@@ -247,13 +249,12 @@ readonly class MySqlRoleRepository
         return $stmt->rowCount() === 1;
     }
 
-
     /**
      * @throws ApiInvalidArgumentException
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function findRoleById(RoleId $roleId): ?Role
+    public function findRoleByRoleId(RoleId $roleId): ?Role
     {
         $sql = <<<SQL
             SELECT 

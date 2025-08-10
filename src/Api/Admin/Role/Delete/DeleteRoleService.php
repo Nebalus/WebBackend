@@ -30,7 +30,7 @@ readonly class DeleteRoleService
     public function execute(DeleteRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
-            $role = $this->roleRepository->findRoleById($validator->getRoleId());
+            $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
             if ($role === null) {
                 return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
@@ -40,7 +40,7 @@ readonly class DeleteRoleService
                 return Result::createError('This role cannot be deleted', StatusCodeInterface::STATUS_FORBIDDEN);
             }
 
-            if ($this->roleRepository->deleteRoleFromRoleId($validator->getRoleId())) {
+            if ($this->roleRepository->deleteRoleByRoleId($validator->getRoleId())) {
                 return $this->responder->render();
             }
 

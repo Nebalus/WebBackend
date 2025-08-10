@@ -34,7 +34,7 @@ readonly class DeleteRolePermissionService
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        $role = $this->roleRepository->findRoleById($validator->getRoleId());
+        $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
         if ($role === null) {
             return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
@@ -43,6 +43,7 @@ readonly class DeleteRolePermissionService
         if ($role->isEditable() === false) {
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
+
 
         return $this->responder->render();
     }

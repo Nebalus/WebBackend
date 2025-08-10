@@ -28,15 +28,10 @@ readonly class GetRoleService
     public function execute(GetRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true))) {
-            $role = $this->roleRepository->findRoleById($validator->getRoleId());
+            $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
             if ($role === null) {
                 return Result::createError("Role not found", StatusCodeInterface::STATUS_NOT_FOUND);
-            }
-
-            if ($validator->isWithPermissions()) {
-                $privileges = $this->roleRepository->getAllPermissionLinksFromRoleId($validator->getRoleId());
-                return $this->responder->render($role, $privileges);
             }
 
             return $this->responder->render($role);

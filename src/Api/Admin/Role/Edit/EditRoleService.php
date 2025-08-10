@@ -33,7 +33,7 @@ readonly class EditRoleService
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        $role = $this->roleRepository->findRoleById($validator->getRoleId());
+        $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
         if ($role === null) {
             return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);

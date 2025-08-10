@@ -1,14 +1,16 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Get;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\GetAll;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 use Nebalus\Webapi\Exception\ApiException;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 
-class GetRoleValidator extends AbstractValidator
+class GetAllRolePermissionValidator extends AbstractValidator
 {
     private RoleId $roleId;
     public function __construct()

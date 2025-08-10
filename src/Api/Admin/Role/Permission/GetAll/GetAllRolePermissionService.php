@@ -28,12 +28,13 @@ readonly class GetAllRolePermissionService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(UserPermissionIndex $userPerms): ResultInterface
+    public function execute(GetAllRolePermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        return $this->responder->render();
+        $permissions = $this->roleRepository->getAllPermissionLinksByRoleId($validator->getRoleId());
+        return $this->responder->render($permissions);
     }
 }
