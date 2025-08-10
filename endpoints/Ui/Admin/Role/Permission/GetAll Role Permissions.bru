@@ -1,12 +1,12 @@
 meta {
-  name: Get Role sd
+  name: GetAll Role Permissions
   type: http
-  seq: 8
+  seq: 3
 }
 
-put {
-  url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permissions
-  body: json
+get {
+  url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permission/all
+  body: none
   auth: apikey
 }
 
@@ -22,6 +22,6 @@ auth:apikey {
 
 body:json {
   [
-  "sd": 23
+  
   ]
 }

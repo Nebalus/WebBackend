@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\EditPermission;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Upsert;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
@@ -9,13 +9,15 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkMetadata;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionValue;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 
-class EditPermissionRoleValidator extends AbstractValidator
+class UpsertRolePermissionValidator extends AbstractValidator
 {
     private RoleId $roleId;
-    private PermissionNodeCollection $permissionNodes;
+    private PermissionRoleLinkCollection $permissionRoleLinks;
 
     public function __construct()
     {
@@ -23,7 +25,11 @@ class EditPermissionRoleValidator extends AbstractValidator
             RequestParamTypes::PATH_ARGS => S::object([
                 "role_id" => RoleId::getSchema(),
             ]),
-            RequestParamTypes::BODY => S::array(PermissionNode::getSchema())
+            RequestParamTypes::BODY => S::array(S::object([
+                "node" => PermissionNode::getSchema(),
+                "allow_all_sub_permissions" => S::boolean()->default(false),
+                "value" => PermissionValue::getSchema()->nullish()->default(null),
+            ]))
         ]));
     }
 
@@ -34,9 +40,12 @@ class EditPermissionRoleValidator extends AbstractValidator
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
         $this->roleId = RoleId::from($pathArgsData["role_id"]);
-        $this->permissionNodes = PermissionNodeCollection::fromObjects(
+        $this->permissionRoleLinks = PermissionRoleLinkCollection::fromObjects(
             ...array_map(
-                fn(string $node) => PermissionNode::from($node),
+                fn(array $data) => PermissionRoleLink::fromMetadata(
+                    PermissionNode::from($data['node']),
+                    PermissionRoleLinkMetadata::fromArray($data)
+                ),
                 $bodyData
             )
         );
@@ -47,8 +56,8 @@ class EditPermissionRoleValidator extends AbstractValidator
         return $this->roleId;
     }
 
-    public function getPermissionNodes(): PermissionNodeCollection
+    public function getPermissionRoleLinks(): PermissionRoleLinkCollection
     {
-        return $this->permissionNodes;
+        return $this->permissionRoleLinks;
     }
 }

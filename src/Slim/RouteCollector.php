@@ -9,10 +9,11 @@ use Nebalus\Webapi\Api\Admin\Permission\GetAll\GetAllPermissionAction;
 use Nebalus\Webapi\Api\Admin\Role\Create\CreateRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Delete\DeleteRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleAction;
-use Nebalus\Webapi\Api\Admin\Role\EditPermission\EditPermissionRoleAction;
-use Nebalus\Webapi\Api\Admin\Role\EditPermission\EditPermissionRoleResponder;
 use Nebalus\Webapi\Api\Admin\Role\Get\GetRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\GetAll\GetAllRoleAction;
+use Nebalus\Webapi\Api\Admin\Role\Permission\Delete\DeleteRolePermissionAction;
+use Nebalus\Webapi\Api\Admin\Role\Permission\GetAll\GetAllRolePermissionAction;
+use Nebalus\Webapi\Api\Admin\Role\Permission\Upsert\UpsertRolePermissionAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
@@ -74,14 +75,16 @@ readonly class RouteCollector
                     });
                 });
                 $group->group("/role", function (RouteCollectorProxy $group) {
-                    $group->map(["POST"], "", CreateRoleAction::class);
                     $group->map(["GET"], "/all", GetAllRoleAction::class);
+                    $group->map(["POST"], "", CreateRoleAction::class);
                     $group->group("/{role_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetRoleAction::class);
                         $group->map(["PUT"], "", EditRoleAction::class);
                         $group->map(["DELETE"], "", DeleteRoleAction::class);
-                        $group->group("/permissions", function (RouteCollectorProxy $group) {
-                            $group->map(["GET", "PUT", "DELETE"], "", EditPermissionRoleAction::class);
+                        $group->group("/permission", function (RouteCollectorProxy $group) {
+                            $group->map(["GET"], "/all", GetAllRolePermissionAction::class);
+                            $group->map(["DELETE"], "", DeleteRolePermissionAction::class);
+                            $group->map(["PUT", "POST"], "", UpsertRolePermissionAction::class);
                         });
                     });
                 });

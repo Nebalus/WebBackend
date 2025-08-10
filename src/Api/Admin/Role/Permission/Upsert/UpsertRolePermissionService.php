@@ -1,7 +1,8 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Edit;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Upsert;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
@@ -14,11 +15,11 @@ use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
-readonly class EditRoleService
+readonly class UpsertRolePermissionService
 {
     public function __construct(
-        private MySQlRoleRepository $roleRepository,
-        private EditRoleResponder $responder,
+        private MySqlRoleRepository $roleRepository,
+        private UpsertRolePermissionResponder $responder
     ) {
     }
 
@@ -27,9 +28,9 @@ readonly class EditRoleService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(EditRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(UpsertRolePermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
         }
 
@@ -43,6 +44,6 @@ readonly class EditRoleService
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        return Result::createError('PLACEHOLDER', StatusCodeInterface::STATUS_NOT_FOUND);
+        return $this->responder->render();
     }
 }

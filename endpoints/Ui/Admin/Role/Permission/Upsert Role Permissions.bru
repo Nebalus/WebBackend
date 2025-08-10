@@ -1,0 +1,36 @@
+meta {
+  name: Upsert Role Permissions
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permission
+  body: json
+  auth: apikey
+}
+
+params:path {
+  roleId: 2
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{auth_jwt}}
+  placement: header
+}
+
+body:json {
+  [
+    {
+      "node": "admin",
+      "allow_all_sub_permissions": true,
+      "value": null
+    },
+    {
+      "node": "feature",
+      "allow_all_sub_permissions": true,
+      "value": null
+    }
+  ]
+}

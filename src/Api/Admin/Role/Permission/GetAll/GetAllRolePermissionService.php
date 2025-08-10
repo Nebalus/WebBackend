@@ -1,7 +1,8 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Edit;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\GetAll;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
@@ -14,11 +15,11 @@ use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
-readonly class EditRoleService
+readonly class GetAllRolePermissionService
 {
     public function __construct(
-        private MySQlRoleRepository $roleRepository,
-        private EditRoleResponder $responder,
+        private MySqlRoleRepository $roleRepository,
+        private GetAllRolePermissionResponder $responder
     ) {
     }
 
@@ -27,22 +28,12 @@ readonly class EditRoleService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(EditRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(UserPermissionIndex $userPerms): ResultInterface
     {
-        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        $role = $this->roleRepository->findRoleById($validator->getRoleId());
-
-        if ($role === null) {
-            return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
-        }
-
-        if ($role->isEditable() === false) {
-            return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
-        }
-
-        return Result::createError('PLACEHOLDER', StatusCodeInterface::STATUS_NOT_FOUND);
+        return $this->responder->render();
     }
 }

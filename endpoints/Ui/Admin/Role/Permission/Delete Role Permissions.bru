@@ -1,17 +1,17 @@
 meta {
-  name: Get Role With Permissions
+  name: Delete Role Permissions
   type: http
-  seq: 6
+  seq: 2
 }
 
-get {
-  url: {{protocol}}://{{host}}/ui/admin/role/:roleId
+delete {
+  url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permission
   body: json
   auth: apikey
 }
 
 params:path {
-  roleId: 1
+  roleId: 2
 }
 
 auth:apikey {
@@ -21,7 +21,8 @@ auth:apikey {
 }
 
 body:json {
-  {
-    "with_permissions": true
-  }
+  [
+    "admin",
+    "test.de.sds"
+  ]
 }

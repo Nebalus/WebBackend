@@ -1,17 +1,17 @@
 meta {
-  name: Delete Referral
+  name: Edit Own Referral
   type: http
-  seq: 4
+  seq: 3
 }
 
-delete {
+put {
   url: {{protocol}}://{{host}}/ui/user/:userId/services/referrals/:code
-  body: none
+  body: json
   auth: apikey
 }
 
 params:path {
-  code: nSW1Oep4
+  code: UovRQ3H1
   userId: self
 }
 
@@ -19,4 +19,11 @@ auth:apikey {
   key: Authorization
   value: {{auth_jwt}}
   placement: header
+}
+
+body:json {
+  {
+    "url": "https://test.de",
+    "label": "test"
+  }
 }

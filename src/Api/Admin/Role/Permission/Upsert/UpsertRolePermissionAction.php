@@ -1,20 +1,18 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\EditPermission;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Upsert;
 
 use Nebalus\Webapi\Api\AbstractAction;
-use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleService;
-use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleValidator;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 
-class EditPermissionRoleAction extends AbstractAction
+class UpsertRolePermissionAction extends AbstractAction
 {
     public function __construct(
-        private readonly EditPermissionRoleService $service,
-        private readonly EditPermissionRoleValidator $validator
+        private readonly UpsertRolePermissionService $service,
+        private readonly UpsertRolePermissionValidator $validator
     ) {
     }
 
@@ -22,9 +20,8 @@ class EditPermissionRoleAction extends AbstractAction
     {
         $this->validator->validate($request, $pathArgs);
 
-        $httpMethod = $request->getMethod();
         $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
-        $result = $this->service->execute($this->validator, $httpMethod, $userPerms);
+        $result = $this->service->execute($this->validator, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }
