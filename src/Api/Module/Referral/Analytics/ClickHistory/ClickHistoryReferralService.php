@@ -45,8 +45,8 @@ readonly class ClickHistoryReferralService
      */
     private function run(UserId $userId, ReferralCode $code, int $range): ResultInterface
     {
-        $referral = $this->referralRepository->findReferralByCodeFromOwner($userId, $code);
-        if ($referral === null) {
+        $referral = $this->referralRepository->findReferralByCode($code);
+        if ($referral === null || $userId !== $referral->getOwnerId()) {
             return Result::createError("Referral not found");
         }
         $data = $this->referralRepository->getReferralClicksFromRange($userId, $code, $range);

@@ -46,8 +46,8 @@ readonly class GetReferralService
      */
     private function run(UserId $ownerId, ReferralCode $code): ResultInterface
     {
-        $referral = $this->referralRepository->findReferralByCodeFromOwner($ownerId, $code);
-        if ($referral === null) {
+        $referral = $this->referralRepository->findReferralByCode($code);
+        if ($referral === null || $ownerId !== $referral->getOwnerId()) {
             return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
         return $this->responder->render($referral);

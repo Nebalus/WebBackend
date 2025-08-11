@@ -148,7 +148,7 @@ readonly class MySqlReferralRepository
         $stmt->bindValue(':code', $code->asString());
         $stmt->execute();
 
-        return $this->findReferralByCodeFromOwner($ownerId, $code);
+        return $this->findReferralByCode($code);
     }
 
     /**
@@ -191,34 +191,6 @@ readonly class MySqlReferralRepository
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':code', $code->asString());
-        $stmt->execute();
-
-        $data = $stmt->fetch();
-
-        if (!$data) {
-            return null;
-        }
-
-        return Referral::fromArray($data);
-    }
-
-    /**
-     * @throws ApiException
-     */
-    public function findReferralByCodeFromOwner(UserId $ownerId, ReferralCode $code): ?Referral
-    {
-        $sql = <<<SQL
-            SELECT 
-                * 
-            FROM referrals
-            WHERE 
-                owner_id = :owner_id
-                AND code = :code
-        SQL;
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':owner_id', $ownerId->asInt());
         $stmt->bindValue(':code', $code->asString());
         $stmt->execute();
 

@@ -48,10 +48,10 @@ readonly class EditReferralService
      */
     private function run(UserId $ownerId, ReferralCode $code, Url $url, ReferralLabel $label, bool $disabled): ResultInterface
     {
-        $updatedReferral = $this->referralRepository->updateReferralFromOwner($ownerId, $code, $url, $label, $disabled);
-        if ($updatedReferral === null) {
+        $referral = $this->referralRepository->updateReferralFromOwner($ownerId, $code, $url, $label, $disabled);
+        if ($referral === null || $ownerId !== $referral->getOwnerId()) {
             return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
-        return $this->responder->render($updatedReferral);
+        return $this->responder->render($referral);
     }
 }
