@@ -6,6 +6,7 @@ use Exception;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
@@ -19,6 +20,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\RoleName;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleSortedCollection;
 use Nebalus\Webapi\Value\User\UserId;
 use PDO;
+use PDOException;
 
 readonly class MySqlRoleRepository
 {
@@ -27,9 +29,83 @@ readonly class MySqlRoleRepository
     ) {
     }
 
+    public function deletePermissionsByRoleId(RoleId $roleId, PermissionNodeCollection $permissionNodeCollection): void
+    {
+        try {
+            $sql = <<<SQL
+            DELETE FROM role_permission_map
+            WHERE
+                role_id = :role_id AND
+                permission_id = (SELECT permission_id FROM permissions WHERE node = :node LIMIT 1)
+        SQL;
+
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare($sql);
+
+            foreach ($permissionNodeCollection as $permissionNode) {
+                $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
+                $stmt->bindValue(':node', $permissionNode->asString(), PDO::PARAM_STR);
+
+                try {
+                    $stmt->execute();
+                } catch (PDOException $e) {
+                    if ($e->getCode() === '23000') { // FK constraints failed
+                        continue;
+                    }
+                    throw $e;
+                }
+            }
+
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
     public function upsertPermissionLinksToRoleByRoleId(RoleId $roleId, PermissionRoleLinkCollection $permissionRoleLinkCollection): void
     {
-        
+        try {
+            $sql = <<<SQL
+            INSERT INTO role_permission_map(
+                role_id,
+                permission_id,
+                allow_all_sub_permissions,
+                `value`
+            )
+            VALUES
+                (:role_id, (SELECT permission_id FROM permissions WHERE node = :node LIMIT 1), :allow_all_sub_permissions, :value)
+            ON DUPLICATE KEY UPDATE
+                allow_all_sub_permissions = values(allow_all_sub_permissions),
+                `value` = values(`value`)
+        SQL;
+
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare($sql);
+
+            foreach ($permissionRoleLinkCollection as $permissionRoleLink) {
+                $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
+                $stmt->bindValue(':node', $permissionRoleLink->getNode()->asString(), PDO::PARAM_STR);
+                $stmt->bindValue(':allow_all_sub_permissions', $permissionRoleLink->getMetadata()->allowAllSubPermissions());
+                $stmt->bindValue(':value', $permissionRoleLink->getMetadata()->getValue()?->asInt(), PDO::PARAM_INT);
+
+                try {
+                    $stmt->execute();
+                } catch (PDOException $e) {
+                    if ($e->getCode() === '23000') { // FK constraints failed
+                        continue;
+                    }
+                    throw $e;
+                }
+            }
+
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 
     /**
