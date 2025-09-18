@@ -44,6 +44,10 @@ readonly class DeleteRolePermissionService
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
+        $this->roleRepository->deletePermissionsByRoleId(
+            $validator->getRoleId(),
+            $validator->getPermissionNodes()
+        );
 
         return $this->responder->render();
     }
