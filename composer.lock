@@ -566,28 +566,28 @@
         },
         {
             "name": "latitude/latitude",
-            "version": "4.2.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shadowhand/latitude.git",
-                "reference": "dc1182ec88cfb532b049af83d44863d373897587"
+                "reference": "b3a010119e112321cd215325b939a0bc05761bf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/dc1182ec88cfb532b049af83d44863d373897587",
-                "reference": "dc1182ec88cfb532b049af83d44863d373897587",
+                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/b3a010119e112321cd215325b939a0bc05761bf1",
+                "reference": "b3a010119e112321cd215325b939a0bc05761bf1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "eloquent/liberator": "^2.0",
-                "eloquent/phpstan-phony": "^0.5.0",
+                "doctrine/coding-standard": "^8.1 || ^10.0 || ^11.0",
+                "eloquent/phpstan-phony": "^0.7.1 || ^0.8.0",
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.11.12",
-                "phpstan/phpstan-phpunit": "^0.11.2",
-                "phpunit/phpunit": "^8.3"
+                "phpstan/phpstan": "^0.12.48 || ^1.0.0",
+                "phpstan/phpstan-phpunit": "^0.12.16 || ^1.0.0",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
@@ -612,9 +612,9 @@
             "description": "A SQL query builder with zero dependencies",
             "support": {
                 "issues": "https://github.com/shadowhand/latitude/issues",
-                "source": "https://github.com/shadowhand/latitude/tree/4.2.0"
+                "source": "https://github.com/shadowhand/latitude/tree/4.3.1"
             },
-            "time": "2020-06-24T15:01:19+00:00"
+            "time": "2025-09-22T10:37:24+00:00"
         },
         {
             "name": "monolog/monolog",
