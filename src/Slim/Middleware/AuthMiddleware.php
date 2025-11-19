@@ -39,7 +39,18 @@ readonly class AuthMiddleware implements MiddlewareInterface
             return $this->denyRequest("Missing 'Authorization' header");
         }
 
-        return $this->processJwt($authHeader[0], $request, $handler);
+        $headerSplit = explode(" ", $authHeader[0]);
+        $headerComponentCount = count($headerSplit);
+
+        if ($headerComponentCount !== 2) {
+            return $this->denyRequest("Invalid 'Authorization' header provided");
+        }
+
+        if ($headerSplit[0] != "Bearer") {
+            return $this->denyRequest("No 'Bearer' JWT provided");
+        }
+
+        return $this->processJwt($headerSplit[1], $request, $handler);
     }
 
     /**

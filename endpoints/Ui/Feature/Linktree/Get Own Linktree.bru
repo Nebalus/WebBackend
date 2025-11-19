@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: 
+  url: {{protocol}}://{{host}}/ui/user/self/services/linktree
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
 }

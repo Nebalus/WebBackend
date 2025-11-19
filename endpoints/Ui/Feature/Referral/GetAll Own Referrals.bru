@@ -5,13 +5,15 @@ meta {
 }
 
 get {
-  url: {{protocol}}://{{host}}/ui/user/1/services/referrals/all
+  url: {{protocol}}://{{host}}/ui/user/:userid/services/referrals/all
   body: none
-  auth: apikey
+  auth: bearer
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+params:path {
+  userid: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
 }

@@ -7,11 +7,9 @@ meta {
 get {
   url: {{protocol}}://{{host}}/ui/user/2/services/referrals/djssKeaN
   body: none
-  auth: apikey
+  auth: bearer
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }

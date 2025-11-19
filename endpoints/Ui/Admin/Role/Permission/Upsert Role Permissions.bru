@@ -7,17 +7,15 @@ meta {
 put {
   url: {{protocol}}://{{host}}/ui/admin/role/:roleId/permission
   body: json
-  auth: apikey
+  auth: bearer
 }
 
 params:path {
   roleId: 4
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 body:json {

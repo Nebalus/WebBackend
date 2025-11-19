@@ -7,7 +7,7 @@ meta {
 post {
   url: {{protocol}}://{{host}}/ui/user/:userId/services/referrals
   body: json
-  auth: apikey
+  auth: bearer
 }
 
 params:path {
@@ -18,10 +18,8 @@ headers {
   : 
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 body:json {

@@ -7,17 +7,15 @@ meta {
 get {
   url: {{protocol}}://{{host}}/ui/user/:userId/permissions
   body: none
-  auth: apikey
+  auth: bearer
 }
 
 params:path {
   userId: self
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 docs {

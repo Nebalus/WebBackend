@@ -7,7 +7,7 @@ meta {
 delete {
   url: {{protocol}}://{{host}}/ui/user/:userId/services/referrals/:code
   body: none
-  auth: apikey
+  auth: bearer
 }
 
 params:path {
@@ -15,8 +15,6 @@ params:path {
   userId: self
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }

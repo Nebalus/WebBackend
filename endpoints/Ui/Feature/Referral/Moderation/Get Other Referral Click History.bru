@@ -7,15 +7,13 @@ meta {
 get {
   url: {{protocol}}://{{host}}/ui/user/2/services/referrals/djssKeaN/click_history?range=30
   body: none
-  auth: apikey
+  auth: bearer
 }
 
 params:query {
   range: 30
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }

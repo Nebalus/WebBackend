@@ -7,13 +7,11 @@ meta {
 post {
   url: {{protocol}}://{{host}}/ui/admin/role
   body: json
-  auth: apikey
+  auth: bearer
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 body:json {

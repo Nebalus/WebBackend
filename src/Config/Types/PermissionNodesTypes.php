@@ -32,4 +32,9 @@ class PermissionNodesTypes
     public const string FEATURE_BLOG_OTHER = 'feature.blog.other';
     public const string FEATURE_BLOG_OTHER_DELETE = 'feature.blog.other.delete';
     public const string FEATURE_BLOG_OTHER_EDIT = 'feature.blog.other.edit';
+
+
+    public const string FEATURE_LINKTREE = 'feature.linktree';
+    public const string FEATURE_LINKTREE_OWN = 'feature.linktree';
+
 }

@@ -7,7 +7,7 @@ meta {
 get {
   url: {{protocol}}://{{host}}/ui/user/:userId/services/referrals/:code/click_history?range=30
   body: none
-  auth: apikey
+  auth: bearer
 }
 
 params:query {
@@ -19,8 +19,6 @@ params:path {
   code: Bgo1RVKm
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }

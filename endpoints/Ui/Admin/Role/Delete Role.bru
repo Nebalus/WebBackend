@@ -7,15 +7,13 @@ meta {
 delete {
   url: {{protocol}}://{{host}}/ui/admin/role/:roleId
   body: none
-  auth: apikey
+  auth: bearer
 }
 
 params:path {
-  roleId: 1
+  roleId: 5
 }
 
-auth:apikey {
-  key: Authorization
-  value: {{auth_jwt}}
-  placement: header
+auth:bearer {
+  token: {{auth_jwt}}
 }
