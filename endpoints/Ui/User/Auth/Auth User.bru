@@ -17,10 +17,6 @@ body:json {
   }
 }
 
-assert {
-  : isJson 
-}
-
 script:post-response {
   let body = res.getBody();
   bru.setVar("auth_jwt",body.payload.jwt);
