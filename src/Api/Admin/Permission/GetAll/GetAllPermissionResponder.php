@@ -17,8 +17,11 @@ class GetAllPermissionResponder
                 "permission_id" => $permission->getPermissionId()->asInt(),
                 "node" => $permission->getNode()->asString(),
                 "description" => $permission->getDescription()->asString(),
-                "prestige_level" => $permission->getPrestigeLevel()->asString(),
                 "default_value" => $permission->getDefaultValue()?->asInt(),
+                "prestige_level" => [
+                    "type" => $permission->getPrestigeLevel()->asString(),
+                    "value" => $permission->getPrestigeLevel()->asInt(),
+                ]
             ];
         }
 

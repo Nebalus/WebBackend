@@ -9,14 +9,17 @@ use Nebalus\Webapi\Value\User\AccessControl\Permission\Permission;
 
 class GetPermissionResponder
 {
-    public function render(Permission $privilege): ResultInterface
+    public function render(Permission $permission): ResultInterface
     {
         $fields = [
-            "permission_id" => $privilege->getPermissionId()->asInt(),
-            "node" => $privilege->getNode()->asString(),
-            "description" => $privilege->getDescription()->asString(),
-            "prestige_level" => $privilege->getPrestigeLevel()->asString(),
-            "default_value" => $privilege->getDefaultValue()?->asInt(),
+            "permission_id" => $permission->getPermissionId()->asInt(),
+            "node" => $permission->getNode()->asString(),
+            "description" => $permission->getDescription()->asString(),
+            "default_value" => $permission->getDefaultValue()?->asInt(),
+            "prestige_level" => [
+                "type" => $permission->getPrestigeLevel()->asString(),
+                "value" => $permission->getPrestigeLevel()->asInt(),
+            ]
         ];
 
         return Result::createSuccess("Permission fetched", StatusCodeInterface::STATUS_OK, $fields);
