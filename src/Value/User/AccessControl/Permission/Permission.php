@@ -11,7 +11,7 @@ readonly class Permission
         private PermissionId $permissionId,
         private PermissionNode $node,
         private PermissionDescription $description,
-        private bool $isPrestige,
+        private PermissionPrestigeLevel $prestigeLevel,
         private ?PermissionValue $defaultValue
     ) {
     }
@@ -20,14 +20,14 @@ readonly class Permission
         PermissionId $permissionId,
         PermissionNode $node,
         PermissionDescription $description,
-        bool $isPrestige,
+        PermissionPrestigeLevel $prestigeLevel,
         ?PermissionValue $defaultValue = null
     ): self {
         return new self(
             $permissionId,
             $node,
             $description,
-            $isPrestige,
+            $prestigeLevel,
             $defaultValue
         );
     }
@@ -41,10 +41,10 @@ readonly class Permission
         $permissionId = PermissionId::from($value['permission_id']);
         $node = PermissionNode::from($value['node']);
         $description = PermissionDescription::from($value['description']);
-        $isPrestige = (bool) $value['is_prestige'];
+        $prestigeLevel = PermissionPrestigeLevel::from($value['prestige_level']);
         $defaultValue = empty($value['default_value']) ? null : PermissionValue::from($value['default_value']);
 
-        return new self($permissionId, $node, $description, $isPrestige, $defaultValue);
+        return new self($permissionId, $node, $description, $prestigeLevel, $defaultValue);
     }
 
     public function asArray(): array
@@ -53,7 +53,7 @@ readonly class Permission
             'permission_id' => $this->permissionId->asInt(),
             'node' => $this->node->asString(),
             'description' => $this->description->asString(),
-            'is_prestige' => $this->isPrestige,
+            'prestige_level' => $this->prestigeLevel->asString(),
             'default_value' => $this->defaultValue?->asInt(),
         ];
     }
@@ -73,9 +73,9 @@ readonly class Permission
         return $this->description;
     }
 
-    public function isPrestige(): bool
+    public function getPrestigeLevel(): PermissionPrestigeLevel
     {
-        return $this->isPrestige;
+        return $this->prestigeLevel;
     }
 
     public function getDefaultValue(): ?PermissionValue

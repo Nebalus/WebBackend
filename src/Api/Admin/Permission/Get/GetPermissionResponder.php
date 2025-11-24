@@ -15,7 +15,7 @@ class GetPermissionResponder
             "permission_id" => $privilege->getPermissionId()->asInt(),
             "node" => $privilege->getNode()->asString(),
             "description" => $privilege->getDescription()->asString(),
-            "is_prestige" => $privilege->isPrestige(),
+            "prestige_level" => $privilege->getPrestigeLevel()->asString(),
             "default_value" => $privilege->getDefaultValue()?->asInt(),
         ];
 
