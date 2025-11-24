@@ -29,7 +29,7 @@ readonly class MySqlRoleRepository
     ) {
     }
 
-    public function deletePermissionsByRoleId(RoleId $roleId, PermissionNodeCollection $permissionNodeCollection): void
+    public function deletePermissionLinksByRoleId(RoleId $roleId, PermissionNodeCollection $permissionNodeCollection): void
     {
         try {
             $sql = <<<SQL
@@ -88,7 +88,7 @@ readonly class MySqlRoleRepository
             foreach ($permissionRoleLinkCollection as $permissionRoleLink) {
                 $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
                 $stmt->bindValue(':node', $permissionRoleLink->getNode()->asString(), PDO::PARAM_STR);
-                $stmt->bindValue(':allow_all_sub_permissions', $permissionRoleLink->getMetadata()->allowAllSubPermissions());
+                $stmt->bindValue(':allow_all_sub_permissions', $permissionRoleLink->getMetadata()->allowAllSubPermissions(), PDO::PARAM_BOOL);
                 $stmt->bindValue(':value', $permissionRoleLink->getMetadata()->getValue()?->asInt(), PDO::PARAM_INT);
 
                 try {

@@ -19,6 +19,11 @@ class PermissionRoleLinkCollection implements IteratorAggregate
         return new self(...$permissionNodes);
     }
 
+    public function isEmpty(): bool
+    {
+        return count($this->permissionNodes) === 0;
+    }
+
     public function getIterator(): Traversable
     {
         yield from $this->permissionNodes;

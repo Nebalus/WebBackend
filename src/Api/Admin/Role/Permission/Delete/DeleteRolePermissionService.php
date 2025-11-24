@@ -13,6 +13,7 @@ use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
 readonly class DeleteRolePermissionService
@@ -44,11 +45,32 @@ readonly class DeleteRolePermissionService
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $this->roleRepository->deletePermissionsByRoleId(
+        $permissionsLinksBefore = $this->roleRepository->getAllPermissionLinksByRoleId($validator->getRoleId());
+
+        $this->roleRepository->deletePermissionLinksByRoleId(
             $validator->getRoleId(),
             $validator->getPermissionNodes()
         );
 
-        return $this->responder->render();
+        $permissionsLinksAfter = $this->roleRepository->getAllPermissionLinksByRoleId($validator->getRoleId());
+
+        // Calculate the difference between before and after and return only the deleted links
+        $permissionsLinksDiff = PermissionRoleLinkCollection::fromObjects(...array_filter(
+            [...$permissionsLinksBefore],
+            function ($beforeLink) use ($permissionsLinksAfter) {
+                foreach ($permissionsLinksAfter as $afterLink) {
+                    if ($afterLink == $beforeLink) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        ));
+
+        if ($permissionsLinksDiff->isEmpty()) {
+            return Result::createSuccess('No changes were made to the role permissions');
+        }
+
+        return $this->responder->render($permissionsLinksDiff);
     }
 }

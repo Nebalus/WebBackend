@@ -2,7 +2,6 @@
 
 namespace Nebalus\Webapi\Api\Admin\Role\Permission\Upsert;
 
-use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
@@ -13,6 +12,7 @@ use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
+use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
 readonly class UpsertRolePermissionService
@@ -44,11 +44,32 @@ readonly class UpsertRolePermissionService
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
+        $permissionsLinksBefore = $this->roleRepository->getAllPermissionLinksByRoleId($validator->getRoleId());
+
         $this->roleRepository->upsertPermissionLinksToRoleByRoleId(
             $validator->getRoleId(),
             $validator->getPermissionRoleLinks()
         );
 
-        return $this->responder->render();
+        $permissionsLinksAfter = $this->roleRepository->getAllPermissionLinksByRoleId($validator->getRoleId());
+
+        // Calculate the difference between before and after and return only the new links added
+        $permissionsLinksDiff = PermissionRoleLinkCollection::fromObjects(...array_filter(
+            [...$permissionsLinksAfter],
+            function ($afterLink) use ($permissionsLinksBefore) {
+                foreach ($permissionsLinksBefore as $beforeLink) {
+                    if ($afterLink == $beforeLink) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        ));
+
+        if ($permissionsLinksDiff->isEmpty()) {
+            return Result::createSuccess('No changes were made to the role permissions');
+        }
+
+        return $this->responder->render($permissionsLinksDiff);
     }
 }
