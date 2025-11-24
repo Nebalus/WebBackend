@@ -3,7 +3,7 @@
 namespace Nebalus\Webapi\Api\Admin\Role\Delete;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
@@ -29,7 +29,7 @@ readonly class DeleteRoleService
      */
     public function execute(DeleteRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_DELETE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_DELETE, true))) {
             $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
             if ($role === null) {

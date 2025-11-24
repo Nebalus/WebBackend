@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Admin\Permission\GetAll;
 
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\PermissionsRepository\MySqlPermissionRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
@@ -23,7 +23,7 @@ readonly class GetAllPermissionService
      */
     public function execute(UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE, true))) {
             $requestedPermissions = $this->permissionRepository->getAllPermissions();
 
             return $this->responder->render($requestedPermissions);

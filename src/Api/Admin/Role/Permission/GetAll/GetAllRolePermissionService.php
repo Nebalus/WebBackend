@@ -4,7 +4,7 @@ namespace Nebalus\Webapi\Api\Admin\Role\Permission\GetAll;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
@@ -30,7 +30,7 @@ readonly class GetAllRolePermissionService
      */
     public function execute(GetAllRolePermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_EDIT, true))) {
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
         }
 

@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Admin\Role\Create;
 
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\RoleRepository\MySqlRoleRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
@@ -24,7 +24,7 @@ readonly class CreateRoleService
      */
     public function execute(CreateRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE_CREATE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_CREATE, true))) {
             $role = Role::create($validator->getRoleName(), $validator->getRoleDescription(), $validator->getRoleColor(), $validator->getAccessLevel(), $validator->appliesToEveryone(), $validator->isDisabled());
             $role = $this->roleRepository->insertRole($role);
 

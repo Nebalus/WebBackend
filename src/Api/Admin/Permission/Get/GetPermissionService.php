@@ -4,7 +4,7 @@ namespace Nebalus\Webapi\Api\Admin\Permission\Get;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Api\AbstractService;
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
 use Nebalus\Webapi\Repository\PermissionsRepository\MySqlPermissionRepository;
@@ -28,7 +28,7 @@ class GetPermissionService extends AbstractService
      */
     public function execute(GetPermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE, true))) {
             $requestedPermission = $this->permissionRepository->findPermissionByPermissionId($validator->getPermissionId());
 
             if ($requestedPermission === null) {

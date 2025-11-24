@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Config\Types;
 
-class PermissionNodesTypes
+class PermissionNodeTypes
 {
     public const string ADMIN = 'admin';
     public const string ADMIN_ROLE = 'admin.role';

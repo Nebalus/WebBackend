@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Module\Blog\Create;
 
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
@@ -25,7 +25,7 @@ readonly class CreateBlogService
      */
     public function execute(CreateBlogValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN_CREATE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN_CREATE, true))) {
             $referralCode = ReferralCode::create();
 
             $this->referralRepository->insertReferral($requestingUser->getUserId(), $referralCode, $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());

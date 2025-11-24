@@ -66,11 +66,11 @@ readonly class AuthMiddleware implements MiddlewareInterface
         }
 
         if (!Token::validate($jwt, $this->env->getJwtSecret())) {
-            return $this->denyRequest('The JWT is not valid');
+            return $this->denyRequest('Your provided JWT is not valid');
         }
 
         if (!Token::validateExpiration($jwt)) {
-            return $this->denyRequest('The JWT has expired');
+            return $this->denyRequest('Your provided JWT has expired');
         }
 
         $payloadParsed = Token::parser($jwt)->parse();
@@ -83,7 +83,7 @@ readonly class AuthMiddleware implements MiddlewareInterface
             $user->isDisabled() ||
             $payloadParsed->getIssuedAt() < $user->getUpdatedAtDate()->getTimestamp()
         ) {
-            return $this->denyRequest("The JWT has expired");
+            return $this->denyRequest("Your provided JWT has expired");
         }
 
         $request = $request->withAttribute(AttributeTypes::REQUESTING_USER, $user);

@@ -3,7 +3,7 @@
 namespace Nebalus\Webapi\Api\Admin\Role\Get;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
 use Nebalus\Webapi\Repository\RoleRepository\MySqlRoleRepository;
@@ -27,7 +27,7 @@ readonly class GetRoleService
      */
     public function execute(GetRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::ADMIN_ROLE, true))) {
+        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE, true))) {
             $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
             if ($role === null) {

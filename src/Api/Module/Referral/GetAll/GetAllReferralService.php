@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Module\Referral\GetAll;
 
-use Nebalus\Webapi\Config\Types\PermissionNodesTypes;
+use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
@@ -27,11 +27,11 @@ readonly class GetAllReferralService
     {
         $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
 
-        if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OWN, true))) {
+        if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN, true))) {
             return $this->run($requestingUser->getUserId());
         }
 
-        if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodesTypes::FEATURE_REFERRAL_OTHER, true))) {
+        if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OTHER, true))) {
             return $this->run($validator->getUserId());
         }
 
