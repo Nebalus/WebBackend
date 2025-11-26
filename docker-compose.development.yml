@@ -33,7 +33,7 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY}
       APP_ENV: "development"
       ERROR_LOGLEVEL: "Warning"
-      JWT_SECRET: "Fm4}hopm2JGs]#h:!EE1)w0#?b9-8abjGg6PCuk.-j2R7w8OIqSO3D'ev@2]h!"
+      JWT_SECRET: ${JWT_SECRET}
       JWT_NORMAL_EXPIRATION_TIME: 86400
       JWT_EXTENDED_EXPIRATION_TIME: 604800
       ACCESS_CONTROL_ALLOW_ORIGIN: "*"
