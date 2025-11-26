@@ -26,7 +26,11 @@ services:
     user: '1001:1001' # Default User ID
     volumes:
       - ./:/var/www:rw
+    env_file:
+      - path: ./.env
+        required: true
     environment:
+      RESEND_API_KEY: ${RESEND_API_KEY}
       APP_ENV: "development"
       ERROR_LOGLEVEL: "Warning"
       JWT_SECRET: "Fm4}hopm2JGs]#h:!EE1)w0#?b9-8abjGg6PCuk.-j2R7w8OIqSO3D'ev@2]h!"

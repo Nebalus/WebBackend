@@ -35,6 +35,7 @@ use Nebalus\Webapi\Slim\Middleware\AuthMiddleware;
 use Nebalus\Webapi\Slim\Middleware\CorsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\MetricsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\PermissionMiddleware;
+use Resend\Client;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -42,7 +43,7 @@ readonly class RouteCollector
 {
     public function __construct(
         private App $app,
-        private GeneralConfig $generalConfig
+        private GeneralConfig $generalConfig,
     ) {
     }
 

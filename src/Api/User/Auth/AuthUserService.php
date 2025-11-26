@@ -12,6 +12,7 @@ use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
 use ReallySimpleJWT\Exception\BuildException;
 use ReallySimpleJWT\Token;
+use Resend\Client as ResendClient;
 
 readonly class AuthUserService
 {
@@ -19,6 +20,7 @@ readonly class AuthUserService
         private MySqlUserRepository $mySqlUserRepository,
         private GeneralConfig $generalConfig,
         private AuthUserResponder $responder,
+        private ResendClient $resendClient,
     ) {
     }
 
@@ -34,6 +36,14 @@ readonly class AuthUserService
         }
 
         $expirationTime = time() + $this->generalConfig->getJwtNormalExpirationTime();
+
+
+        $this->resendClient->emails->send([
+            'from' => 'noreply@nebalus.dev',
+            'to' => 'contact@nebalus.dev',
+            'subject' => 'Hello Und Willkommen',
+            'html' => '<strong>...</strong>',
+        ]);
 
         $token = Token::builder($this->generalConfig->getJwtSecret())
             ->setIssuer("https://api.nebalus.dev")
