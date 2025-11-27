@@ -68,7 +68,7 @@ readonly class DeleteRolePermissionService
         ));
 
         if ($permissionsLinksDiff->isEmpty()) {
-            return Result::createSuccess('No changes were made to the role permissions');
+            return Result::createError('No changes were made to the role permissions', StatusCodeInterface::STATUS_NOT_FOUND);
         }
 
         return $this->responder->render($permissionsLinksDiff);

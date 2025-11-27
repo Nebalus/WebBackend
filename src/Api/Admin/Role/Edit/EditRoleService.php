@@ -33,16 +33,26 @@ readonly class EditRoleService
             return ResultBuilder::buildNoPermissionResult();
         }
 
-        $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
+        $oldRole = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
-        if ($role === null) {
-            return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
-        }
-
-        if ($role->isEditable() === false) {
+        if ($oldRole->isEditable() === false) {
             return Result::createError('This role cannot be edited', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        return Result::createError('PLACEHOLDER', StatusCodeInterface::STATUS_NOT_FOUND);
+        $updatedRole = $this->roleRepository->updateRoleByRoleId(
+            $validator->getRoleId(),
+            $validator->getRoleName(),
+            $validator->getRoleDescription(),
+            $validator->getRoleColor(),
+            $validator->getAccessLevel(),
+            $validator->appliesToEveryone(),
+            $validator->isDisabled()
+        );
+
+        if ($updatedRole === null) {
+            return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
+        return $this->responder->render($updatedRole);
     }
 }

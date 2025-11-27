@@ -51,7 +51,7 @@ class EditRoleValidator extends AbstractValidator
     {
         $this->roleId = RoleId::from($pathArgsData["role_id"]);
         $this->roleName = RoleName::from($bodyData["name"]);
-        $this->roleDescription = array_key_exists("description", $bodyData) ? RoleDescription::from($bodyData["description"]) : null;
+        $this->roleDescription = isset($bodyData["description"]) ? RoleDescription::from($bodyData["description"]) : null;
         $this->roleColor = RoleHexColor::from($bodyData["color"]);
         $this->accessLevel = RoleAccessLevel::from($bodyData["access_level"]);
         $this->appliesToEveryone = $bodyData["applies_to_everyone"];

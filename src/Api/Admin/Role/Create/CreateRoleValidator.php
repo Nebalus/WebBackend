@@ -25,7 +25,7 @@ class CreateRoleValidator extends AbstractValidator
         parent::__construct(S::object([
             RequestParamTypes::BODY => S::object([
                 "name" => RoleName::getSchema(),
-                "description" => RoleDescription::getSchema(),
+                "description" => RoleDescription::getSchema()->nullish(),
                 "color" => RoleHexColor::getSchema(),
                 "access_level" => RoleAccessLevel::getSchema(),
                 "applies_to_everyone" => S::boolean(),

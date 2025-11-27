@@ -263,7 +263,7 @@ readonly class MySqlRoleRepository
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':name', $role->getName()->asString());
-        $stmt->bindValue(':description', $role->getDescription()->asString());
+        $stmt->bindValue(':description', $role->getDescription()?->asString());
         $stmt->bindValue(':color', $role->getColor()->asString());
         $stmt->bindValue(':access_level', $role->getAccessLevel()->asInt(), PDO::PARAM_INT);
         $stmt->bindValue(':applies_to_everyone', $role->appliesToEveryone(), PDO::PARAM_BOOL);
@@ -280,7 +280,12 @@ readonly class MySqlRoleRepository
         return Role::fromArray($roleToArray);
     }
 
-    public function updateRoleByRoleId(RoleId $roleId, RoleName $name, RoleDescription $description, RoleHexColor $color, RoleAccessLevel $accessLevel, bool $appliesToEveryone, bool $disabled): ?Role
+    /**
+     * @throws ApiInvalidArgumentException
+     * @throws ApiException
+     * @throws ApiDateMalformedStringException
+     */
+    public function updateRoleByRoleId(RoleId $roleId, RoleName $name, ?RoleDescription $description, RoleHexColor $color, RoleAccessLevel $accessLevel, bool $appliesToEveryone, bool $disabled): ?Role
     {
         $sql = <<<SQL
             UPDATE roles
@@ -297,13 +302,13 @@ readonly class MySqlRoleRepository
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
         $stmt->bindValue(':name', $name->asString());
-        $stmt->bindValue(':description', $description->asString());
+        $stmt->bindValue(':description', $description?->asString(), PDO::PARAM_STR);
         $stmt->bindValue(':color', $color->asString());
         $stmt->bindValue(':access_level', $accessLevel->asInt(), PDO::PARAM_INT);
         $stmt->bindValue(':applies_to_everyone', $appliesToEveryone, PDO::PARAM_BOOL);
         $stmt->bindValue(':disabled', $disabled, PDO::PARAM_BOOL);
-        $stmt->bindValue(':role_id', $roleId->asInt(), PDO::PARAM_INT);
         $stmt->execute();
 
         return $this->findRoleByRoleId($roleId);
