@@ -7,7 +7,6 @@ use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
-use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkMetadata;

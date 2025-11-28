@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Permission\Delete;
+namespace Nebalus\Webapi\Api\Admin\User\Role\Remove;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;

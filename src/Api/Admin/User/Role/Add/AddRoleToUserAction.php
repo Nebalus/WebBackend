@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Create;
+namespace Nebalus\Webapi\Api\Admin\User\Role\Add;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
