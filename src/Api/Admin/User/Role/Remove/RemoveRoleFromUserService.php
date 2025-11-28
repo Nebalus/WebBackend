@@ -1,7 +1,8 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\Role\Remove;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Delete;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;

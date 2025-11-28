@@ -10,8 +10,8 @@ use Slim\Http\ServerRequest as Request;
 class CreateRoleAction extends AbstractAction
 {
     public function __construct(
-        private readonly AddRoleToUserValidator $validator,
-        private readonly AddRoleToUserService   $service
+        private readonly CreateRoleValidator $validator,
+        private readonly CreateRoleService   $service
     ) {
     }
 

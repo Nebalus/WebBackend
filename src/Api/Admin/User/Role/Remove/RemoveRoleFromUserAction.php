@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\Role\Remove;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Delete;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
@@ -11,7 +11,7 @@ use Slim\Http\ServerRequest as Request;
 class RemoveRoleFromUserAction extends AbstractAction
 {
     public function __construct(
-        private readonly RemoveRoleFromUserService $service,
+        private readonly RemoveRoleFromUserService     $service,
         private readonly RemoveRoleFromUserValidator $validator
     ) {
     }

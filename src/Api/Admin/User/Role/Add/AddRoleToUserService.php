@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\Role\Add;
+namespace Nebalus\Webapi\Api\Admin\Role\Create;
 
 use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiException;
@@ -14,7 +14,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 readonly class AddRoleToUserService
 {
     public function __construct(
-        private MySqlRoleRepository $roleRepository,
+        private MySqlRoleRepository    $roleRepository,
         private AddRoleToUserResponder $responder,
     ) {
     }

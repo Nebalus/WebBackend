@@ -14,6 +14,7 @@ use PDO;
 use Prometheus\CollectorRegistry;
 use Redis;
 use Resend\Client as ResendClient;
+
 use function DI\factory;
 
 class ApplicationConfig extends DefinitionArray

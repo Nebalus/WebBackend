@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\Role\Add;
+namespace Nebalus\Webapi\Api\Admin\Role\Create;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;

@@ -14,8 +14,8 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 readonly class CreateRoleService
 {
     public function __construct(
-        private MySqlRoleRepository    $roleRepository,
-        private AddRoleToUserResponder $responder,
+        private MySqlRoleRepository $roleRepository,
+        private CreateRoleResponder $responder,
     ) {
     }
 

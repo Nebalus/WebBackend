@@ -2,6 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Admin\Role\Permission\Delete;
 
+use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
@@ -19,7 +20,7 @@ readonly class DeleteRolePermissionService
 {
     public function __construct(
         private MySqlRoleRepository $roleRepository,
-        private RemoveRoleFromUserResponder $responder
+        private DeleteRolePermissionResponder $responder
     ) {
     }
 
@@ -28,7 +29,7 @@ readonly class DeleteRolePermissionService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(RemoveRoleFromUserValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(DeleteRolePermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();

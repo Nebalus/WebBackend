@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\Role\Add;
+namespace Nebalus\Webapi\Api\Admin\Role\Create;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
