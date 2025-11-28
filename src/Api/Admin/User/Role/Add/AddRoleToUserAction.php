@@ -7,7 +7,7 @@ use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 
-class CreateRoleAction extends AbstractAction
+class AddRoleToUserAction extends AbstractAction
 {
     public function __construct(
         private readonly AddRoleToUserValidator $validator,

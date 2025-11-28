@@ -11,8 +11,8 @@ use Slim\Http\ServerRequest as Request;
 class GetAllRolePermissionAction extends AbstractAction
 {
     public function __construct(
-        private readonly GetAllRolePermissionService $service,
-        private readonly GetAllRolePermissionValidator $validator
+        private readonly GetAllRoleFromUserService     $service,
+        private readonly GetAllRoleFromUserValidator $validator
     ) {
     }
 

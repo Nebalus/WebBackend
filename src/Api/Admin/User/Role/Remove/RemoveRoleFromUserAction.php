@@ -1,21 +1,22 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Create;
+namespace Nebalus\Webapi\Api\Admin\Role\Permission\Delete;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
+use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 
-class CreateRoleAction extends AbstractAction
+class RemoveRoleFromUserAction extends AbstractAction
 {
     public function __construct(
-        private readonly AddRoleToUserValidator $validator,
-        private readonly AddRoleToUserService   $service
+        private readonly RemoveRoleFromUserService     $service,
+        private readonly RemoveRoleFromUserValidator $validator
     ) {
     }
 
-    protected function execute(Request $request, Response $response, array $pathArgs): Response
+    protected function execute(Request $request, Response $response, array $pathArgs): ResponseInterface
     {
         $this->validator->validate($request, $pathArgs);
 

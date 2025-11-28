@@ -15,7 +15,7 @@ use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
-readonly class GetAllRolePermissionService
+readonly class GetAllRoleFromUserService
 {
     public function __construct(
         private MySqlRoleRepository $roleRepository,

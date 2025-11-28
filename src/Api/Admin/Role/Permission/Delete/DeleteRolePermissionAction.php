@@ -11,8 +11,8 @@ use Slim\Http\ServerRequest as Request;
 class DeleteRolePermissionAction extends AbstractAction
 {
     public function __construct(
-        private readonly DeleteRolePermissionService $service,
-        private readonly DeleteRolePermissionValidator $validator
+        private readonly RemoveRoleFromUserService     $service,
+        private readonly RemoveRoleFromUserValidator $validator
     ) {
     }
 

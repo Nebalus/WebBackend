@@ -29,24 +29,24 @@ readonly class DeleteRoleService
      */
     public function execute(DeleteRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_DELETE, true))) {
-            $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_DELETE, true))) {
+            return ResultBuilder::buildNoPermissionResult();
+        }
 
-            if ($role === null) {
-                return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
-            }
+        $role = $this->roleRepository->findRoleByRoleId($validator->getRoleId());
 
-            if ($role->isDeletable() === false) {
-                return Result::createError('This role cannot be deleted', StatusCodeInterface::STATUS_FORBIDDEN);
-            }
-
-            if ($this->roleRepository->deleteRoleByRoleId($validator->getRoleId())) {
-                return $this->responder->render();
-            }
-
+        if ($role === null) {
             return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
 
-        return ResultBuilder::buildNoPermissionResult();
+        if ($role->isDeletable() === false) {
+            return Result::createError('This role cannot be deleted', StatusCodeInterface::STATUS_FORBIDDEN);
+        }
+
+        if ($this->roleRepository->deleteRoleByRoleId($validator->getRoleId())) {
+            return $this->responder->render();
+        }
+
+        return Result::createError('Role does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
     }
 }

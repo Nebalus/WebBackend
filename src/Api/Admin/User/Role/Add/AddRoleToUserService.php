@@ -11,7 +11,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 
-readonly class CreateRoleService
+readonly class AddRoleToUserService
 {
     public function __construct(
         private MySqlRoleRepository    $roleRepository,

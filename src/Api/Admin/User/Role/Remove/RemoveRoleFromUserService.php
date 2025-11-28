@@ -16,7 +16,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 
-readonly class DeleteRolePermissionService
+readonly class RemoveRoleFromUserService
 {
     public function __construct(
         private MySqlRoleRepository $roleRepository,
