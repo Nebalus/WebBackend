@@ -11,7 +11,7 @@ class CreateRoleAction extends AbstractAction
 {
     public function __construct(
         private readonly CreateRoleValidator $validator,
-        private readonly CreateRoleService   $service
+        private readonly CreateRoleService $service
     ) {
     }
 

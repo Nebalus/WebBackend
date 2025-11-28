@@ -22,7 +22,7 @@ readonly class CreateRoleService
     /**
      * @throws ApiException
      */
-    public function execute(AddRoleToUserValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(CreateRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_CREATE, true))) {
             $role = Role::create($validator->getRoleName(), $validator->getRoleDescription(), $validator->getRoleColor(), $validator->getAccessLevel(), $validator->appliesToEveryone(), $validator->isDisabled());

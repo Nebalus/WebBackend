@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\Role\Permission\GetAll;
+namespace Nebalus\Webapi\Api\Admin\User\Role\GetAll;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
@@ -11,7 +11,7 @@ use Slim\Http\ServerRequest as Request;
 class GetAllRoleFromUserAction extends AbstractAction
 {
     public function __construct(
-        private readonly GetAllRoleFromUserService     $service,
+        private readonly GetAllRoleFromUserService $service,
         private readonly GetAllRoleFromUserValidator $validator
     ) {
     }

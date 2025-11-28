@@ -19,7 +19,7 @@ readonly class GetAllRolePermissionService
 {
     public function __construct(
         private MySqlRoleRepository $roleRepository,
-        private GetAllRoleFromUserResponder $responder
+        private GetAllRolePermissionResponder $responder
     ) {
     }
 
@@ -28,7 +28,7 @@ readonly class GetAllRolePermissionService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(GetAllRoleFromUserValidator $validator, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(GetAllRolePermissionValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
         if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_EDIT, true))) {
             return ResultBuilder::buildNoPermissionResult();
