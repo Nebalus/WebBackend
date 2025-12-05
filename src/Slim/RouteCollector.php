@@ -14,6 +14,9 @@ use Nebalus\Webapi\Api\Admin\Role\Edit\EditRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Get\GetRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\GetAll\GetAllRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Permission\Upsert\UpsertRolePermissionAction;
+use Nebalus\Webapi\Api\Admin\User\Role\Add\AddRoleToUserAction;
+use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
+use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
 use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
@@ -74,9 +77,20 @@ readonly class RouteCollector
                         $group->map(["GET"], "", GetPermissionAction::class);
                     });
                 });
+                $group->group("/user", function (RouteCollectorProxy $group) {
+                    $group->map(["GET"], "/all", GetAllPermissionAction::class); // TODO get all users
+                    $group->group("/{user_id}", function (RouteCollectorProxy $group) {
+                        $group->map(["GET"], "", GetPermissionAction::class); // TODO get user information
+                        $group->group("/role", function (RouteCollectorProxy $group) {
+                            $group->map(["POST"], "", AddRoleToUserAction::class);
+                            $group->map(["DELETE"], "", RemoveRoleFromUserAction::class);
+                            $group->map(["GET"], "/all", GetAllRoleFromUserAction::class);
+                        });
+                    });
+                });
                 $group->group("/role", function (RouteCollectorProxy $group) {
-                    $group->map(["GET"], "/all", GetAllRoleAction::class);
                     $group->map(["POST"], "", CreateRoleAction::class);
+                    $group->map(["GET"], "/all", GetAllRoleAction::class);
                     $group->group("/{role_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetRoleAction::class);
                         $group->map(["PUT"], "", EditRoleAction::class);
