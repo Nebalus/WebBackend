@@ -17,6 +17,7 @@ use Nebalus\Webapi\Api\Admin\Role\Permission\Upsert\UpsertRolePermissionAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Add\AddRoleToUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
+use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
 use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
@@ -130,6 +131,7 @@ readonly class RouteCollector
         });
 
         $this->app->map(["GET"], "/metrics", MetricsAction::class);
+        $this->app->map(["GET"], "/health", HealthAction::class);
 
         $this->app->group("/services", function (RouteCollectorProxy $group) {
             $group->map(["GET"], "/referral/{code}", ClickReferralAction::class);
