@@ -42,7 +42,8 @@
         "elasticsearch/elasticsearch": "^9.0",
         "latitude/latitude": "^4.2",
         "nebalus/sanitizr": "v1.0.2",
-        "resend/resend-php": "^1.1"
+        "resend/resend-php": "^1.1",
+        "twig/twig": "^3.0"
     },
     
     "autoload-dev": {
