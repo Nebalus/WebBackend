@@ -9,7 +9,8 @@ use Throwable;
 
 class HealthAction extends AbstractAction
 {
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
