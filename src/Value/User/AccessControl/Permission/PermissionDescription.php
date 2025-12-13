@@ -12,7 +12,7 @@ class PermissionDescription
     use SanitizrValueObjectTrait;
 
     public const int MAX_LENGTH = 255;
-    public const string REGEX = '/^[\w\d_.\s\-]*$/';
+    public const string REGEX = '/^[\w\d_.\s\-\(\)]*$/';
 
     private function __construct(
         private readonly string $description,
