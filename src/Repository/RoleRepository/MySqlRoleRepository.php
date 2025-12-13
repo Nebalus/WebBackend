@@ -6,6 +6,7 @@ use Exception;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
+use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLink;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
@@ -25,7 +26,8 @@ use PDOException;
 readonly class MySqlRoleRepository
 {
     public function __construct(
-        private PDO $pdo
+        private PDO $pdo,
+        private MySqlUserRepository $userRepository,
     ) {
     }
 
@@ -110,69 +112,18 @@ readonly class MySqlRoleRepository
 
     /**
      * @throws ApiException
-     */
-    public function getAllRolesFromUserId(UserId $userId): RoleCollection
-    {
-        $sql = <<<SQL
-            (
-                SELECT
-                    roles.role_id,
-                    roles.name,
-                    roles.description,
-                    HEX(roles.color) AS color,
-                    roles.access_level,
-                    roles.applies_to_everyone,
-                    roles.deletable,
-                    roles.editable,
-                    roles.disabled,
-                    roles.created_at,
-                    roles.updated_at
-                FROM
-                    user_role_map
-                INNER JOIN roles ON roles.role_id = user_role_map.role_id
-                WHERE user_role_map.user_id = :userId
-            )
-            UNION
-            (
-                SELECT
-                    roles.role_id,
-                    roles.name,
-                    roles.description,
-                    HEX(roles.color) AS color,
-                    roles.access_level,
-                    roles.applies_to_everyone,
-                    roles.deletable,
-                    roles.editable,
-                    roles.disabled,
-                    roles.created_at,
-                    roles.updated_at
-                FROM
-                    roles
-                WHERE roles.applies_to_everyone = 1
-            )
-        SQL;
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':userId', $userId->asInt(), PDO::PARAM_INT);
-        $stmt->execute();
-
-        $data = [];
-
-        while ($row = $stmt->fetch()) {
-            $data[] = Role::fromArray($row);
-        }
-
-        return RoleCollection::fromObjects(...$data);
-    }
-
-    /**
-     * @throws ApiException
      * @throws Exception
      */
     public function getPermissionIndexFromUserId(UserId $userId): UserPermissionIndex
     {
-        $unsortedRoles = $this->getAllRolesFromUserId($userId);
-        $sortedRoles = RoleSortedCollection::fromRoleCollectionByAccessLevel($unsortedRoles);
+        // Sorts the Roles by AccessLevel
+        $unsortedRolesArray = $this->userRepository->getAllRolesFromUserByUserId($userId)->toArray();
+        usort($unsortedRolesArray, function (Role $a, Role $b) {
+            return $b->getAccessLevel() <=> $a->getAccessLevel();
+        });
+        $sortedRoles = RoleCollection::fromObjects(...$unsortedRolesArray);
+
+        // Generates an UserPermissionIndex
         $sortedRoleLinkCollections = [];
         foreach ($sortedRoles as $role) {
             $sortedRoleLinkCollections[] = $this->getAllPermissionLinksByRoleId($role->getRoleId());

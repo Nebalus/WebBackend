@@ -19,6 +19,11 @@ class RoleCollection implements IteratorAggregate
         return new self(...$roles);
     }
 
+    public function toArray(): array
+    {
+        return $this->roles;
+    }
+
     public function getIterator(): Traversable
     {
         yield from $this->roles;
