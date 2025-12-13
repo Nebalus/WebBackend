@@ -35,8 +35,7 @@ readonly class AuthUserService
             return Result::createError('Authentication failed: Wrong credentials', StatusCodeInterface::STATUS_UNAUTHORIZED);
         }
 
-        $expirationTime = time() + $this->generalConfig->getJwtNormalExpirationTime();
-
+        $expirationTime = time() + $this->generalConfig->getJwtExpirationTime();
 
         $this->resendClient->emails->send([
             'from' => 'noreply@nebalus.dev',

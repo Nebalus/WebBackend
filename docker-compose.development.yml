@@ -34,8 +34,7 @@ services:
       APP_ENV: "development"
       ERROR_LOGLEVEL: "Warning"
       JWT_SECRET: ${JWT_SECRET}
-      JWT_NORMAL_EXPIRATION_TIME: 86400
-      JWT_EXTENDED_EXPIRATION_TIME: 604800
+      JWT_EXPIRATION_TIME: 86400
       ACCESS_CONTROL_ALLOW_ORIGIN: "*"
       MYSQL_HOST: "nebalus-web-storage-mysql"
       MYSQL_PORT: "3306"
