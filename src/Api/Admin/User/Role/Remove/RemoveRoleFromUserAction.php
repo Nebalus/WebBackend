@@ -3,8 +3,6 @@
 namespace Nebalus\Webapi\Api\Admin\User\Role\Remove;
 
 use Nebalus\Webapi\Api\AbstractAction;
-use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserService;
-use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserValidator;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response;

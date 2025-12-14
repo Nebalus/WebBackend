@@ -7,7 +7,6 @@ use Nebalus\Sanitizr\Schema\AbstractSanitizrSchema;
 use Nebalus\Sanitizr\Trait\SanitizrValueObjectTrait;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
-use function PHPUnit\Framework\exactly;
 
 abstract class ID
 {

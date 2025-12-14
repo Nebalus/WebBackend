@@ -3,7 +3,6 @@
 namespace Nebalus\Webapi\Api\Admin\Role\Permission\GetAll;
 
 use Nebalus\Webapi\Api\AbstractAction;
-use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserService;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response;

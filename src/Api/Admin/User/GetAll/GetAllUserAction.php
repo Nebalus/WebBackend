@@ -3,8 +3,6 @@
 namespace Nebalus\Webapi\Api\Admin\User\GetAll;
 
 use Nebalus\Webapi\Api\AbstractAction;
-use Nebalus\Webapi\Api\Admin\User\GetAll\GetAllUserService;
-use Nebalus\Webapi\Api\Admin\User\GetAll\GetAllUserValidator;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response;
