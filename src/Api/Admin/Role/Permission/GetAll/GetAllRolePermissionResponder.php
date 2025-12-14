@@ -21,6 +21,6 @@ class GetAllRolePermissionResponder
             ];
         }
 
-        return Result::createSuccess("Fetched permissions for this role", StatusCodeInterface::STATUS_OK, $fields);
+        return Result::createSuccess("Fetched all permissions from this role", StatusCodeInterface::STATUS_OK, $fields);
     }
 }

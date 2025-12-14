@@ -9,15 +9,16 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
+use Nebalus\Webapi\Value\User\UserId;
 
 class GetAllRoleFromUserValidator extends AbstractValidator
 {
-    private RoleId $roleId;
+    private UserId $userId;
     public function __construct()
     {
         parent::__construct(S::object([
             RequestParamTypes::PATH_ARGS => S::object([
-                "role_id" => RoleId::getSchema(),
+                "user_id" => UserId::getSchema(),
             ])
         ]));
     }
@@ -28,11 +29,11 @@ class GetAllRoleFromUserValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        $this->roleId = RoleId::from($pathArgsData["role_id"]);
+        $this->userId = UserId::from($pathArgsData["user_id"]);
     }
 
-    public function getRoleId(): RoleId
+    public function getUserId(): UserId
     {
-        return $this->roleId;
+        return $this->userId;
     }
 }

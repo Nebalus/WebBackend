@@ -5,6 +5,10 @@ namespace Nebalus\Webapi\Config\Types;
 class PermissionNodeTypes
 {
     public const string ADMIN = 'admin';
+    public const string ADMIN_USER = 'admin.user';
+    public const string ADMIN_USER_ROLE = 'admin.user.role';
+    public const string ADMIN_USER_ROLE_ADD = 'admin.user.role.add';
+    public const string ADMIN_USER_ROLE_REMOVE = 'admin.user.role.remove';
     public const string ADMIN_ROLE = 'admin.role';
     public const string ADMIN_ROLE_CREATE = 'admin.role.create';
     public const string ADMIN_ROLE_EDIT = 'admin.role.edit';

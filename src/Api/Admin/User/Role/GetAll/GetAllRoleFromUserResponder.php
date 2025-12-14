@@ -5,22 +5,23 @@ namespace Nebalus\Webapi\Api\Admin\User\Role\GetAll;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollection;
-use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkMetadata;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
 
 class GetAllRoleFromUserResponder
 {
-    public function render(PermissionRoleLinkCollection $permissionRoleLinkCollection): ResultInterface
+    public function render(RoleCollection $roleCollection): ResultInterface
     {
         $fields = [];
-        foreach ($permissionRoleLinkCollection as $permissionRoleLink) {
+        foreach ($roleCollection as $role) {
             $fields[] = [
-                'node' => $permissionRoleLink->getNode()->asString(),
-                'allow_all_sub_permissions' => $permissionRoleLink->getMetadata()->allowAllSubPermissions(),
-                'value' => $permissionRoleLink->getMetadata()->getValue()?->asInt(),
+                'role_id' => $role->getRoleId()->asInt(),
+                'name' => $role->getName()->asString(),
+                'description' => $role->getDescription()?->asString(),
+                'color' => $role->getColor()->asString(),
+                'access_level' => $role->getAccessLevel()->asInt(),
             ];
         }
 
-        return Result::createSuccess("Fetched permissions for this role", StatusCodeInterface::STATUS_OK, $fields);
+        return Result::createSuccess("Fetched all roles from this user", StatusCodeInterface::STATUS_OK, $fields);
     }
 }

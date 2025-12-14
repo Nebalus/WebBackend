@@ -9,7 +9,6 @@ use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 
 readonly class AddRoleToUserService
 {
@@ -24,13 +23,10 @@ readonly class AddRoleToUserService
      */
     public function execute(AddRoleToUserValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_CREATE, true))) {
-            $role = Role::create($validator->getRoleName(), $validator->getRoleDescription(), $validator->getRoleColor(), $validator->getAccessLevel(), $validator->appliesToEveryone(), $validator->isDisabled());
-            $role = $this->roleRepository->insertRole($role);
-
-            return $this->responder->render($role);
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_USER_ROLE_ADD, true))) {
+            return ResultBuilder::buildNoPermissionResult();
         }
 
-        return ResultBuilder::buildNoPermissionResult();
+        return $this->responder->render();
     }
 }

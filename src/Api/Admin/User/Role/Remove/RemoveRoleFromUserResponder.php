@@ -9,19 +9,8 @@ use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionRoleLinkCollect
 
 class RemoveRoleFromUserResponder
 {
-    public function render(PermissionRoleLinkCollection $permissionsLinksDiff): ResultInterface
+    public function render(): ResultInterface
     {
-        $fields = [
-            "deleted_permissions" => []
-        ];
-        foreach ($permissionsLinksDiff as $permissionRoleLink) {
-            $fields["deleted_permissions"][] = [
-                'node' => $permissionRoleLink->getNode()->asString(),
-                'allow_all_sub_permissions' => $permissionRoleLink->getMetadata()->allowAllSubPermissions(),
-                'value' => $permissionRoleLink->getMetadata()->getValue()?->asInt(),
-            ];
-        }
-
-        return Result::createSuccess("All requested permissions deleted successfully", StatusCodeInterface::STATUS_OK, $fields);
+        return Result::createSuccess("Role Removed", StatusCodeInterface::STATUS_OK);
     }
 }

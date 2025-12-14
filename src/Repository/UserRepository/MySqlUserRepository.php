@@ -7,6 +7,9 @@ namespace Nebalus\Webapi\Repository\UserRepository;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
+use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 use Nebalus\Webapi\Value\User\User;
 use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\UserId;
@@ -136,5 +139,77 @@ readonly class MySqlUserRepository
         }
 
         return User::fromArray($data);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function getAllRolesFromUserByUserId(UserId $userId): RoleCollection
+    {
+        $sql = <<<SQL
+            (
+                SELECT
+                    roles.role_id,
+                    roles.name,
+                    roles.description,
+                    HEX(roles.color) AS color,
+                    roles.access_level,
+                    roles.applies_to_everyone,
+                    roles.deletable,
+                    roles.editable,
+                    roles.disabled,
+                    roles.created_at,
+                    roles.updated_at
+                FROM
+                    user_role_map
+                INNER JOIN roles ON roles.role_id = user_role_map.role_id
+                WHERE user_role_map.user_id = :userId
+            )
+            UNION
+            (
+                SELECT
+                    roles.role_id,
+                    roles.name,
+                    roles.description,
+                    HEX(roles.color) AS color,
+                    roles.access_level,
+                    roles.applies_to_everyone,
+                    roles.deletable,
+                    roles.editable,
+                    roles.disabled,
+                    roles.created_at,
+                    roles.updated_at
+                FROM
+                    roles
+                WHERE roles.applies_to_everyone = 1
+            )
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':userId', $userId->asInt(), PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = [];
+
+        while ($row = $stmt->fetch()) {
+            $data[] = Role::fromArray($row);
+        }
+
+        return RoleCollection::fromObjects(...$data);
+    }
+
+    public function insertRoleToUserByRoleId(UserId $userId, RoleId $roleId): bool
+    {
+        $sql = <<<SQL
+            INSERT INTO user_role_map
+                (user_id, role_id) 
+            VALUES 
+                (:user_id,:role_id)
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->bindValue(':role_id', $roleId->asInt());
+        $stmt->execute();
     }
 }

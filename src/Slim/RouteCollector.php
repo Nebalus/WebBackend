@@ -19,13 +19,13 @@ use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
-use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Get\GetLinktreeAction;
 use Nebalus\Webapi\Api\Module\Referral\Analytics\Click\ClickReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\Analytics\ClickHistory\ClickHistoryReferralAction;
+use Nebalus\Webapi\Api\Module\Referral\Create\CreateReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\Delete\DeleteReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\Edit\EditReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\Get\GetReferralAction;
@@ -117,7 +117,7 @@ readonly class RouteCollector
                         $group->map(["DELETE"], "", DeleteLinktreeAction::class);
                     });
                     $group->group("/referrals", function (RouteCollectorProxy $group) {
-                        $group->map(["POST"], "", CreateBlogAction::class);
+                        $group->map(["POST"], "", CreateReferralAction::class);
                         $group->map(["GET"], "/all", GetAllReferralAction::class);
                         $group->group("/{code}", function (RouteCollectorProxy $group) {
                             $group->map(["GET"], "", GetReferralAction::class);

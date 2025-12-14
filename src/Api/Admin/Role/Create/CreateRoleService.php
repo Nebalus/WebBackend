@@ -24,13 +24,13 @@ readonly class CreateRoleService
      */
     public function execute(CreateRoleValidator $validator, UserPermissionIndex $userPerms): ResultInterface
     {
-        if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_CREATE, true))) {
-            $role = Role::create($validator->getRoleName(), $validator->getRoleDescription(), $validator->getRoleColor(), $validator->getAccessLevel(), $validator->appliesToEveryone(), $validator->isDisabled());
-            $role = $this->roleRepository->insertRole($role);
-
-            return $this->responder->render($role);
+        if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_ROLE_CREATE, true))) {
+            return ResultBuilder::buildNoPermissionResult();
         }
 
-        return ResultBuilder::buildNoPermissionResult();
+        $role = Role::create($validator->getRoleName(), $validator->getRoleDescription(), $validator->getRoleColor(), $validator->getAccessLevel(), $validator->appliesToEveryone(), $validator->isDisabled());
+        $role = $this->roleRepository->insertRole($role);
+
+        return $this->responder->render($role);
     }
 }
