@@ -28,7 +28,7 @@ readonly class DeleteReferralService
      */
     public function execute(DeleteReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
+        $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN, true))) {
             return $this->run($requestingUser->getUserId(), $validator->getReferralCode());

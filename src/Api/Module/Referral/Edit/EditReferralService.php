@@ -30,7 +30,7 @@ readonly class EditReferralService
      */
     public function execute(EditReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
+        $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN_EDIT, true))) {
             return $this->run($requestingUser->getUserId(), $validator->getCode(), $validator->getUrl(), $validator->getLabel(), $validator->isDisabled());
@@ -49,7 +49,7 @@ readonly class EditReferralService
     private function run(UserId $ownerId, ReferralCode $code, Url $url, ReferralLabel $label, bool $disabled): ResultInterface
     {
         $referral = $this->referralRepository->updateReferralFromOwner($ownerId, $code, $url, $label, $disabled);
-        if ($referral === null || $ownerId !== $referral->getOwnerId()) {
+        if ($referral === null || !$ownerId->equals($referral->getOwnerId())) {
             return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
         return $this->responder->render($referral);

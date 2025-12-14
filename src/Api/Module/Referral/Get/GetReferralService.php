@@ -28,7 +28,7 @@ readonly class GetReferralService
      */
     public function execute(GetReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
-        $isSelfUser = $validator->getUserId()->asInt() === $requestingUser->getUserId()->asInt();
+        $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN, true))) {
             return $this->run($requestingUser->getUserId(), $validator->getReferralCode());
@@ -47,7 +47,7 @@ readonly class GetReferralService
     private function run(UserId $ownerId, ReferralCode $code): ResultInterface
     {
         $referral = $this->referralRepository->findReferralByCode($code);
-        if ($referral === null || $ownerId !== $referral->getOwnerId()) {
+        if ($referral === null || !$ownerId->equals($referral->getOwnerId())) {
             return Result::createError('Referral does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
         return $this->responder->render($referral);

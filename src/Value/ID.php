@@ -7,8 +7,9 @@ use Nebalus\Sanitizr\Schema\AbstractSanitizrSchema;
 use Nebalus\Sanitizr\Trait\SanitizrValueObjectTrait;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Exception\ApiInvalidArgumentException;
+use function PHPUnit\Framework\exactly;
 
-trait ID
+abstract class ID
 {
     use SanitizrValueObjectTrait;
 
@@ -25,7 +26,7 @@ trait ID
     /**
      * @throws ApiException
      */
-    public static function from(mixed $id): self
+    public static function from(mixed $id): static
     {
         $schema = static::getSchema();
         $validData = $schema->safeParse($id);
@@ -34,7 +35,12 @@ trait ID
             throw new ApiInvalidArgumentException('Invalid id: ' . $validData->getErrorMessage());
         }
 
-        return new self($validData->getValue());
+        return new static($validData->getValue());
+    }
+
+    public function equals(self $id): bool
+    {
+        return $this->id === $id->asInt();
     }
 
     public function asInt(): int
