@@ -57,7 +57,10 @@ readonly class RemoveRoleFromUserService
             return Result::createError("You cannot remove this role from this user because this role is above your highest role", StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $this->userRepository->removeRoleFromUserByRoleId($validator->getUserId(), $validator->getRoleId());
-        return $this->responder->render();
+        if ($this->userRepository->removeRoleFromUserByRoleId($validator->getUserId(), $validator->getRoleId())) {
+            return $this->responder->render($roleThatWantsToBeAdded);
+        }
+
+        return Result::createError('No changes were made to the users roles', StatusCodeInterface::STATUS_NOT_FOUND);
     }
 }

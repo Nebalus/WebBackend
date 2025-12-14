@@ -53,7 +53,10 @@ readonly class AddRoleToUserService
             return Result::createError("You cannot add this role to this user because this role is above your highest role", StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $this->userRepository->insertRoleToUserByRoleId($validator->getUserId(), $validator->getRoleId());
-        return $this->responder->render();
+        if ($this->userRepository->insertRoleToUserByRoleId($validator->getUserId(), $validator->getRoleId())) {
+            return $this->responder->render($roleThatWantsToBeAdded);
+        }
+
+        return Result::createError('No changes were made to the users roles', StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 }

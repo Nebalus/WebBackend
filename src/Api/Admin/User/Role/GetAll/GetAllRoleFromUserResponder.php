@@ -19,6 +19,7 @@ class GetAllRoleFromUserResponder
                 'description' => $role->getDescription()?->asString(),
                 'color' => $role->getColor()->asString(),
                 'access_level' => $role->getAccessLevel()->asInt(),
+                'applies_to_everyone' => $role->appliesToEveryone(),
             ];
         }
 
