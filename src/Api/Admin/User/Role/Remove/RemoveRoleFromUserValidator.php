@@ -9,19 +9,20 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNode;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionNodeCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
+use Nebalus\Webapi\Value\User\UserId;
 
 class RemoveRoleFromUserValidator extends AbstractValidator
 {
+    private UserId $userId;
     private RoleId $roleId;
-    private PermissionNodeCollection $permissionNodes;
 
     public function __construct()
     {
         parent::__construct(S::object([
             RequestParamTypes::PATH_ARGS => S::object([
+                "user_id" => UserId::getSchema(),
                 "role_id" => RoleId::getSchema(),
             ]),
-            RequestParamTypes::BODY => S::array(PermissionNode::getSchema())
         ]));
     }
 
@@ -31,22 +32,16 @@ class RemoveRoleFromUserValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
+        $this->userId = UserId::from($pathArgsData["user_id"]);
         $this->roleId = RoleId::from($pathArgsData["role_id"]);
-        $this->permissionNodes = PermissionNodeCollection::fromObjects(
-            ...array_map(
-                fn(string $node) => PermissionNode::from($node),
-                $bodyData
-            )
-        );
     }
 
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
     public function getRoleId(): RoleId
     {
         return $this->roleId;
-    }
-
-    public function getPermissionNodes(): PermissionNodeCollection
-    {
-        return $this->permissionNodes;
     }
 }

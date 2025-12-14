@@ -5,9 +5,18 @@ meta {
 }
 
 delete {
-  url: 
+  url: {{protocol}}://{{host}}/ui/admin/user/:userid/role/:roleid
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+params:path {
+  roleid: 3
+  userid: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 settings {

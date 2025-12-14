@@ -9,27 +9,21 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleAccessLevel;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleDescription;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleHexColor;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleName;
+use Nebalus\Webapi\Value\User\UserId;
 
 class AddRoleToUserValidator extends AbstractValidator
 {
-    private RoleName $roleName;
-    private ?RoleDescription $roleDescription;
-    private RoleHexColor $roleColor;
-    private RoleAccessLevel $accessLevel;
-    private bool $appliesToEveryone;
-    private bool $disabled;
+    private UserId $userId;
+    private RoleId $roleId;
 
     public function __construct()
     {
         parent::__construct(S::object([
-            RequestParamTypes::BODY => S::object([
-                "name" => RoleName::getSchema(),
-                "description" => RoleDescription::getSchema()->nullish(),
-                "color" => RoleHexColor::getSchema(),
-                "access_level" => RoleAccessLevel::getSchema(),
-                "applies_to_everyone" => S::boolean(),
-                "disabled" => S::boolean(),
+            RequestParamTypes::PATH_ARGS => S::object([
+                "user_id" => UserId::getSchema(),
+                "role_id" => RoleId::getSchema(),
             ]),
         ]));
     }
@@ -40,36 +34,16 @@ class AddRoleToUserValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        $this->roleName = RoleName::from($bodyData["name"]);
-        $this->roleDescription = isset($bodyData["description"]) ? RoleDescription::from($bodyData["description"]) : null;
-        $this->roleColor = RoleHexColor::from($bodyData["color"]);
-        $this->accessLevel = RoleAccessLevel::from($bodyData["access_level"]);
-        $this->appliesToEveryone = $bodyData["applies_to_everyone"];
-        $this->disabled = $bodyData["disabled"];
+        $this->userId = UserId::from($pathArgsData["user_id"]);
+        $this->roleId = RoleId::from($pathArgsData["role_id"]);
     }
 
-    public function getRoleName(): RoleName
+    public function getUserId(): UserId
     {
-        return $this->roleName;
+        return $this->userId;
     }
-    public function getRoleColor(): RoleHexColor
+    public function getRoleId(): RoleId
     {
-        return $this->roleColor;
-    }
-    public function getRoleDescription(): ?RoleDescription
-    {
-        return $this->roleDescription;
-    }
-    public function getAccessLevel(): RoleAccessLevel
-    {
-        return $this->accessLevel;
-    }
-    public function appliesToEveryone(): bool
-    {
-        return $this->appliesToEveryone;
-    }
-    public function isDisabled(): bool
-    {
-        return $this->disabled;
+        return $this->roleId;
     }
 }

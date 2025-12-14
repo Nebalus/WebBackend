@@ -18,7 +18,6 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\RoleDescription;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleHexColor;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleName;
-use Nebalus\Webapi\Value\User\AccessControl\Role\RoleSortedCollection;
 use Nebalus\Webapi\Value\User\UserId;
 use PDO;
 use PDOException;
@@ -70,18 +69,18 @@ readonly class MySqlRoleRepository
     {
         try {
             $sql = <<<SQL
-            INSERT INTO role_permission_map(
-                role_id,
-                permission_id,
-                allow_all_sub_permissions,
-                `value`
-            )
-            VALUES
-                (:role_id, (SELECT permission_id FROM permissions WHERE node = :node LIMIT 1), :allow_all_sub_permissions, :value)
-            ON DUPLICATE KEY UPDATE
-                allow_all_sub_permissions = values(allow_all_sub_permissions),
-                `value` = values(`value`)
-        SQL;
+                INSERT INTO role_permission_map(
+                    role_id,
+                    permission_id,
+                    allow_all_sub_permissions,
+                    `value`
+                )
+                VALUES
+                    (:role_id, (SELECT permission_id FROM permissions WHERE node = :node LIMIT 1), :allow_all_sub_permissions, :value)
+                ON DUPLICATE KEY UPDATE
+                    allow_all_sub_permissions = values(allow_all_sub_permissions),
+                    `value` = values(`value`)
+            SQL;
 
             $this->pdo->beginTransaction();
 
@@ -119,7 +118,7 @@ readonly class MySqlRoleRepository
         // Sorts the Roles by AccessLevel
         $unsortedRolesArray = $this->userRepository->getAllRolesFromUserByUserId($userId)->toArray();
         usort($unsortedRolesArray, function (Role $a, Role $b) {
-            return $b->getAccessLevel() <=> $a->getAccessLevel();
+            return $b->getAccessLevel()->asInt() <=> $a->getAccessLevel()->asInt();
         });
         $sortedRoles = RoleCollection::fromObjects(...$unsortedRolesArray);
 

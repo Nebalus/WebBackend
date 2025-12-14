@@ -15,7 +15,6 @@ class EditReferralValidator extends AbstractValidator
 {
     private ReferralCode $code;
     private UserId $userId;
-
     private Url $url;
     private ReferralLabel $label;
     private bool $disabled;

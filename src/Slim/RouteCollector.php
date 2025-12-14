@@ -83,9 +83,9 @@ readonly class RouteCollector
                     $group->group("/{user_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetPermissionAction::class); // TODO get user information
                         $group->group("/role", function (RouteCollectorProxy $group) {
-                            $group->map(["POST"], "", AddRoleToUserAction::class);
-                            $group->map(["DELETE"], "", RemoveRoleFromUserAction::class);
                             $group->map(["GET"], "/all", GetAllRoleFromUserAction::class);
+                            $group->map(["POST"], "/{role_id}", AddRoleToUserAction::class);
+                            $group->map(["DELETE"], "/{role_id}", RemoveRoleFromUserAction::class);
                         });
                     });
                 });

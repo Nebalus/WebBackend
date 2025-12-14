@@ -5,11 +5,21 @@ meta {
 }
 
 post {
-  url: 
+  url: {{protocol}}://{{host}}/ui/admin/user/:userid/role/:roleid
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+params:path {
+  userid: self
+  roleid: 2
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

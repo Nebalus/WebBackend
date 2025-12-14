@@ -201,7 +201,7 @@ readonly class MySqlUserRepository
     public function insertRoleToUserByRoleId(UserId $userId, RoleId $roleId): bool
     {
         $sql = <<<SQL
-            INSERT INTO user_role_map
+            INSERT IGNORE INTO user_role_map
                 (user_id, role_id) 
             VALUES 
                 (:user_id,:role_id)
@@ -211,5 +211,24 @@ readonly class MySqlUserRepository
         $stmt->bindValue(':user_id', $userId->asInt());
         $stmt->bindValue(':role_id', $roleId->asInt());
         $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function removeRoleFromUserByRoleId(UserId $userId, RoleId $roleId): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM user_role_map 
+            WHERE 
+                user_id = :user_id 
+                AND role_id = :role_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->bindValue(':role_id', $roleId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
     }
 }
