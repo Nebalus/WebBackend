@@ -566,23 +566,23 @@
         },
         {
             "name": "latitude/latitude",
-            "version": "4.3.1",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shadowhand/latitude.git",
-                "reference": "b3a010119e112321cd215325b939a0bc05761bf1"
+                "reference": "c822a372f79661544617bae06e78d1b4ae0d34f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/b3a010119e112321cd215325b939a0bc05761bf1",
-                "reference": "b3a010119e112321cd215325b939a0bc05761bf1",
+                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/c822a372f79661544617bae06e78d1b4ae0d34f3",
+                "reference": "c822a372f79661544617bae06e78d1b4ae0d34f3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^8.1 || ^10.0 || ^11.0",
+                "doctrine/coding-standard": "^8.1 || ^10.0 || ^11.0 || ^14.0",
                 "eloquent/phpstan-phony": "^0.7.1 || ^0.8.0",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.48 || ^1.0.0",
@@ -612,9 +612,9 @@
             "description": "A SQL query builder with zero dependencies",
             "support": {
                 "issues": "https://github.com/shadowhand/latitude/issues",
-                "source": "https://github.com/shadowhand/latitude/tree/4.3.1"
+                "source": "https://github.com/shadowhand/latitude/tree/4.4.1"
             },
-            "time": "2025-09-22T10:37:24+00:00"
+            "time": "2025-12-09T11:19:25+00:00"
         },
         {
             "name": "monolog/monolog",
