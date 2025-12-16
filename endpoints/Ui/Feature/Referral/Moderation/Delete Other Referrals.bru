@@ -5,9 +5,14 @@ meta {
 }
 
 delete {
-  url: {{protocol}}://{{host}}/ui/user/2/services/referrals/nSW1Oep4
+  url: {{protocol}}://{{host}}/ui/user/:userid/services/referrals/:code
   body: none
   auth: bearer
+}
+
+params:path {
+  userid: 
+  code: 
 }
 
 auth:bearer {

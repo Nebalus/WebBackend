@@ -5,13 +5,17 @@ meta {
 }
 
 get {
-  url: {{protocol}}://{{host}}/ui/admin/user/:userid/all
+  url: {{protocol}}://{{host}}/ui/admin/user/:userid/role/all
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   userid: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
 }
 
 vars:pre-request {

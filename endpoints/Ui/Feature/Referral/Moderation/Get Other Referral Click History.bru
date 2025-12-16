@@ -5,13 +5,18 @@ meta {
 }
 
 get {
-  url: {{protocol}}://{{host}}/ui/user/2/services/referrals/djssKeaN/click_history?range=30
+  url: {{protocol}}://{{host}}/ui/user/:userid/services/referrals/:code/click_history?range=30
   body: none
   auth: bearer
 }
 
 params:query {
   range: 30
+}
+
+params:path {
+  userid: 
+  code: K5w1rfqC
 }
 
 auth:bearer {
