@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Nebalus\Webapi\Api\User\Auth;
 
+use DateTimeImmutable;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use Monolog\Logger;
 use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Factory\TwigFactory;
@@ -17,9 +19,6 @@ use ReallySimpleJWT\Exception\BuildException;
 use ReallySimpleJWT\Token;
 use Resend\Client as ResendClient;
 use Twig\Environment as TwigEnvironment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 readonly class AuthUserService
 {
@@ -30,6 +29,7 @@ readonly class AuthUserService
         private ResendClient $resendClient,
         private TwigEnvironment $twig,
         private IpUtils $ipUtils,
+        private Logger $logger,
     ) {
     }
 
@@ -44,27 +44,23 @@ readonly class AuthUserService
             return Result::createError('Authentication failed: Wrong credentials', StatusCodeInterface::STATUS_UNAUTHORIZED);
         }
 
-        $expirationTime = time() + $this->generalConfig->getJwtExpirationTime();
-
-        $rendered = "...";
-        $currentDateTime = new \DateTimeImmutable();
-
         try {
-            $rendered = $this->twig->render("/email/on_login.twig", [
-                "username" => $user->getUsername()->asString(),
-                "ip_address" => $this->ipUtils->getClientIP(),
-                "login_time" => $currentDateTime->format("Y-m-d H:i:s"),
+            $currentDateTime = new DateTimeImmutable();
+            $this->resendClient->emails->send([
+                'from' => 'noreply@nebalus.dev',
+                'to' => $user->getEmail()->asString(),
+                'subject' => 'Login Confirmation',
+                'html' => $this->twig->render("/email/on_login.twig", [
+                    "username" => $user->getUsername()->asString(),
+                    "ip_address" => $this->ipUtils->getClientIP(),
+                    "login_time" => $currentDateTime->format("Y-m-d H:i:s"),
+                ]),
             ]);
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
         }
 
-        $this->resendClient->emails->send([
-            'from' => 'noreply@nebalus.dev',
-            'to' => $user->getEmail()->asString(),
-            'subject' => 'Login Confirmation',
-            'html' => '<strong>' . $rendered . '</strong>',
-        ]);
-
+        $expirationTime = time() + $this->generalConfig->getJwtExpirationTime();
         $token = Token::builder($this->generalConfig->getJwtSecret())
             ->setIssuer("https://api.nebalus.dev")
             ->setPayloadClaim("email", $user->getEmail()->asString())
