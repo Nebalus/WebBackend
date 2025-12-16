@@ -2,7 +2,6 @@
 
 namespace Nebalus\Webapi\Api\User\Register;
 
-use DateTimeImmutable;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Monolog\Logger;
@@ -10,7 +9,6 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
-use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\User\User;
 use Resend\Client as ResendClient;

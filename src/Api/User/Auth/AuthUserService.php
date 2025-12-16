@@ -10,7 +10,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use Monolog\Logger;
 use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Factory\TwigFactory;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Utils\IpUtils;
