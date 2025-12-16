@@ -63,7 +63,7 @@ readonly class RegisterUserService
                 'from' => 'noreply@nebalus.dev',
                 'to' => $user->getEmail()->asString(),
                 'subject' => 'Register Confirmation',
-                'html' => $this->twig->render("/email/on_register.twig", [
+                'html' => $this->twig->render("/email/user_register.twig", [
                     "username" => $user->getUsername()->asString(),
                 ]),
             ]);

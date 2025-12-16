@@ -50,7 +50,7 @@ readonly class AuthUserService
                 'from' => 'noreply@nebalus.dev',
                 'to' => $user->getEmail()->asString(),
                 'subject' => 'Login Confirmation',
-                'html' => $this->twig->render("/email/on_login.twig", [
+                'html' => $this->twig->render("/email/user_login.twig", [
                     "username" => $user->getUsername()->asString(),
                     "ip_address" => $this->ipUtils->getClientIP(),
                     "login_time" => $currentDateTime->format("Y-m-d H:i:s"),
