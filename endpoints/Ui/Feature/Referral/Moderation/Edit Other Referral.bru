@@ -6,15 +6,22 @@ meta {
 
 put {
   url: {{protocol}}://{{host}}/ui/user/:userid/services/referrals/:code
-  body: none
+  body: json
   auth: bearer
 }
 
 params:path {
-  code: 
-  userid: 
+  code: ySJ4PuQ1
+  userid: 1
 }
 
 auth:bearer {
   token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "url": "https://test.de",
+    "label": "test"
+  }
 }

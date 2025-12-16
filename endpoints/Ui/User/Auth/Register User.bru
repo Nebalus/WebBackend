@@ -6,6 +6,12 @@ meta {
 
 post {
   url: {{protocol}}://{{host}}/ui/register
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "invitation_token": "0000-0000-0000-0000-0000"
+  }
 }
