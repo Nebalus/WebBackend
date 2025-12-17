@@ -19,6 +19,11 @@ use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
+use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Delete\DeleteBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Edit\EditBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Get\GetBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\GetAll\GetAllBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
@@ -110,8 +115,13 @@ readonly class RouteCollector
                     $group->group("/invitation_tokens", function (RouteCollectorProxy $group) {
                     });
                     $group->group("/blogs", function (RouteCollectorProxy $group) {
-                        $group->map(["POST"], "", CreateReferralAction::class);
-                        $group->map(["GET"], "/all", GetAllReferralAction::class);
+                        $group->map(["POST"], "", CreateBlogAction::class);
+                        $group->map(["GET"], "/all", GetAllBlogAction::class);
+                        $group->group("/{blog_id}", function (RouteCollectorProxy $group) {
+                            $group->map(["GET"], "", GetBlogAction::class);
+                            $group->map(["PUT"], "", EditBlogAction::class);
+                            $group->map(["DELETE"], "", DeleteBlogAction::class);
+                        });
                     });
                     $group->group("/linktree", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetLinktreeAction::class);
@@ -121,7 +131,7 @@ readonly class RouteCollector
                     $group->group("/referrals", function (RouteCollectorProxy $group) {
                         $group->map(["POST"], "", CreateReferralAction::class);
                         $group->map(["GET"], "/all", GetAllReferralAction::class);
-                        $group->group("/{code}", function (RouteCollectorProxy $group) {
+                        $group->group("/{referral_code}", function (RouteCollectorProxy $group) {
                             $group->map(["GET"], "", GetReferralAction::class);
                             $group->map(["PUT"], "", EditReferralAction::class);
                             $group->map(["DELETE"], "", DeleteReferralAction::class);
@@ -136,7 +146,7 @@ readonly class RouteCollector
         $this->app->map(["GET"], "/health", HealthAction::class);
 
         $this->app->group("/services", function (RouteCollectorProxy $group) {
-            $group->map(["GET"], "/referral/{code}", ClickReferralAction::class);
+            $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
         });
     }

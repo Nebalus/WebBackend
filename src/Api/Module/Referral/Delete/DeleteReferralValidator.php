@@ -18,7 +18,7 @@ class DeleteReferralValidator extends AbstractValidator
     {
         parent::__construct(S::object([
             RequestParamTypes::PATH_ARGS => S::object([
-                'code' => ReferralCode::getSchema(),
+                'referral_code' => ReferralCode::getSchema(),
                 "user_id" => UserId::getSchema(),
             ]),
         ]));
@@ -30,7 +30,7 @@ class DeleteReferralValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        $this->referralCode = ReferralCode::from($pathArgsData['code']);
+        $this->referralCode = ReferralCode::from($pathArgsData['referral_code']);
         $this->userId = UserId::from($pathArgsData["user_id"]);
     }
 

@@ -16,7 +16,7 @@ class ClickReferralValidator extends AbstractValidator
     {
         parent::__construct(S::object([
             RequestParamTypes::PATH_ARGS => S::object([
-                'code' => ReferralCode::getSchema()
+                'referral_code' => ReferralCode::getSchema()
             ]),
         ]));
     }
@@ -27,7 +27,7 @@ class ClickReferralValidator extends AbstractValidator
      */
     protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
     {
-        $this->referralCode = ReferralCode::from($pathArgsData['code']);
+        $this->referralCode = ReferralCode::from($pathArgsData['referral_code']);
     }
 
     public function getReferralCode(): ReferralCode
