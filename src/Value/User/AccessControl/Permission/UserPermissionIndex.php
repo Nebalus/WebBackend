@@ -41,6 +41,7 @@ class UserPermissionIndex implements IteratorAggregate
         $node = $permissionAccess->getNode()->asString();
         $parts = explode('.', $node);
         $currentNode = '';
+
         foreach ($parts as $index => $part) {
             $currentNode = $index === 0 ? $part : "$currentNode.$part";
             if (!array_key_exists($currentNode, $this->permissionNodeIndexList)) {
@@ -53,9 +54,6 @@ class UserPermissionIndex implements IteratorAggregate
             }
 
             if ($permissionAccess->isAllowAccessWithSubPermission() && str_starts_with($currentNode, $permissionAccess->getNode()->asString())) {
-//                if ($permissionMetadata->hasValue() && $permissionAccess->hasValueRange()) {
-//                    return $permissionAccess->getValueRange()->isInRange($permissionMetadata->getValue()->asInt());
-//                }
                 return true;
             }
 
@@ -63,11 +61,13 @@ class UserPermissionIndex implements IteratorAggregate
                 return true;
             }
         }
+
         if ($permissionAccess->isAllowAccessWithSubPermission()) {
             $keys = array_keys($this->permissionNodeIndexList);
             $pattern = '/' . preg_quote($permissionAccess->getNode()->asString(), '/') . '/';
             return count(preg_grep($pattern, $keys)) > 0;
         }
+
         return false;
     }
 
