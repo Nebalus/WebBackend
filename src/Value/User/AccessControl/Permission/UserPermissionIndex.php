@@ -53,12 +53,9 @@ class UserPermissionIndex implements IteratorAggregate
             }
 
             if ($permissionAccess->isAllowAccessWithSubPermission() && str_starts_with($currentNode, $permissionAccess->getNode()->asString())) {
-                if ($permissionMetadata->hasValue() && $permissionAccess->hasValueRange()) {
-                    if ($permissionAccess->getValueRange()->isInRange($permissionMetadata->getValue()->asInt())) {
-                        return true;
-                    }
-                    return false;
-                }
+//                if ($permissionMetadata->hasValue() && $permissionAccess->hasValueRange()) {
+//                    return $permissionAccess->getValueRange()->isInRange($permissionMetadata->getValue()->asInt());
+//                }
                 return true;
             }
 

@@ -10,7 +10,7 @@ readonly class PermissionAccess
     private function __construct(
         private PermissionNode $node,
         private bool $allowAccessWithSubPermission,
-        private ?Range $valueRange
+        //  private ?Range $valueRange
     ) {
     }
 
@@ -19,10 +19,13 @@ readonly class PermissionAccess
      */
     public static function from(
         string $node,
-        bool $allowAccessWithSubPermission = false,
-        ?Range $valueRange = null
+        bool $allowAccessWithSubPermission = false
     ): self {
-        return new self(PermissionNode::from($node), $allowAccessWithSubPermission, $valueRange);
+        return new self(
+            PermissionNode::from($node),
+            $allowAccessWithSubPermission,
+            //   $valueRange
+        );
     }
 
     public function getNode(): PermissionNode
@@ -35,13 +38,13 @@ readonly class PermissionAccess
         return $this->allowAccessWithSubPermission;
     }
 
-    public function getValueRange(): ?Range
-    {
-        return $this->valueRange;
-    }
+//    public function getValueRange(): ?Range
+//    {
+//        return $this->valueRange;
+//    }
 
-    public function hasValueRange(): bool
-    {
-        return $this->valueRange !== null;
-    }
+//    public function hasValueRange(): bool
+//    {
+//        return $this->valueRange !== null;
+//    }
 }
