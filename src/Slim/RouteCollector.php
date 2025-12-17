@@ -72,31 +72,31 @@ readonly class RouteCollector
             $group->map(["POST"], "/auth", AuthUserAction::class);
             $group->map(["POST"], "/register", RegisterUserAction::class);
             $group->group("/admin", function (RouteCollectorProxy $group) {
-                $group->group("/permission", function (RouteCollectorProxy $group) {
+                $group->group("/permissions", function (RouteCollectorProxy $group) {
                     $group->map(["GET"], "/all", GetAllPermissionAction::class);
                     $group->group("/{permission_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetPermissionAction::class);
                     });
                 });
-                $group->group("/user", function (RouteCollectorProxy $group) {
+                $group->group("/users", function (RouteCollectorProxy $group) {
                     $group->map(["GET"], "/all", GetAllPermissionAction::class); // TODO get all users
                     $group->group("/{user_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetPermissionAction::class); // TODO get user information
-                        $group->group("/role", function (RouteCollectorProxy $group) {
+                        $group->group("/roles", function (RouteCollectorProxy $group) {
                             $group->map(["GET"], "/all", GetAllRoleFromUserAction::class);
                             $group->map(["POST"], "/{role_id}", AddRoleToUserAction::class);
                             $group->map(["DELETE"], "/{role_id}", RemoveRoleFromUserAction::class);
                         });
                     });
                 });
-                $group->group("/role", function (RouteCollectorProxy $group) {
+                $group->group("/roles", function (RouteCollectorProxy $group) {
                     $group->map(["POST"], "", CreateRoleAction::class);
                     $group->map(["GET"], "/all", GetAllRoleAction::class);
                     $group->group("/{role_id}", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetRoleAction::class);
                         $group->map(["PUT"], "", EditRoleAction::class);
                         $group->map(["DELETE"], "", DeleteRoleAction::class);
-                        $group->group("/permission", function (RouteCollectorProxy $group) {
+                        $group->group("/permissions", function (RouteCollectorProxy $group) {
                             $group->map(["GET"], "/all", GetAllRolePermissionAction::class);
                             $group->map(["DELETE"], "", DeleteRolePermissionAction::class);
                             $group->map(["PUT", "POST"], "", UpsertRolePermissionAction::class);
@@ -104,12 +104,14 @@ readonly class RouteCollector
                     });
                 });
             })->add(PermissionMiddleware::class)->add(AuthMiddleware::class);
-            $group->group("/user/{user_id}", function (RouteCollectorProxy $group) {
+            $group->group("/users/{user_id}", function (RouteCollectorProxy $group) {
                 $group->map(["GET"], "/permissions", GetUserPermissionsAction::class);
                 $group->group("/services", function (RouteCollectorProxy $group) {
                     $group->group("/invitation_tokens", function (RouteCollectorProxy $group) {
                     });
                     $group->group("/blogs", function (RouteCollectorProxy $group) {
+                        $group->map(["POST"], "", CreateReferralAction::class);
+                        $group->map(["GET"], "/all", GetAllReferralAction::class);
                     });
                     $group->group("/linktree", function (RouteCollectorProxy $group) {
                         $group->map(["GET"], "", GetLinktreeAction::class);

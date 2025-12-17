@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{protocol}}://{{host}}/ui/user/:userid/services/referrals/all
+  url: {{protocol}}://{{host}}/ui/users/:userid/services/referrals/all
   body: none
   auth: bearer
 }
 
 params:path {
-  userid: 
+  userid: 1
 }
 
 auth:bearer {
