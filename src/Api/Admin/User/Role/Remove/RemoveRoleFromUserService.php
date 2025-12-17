@@ -15,7 +15,7 @@ use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
 use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 
 readonly class RemoveRoleFromUserService
 {
@@ -31,7 +31,7 @@ readonly class RemoveRoleFromUserService
      * @throws ApiException
      * @throws ApiDateMalformedStringException
      */
-    public function execute(RemoveRoleFromUserValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(RemoveRoleFromUserValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         if (!$userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::ADMIN_USER_ROLE_REMOVE, true))) {
             return ResultBuilder::buildNoPermissionResult();

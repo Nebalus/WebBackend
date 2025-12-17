@@ -6,7 +6,7 @@ use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\RoleRepository\MySqlRoleRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 
 readonly class GetUserPermissionsService
 {
@@ -19,7 +19,7 @@ readonly class GetUserPermissionsService
     /**
      * @throws ApiException
      */
-    public function execute(GetUserPermissionsValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(GetUserPermissionsValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $userId = $validator->getUserId();
 

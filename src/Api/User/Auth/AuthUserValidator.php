@@ -6,9 +6,9 @@ use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Value\User\Totp\TOTPCode;
+use Nebalus\Webapi\Value\User\Authentication\Totp\TOTPCode;
+use Nebalus\Webapi\Value\User\Authentication\UserPassword;
 use Nebalus\Webapi\Value\User\Username;
-use Nebalus\Webapi\Value\User\UserPassword;
 
 class AuthUserValidator extends AbstractValidator
 {

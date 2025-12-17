@@ -12,7 +12,7 @@ use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Nebalus\Webapi\Value\User\UserId;
 
 readonly class DeleteReferralService
@@ -26,7 +26,7 @@ readonly class DeleteReferralService
     /**
      * @throws ApiException
      */
-    public function execute(DeleteReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(DeleteReferralValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 

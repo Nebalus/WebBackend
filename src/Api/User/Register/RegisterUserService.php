@@ -10,7 +10,7 @@ use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Resend\Client as ResendClient;
 use Twig\Environment as TwigEnvironment;
 
@@ -53,7 +53,7 @@ readonly class RegisterUserService
             return Result::createError('Registration failed: The Email you provided is already registered', StatusCodeInterface::STATUS_FORBIDDEN);
         }
 
-        $preUser = User::create($validator->getUsername(), $validator->getUserEmail(), $validator->getUserPassword());
+        $preUser = UserAccount::create($validator->getUsername(), $validator->getUserEmail(), $validator->getUserPassword());
         $user = $this->mySqlUserRepository->registerUser($preUser, $invitationToken);
 
         try {

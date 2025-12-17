@@ -12,7 +12,7 @@ use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Nebalus\Webapi\Value\User\UserId;
 
 readonly class GetReferralService
@@ -26,7 +26,7 @@ readonly class GetReferralService
     /**
      * @throws ApiException
      */
-    public function execute(GetReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(GetReferralValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 

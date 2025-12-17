@@ -8,9 +8,10 @@ use DateMalformedStringException;
 use DateTimeImmutable;
 use Nebalus\Webapi\Exception\ApiDateMalformedStringException;
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Value\User\Totp\TOTPSecretKey;
+use Nebalus\Webapi\Value\User\Authentication\Totp\TOTPSecretKey;
+use Nebalus\Webapi\Value\User\Authentication\UserPassword;
 
-readonly class User
+readonly class UserAccount
 {
     private function __construct(
         private ?UserId $userId,

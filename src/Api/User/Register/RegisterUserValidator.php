@@ -7,9 +7,9 @@ use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationTokenValue;
+use Nebalus\Webapi\Value\User\Authentication\UserPassword;
 use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\Username;
-use Nebalus\Webapi\Value\User\UserPassword;
 
 class RegisterUserValidator extends AbstractValidator
 {

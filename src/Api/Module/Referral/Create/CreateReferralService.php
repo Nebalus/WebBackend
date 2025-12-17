@@ -10,7 +10,7 @@ use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 
 readonly class CreateReferralService
 {
@@ -23,7 +23,7 @@ readonly class CreateReferralService
     /**
      * @throws ApiException
      */
-    public function execute(CreateReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(CreateReferralValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         if ($userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_REFERRAL_OWN_CREATE, true))) {
             $referralCode = ReferralCode::create();

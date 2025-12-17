@@ -6,7 +6,7 @@ use Exception;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\RoleRepository\MySqlRoleRepository;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Override;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,7 +27,7 @@ readonly class PermissionMiddleware implements MiddlewareInterface
     #[Override] public function process(Request $request, RequestHandler $handler): Response
     {
         $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
-        if ($requestingUser instanceof User === false) {
+        if ($requestingUser instanceof UserAccount === false) {
             return $handler->handle($request);
         }
         $userPermissionIndex = $this->roleRepository->getPermissionIndexFromUserId($requestingUser->getUserId());

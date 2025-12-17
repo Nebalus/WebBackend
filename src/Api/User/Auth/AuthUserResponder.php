@@ -5,12 +5,12 @@ namespace Nebalus\Webapi\Api\User\Auth;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use ReallySimpleJWT\Jwt;
 
 class AuthUserResponder
 {
-    public function render(Jwt $jwt, User $user): ResultInterface
+    public function render(Jwt $jwt, UserAccount $user): ResultInterface
     {
         $fields = [
             "jwt" => $jwt->getToken(),

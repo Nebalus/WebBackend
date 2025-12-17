@@ -10,7 +10,7 @@ use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
 use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\UserId;
 use Nebalus\Webapi\Value\User\Username;
@@ -27,7 +27,7 @@ readonly class MySqlUserRepository
     /**
      * @throws ApiException
      */
-    public function registerUser(User $user, InvitationToken $invitationToken): User
+    public function registerUser(UserAccount $user, InvitationToken $invitationToken): UserAccount
     {
         $this->pdo->beginTransaction();
         $newUser = $this->insertUser($user);
@@ -41,7 +41,7 @@ readonly class MySqlUserRepository
     /**
      * @throws ApiException
      */
-    private function insertUser(User $user): User
+    private function insertUser(UserAccount $user): UserAccount
     {
         $sql = <<<SQL
             INSERT INTO users
@@ -63,13 +63,13 @@ readonly class MySqlUserRepository
         $userToArray = $user->asArray();
         $userToArray["user_id"] = UserId::from($this->pdo->lastInsertId())->asInt();
 
-        return User::fromArray($userToArray);
+        return UserAccount::fromArray($userToArray);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromId(UserId $userId): ?User
+    public function findUserFromId(UserId $userId): ?UserAccount
     {
         $sql = <<<SQL
             SELECT 
@@ -88,13 +88,13 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromEmail(UserEmail $email): ?User
+    public function findUserFromEmail(UserEmail $email): ?UserAccount
     {
         $sql = <<<SQL
             SELECT 
@@ -113,13 +113,13 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromUsername(Username $username): ?User
+    public function findUserFromUsername(Username $username): ?UserAccount
     {
         $sql = <<<SQL
             SELECT
@@ -138,7 +138,7 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
     }
 
     /**

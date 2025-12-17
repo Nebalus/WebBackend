@@ -9,7 +9,7 @@ use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\ResultBuilder;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\PermissionAccess;
 use Nebalus\Webapi\Value\User\AccessControl\Permission\UserPermissionIndex;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Nebalus\Webapi\Value\User\UserId;
 
 readonly class GetAllReferralService
@@ -23,7 +23,7 @@ readonly class GetAllReferralService
     /**
      * @throws ApiException
      */
-    public function execute(GetAllReferralValidator $validator, User $requestingUser, UserPermissionIndex $userPerms): ResultInterface
+    public function execute(GetAllReferralValidator $validator, UserAccount $requestingUser, UserPermissionIndex $userPerms): ResultInterface
     {
         $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 

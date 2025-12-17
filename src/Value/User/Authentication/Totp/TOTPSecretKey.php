@@ -1,6 +1,6 @@
 <?php
 
-namespace Nebalus\Webapi\Value\User\Totp;
+namespace Nebalus\Webapi\Value\User\Authentication\Totp;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Sanitizr\Schema\AbstractSanitizrSchema;

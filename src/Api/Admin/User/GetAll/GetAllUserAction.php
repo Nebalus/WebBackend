@@ -11,17 +11,14 @@ use Slim\Http\ServerRequest as Request;
 class GetAllUserAction extends AbstractAction
 {
     public function __construct(
-        private readonly GetAllUserService $service,
-        private readonly GetAllUserValidator $validator
+        private readonly GetAllUserService $service
     ) {
     }
 
     protected function execute(Request $request, Response $response, array $pathArgs): ResponseInterface
     {
-        $this->validator->validate($request, $pathArgs);
-
         $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
-        $result = $this->service->execute($this->validator, $userPerms);
+        $result = $this->service->execute($userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }
