@@ -7,12 +7,12 @@ namespace Nebalus\Webapi\Repository\ReferralRepository;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClick;
-use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClicks;
+use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClickCollection;
 use Nebalus\Webapi\Value\Module\Referral\Referral;
 use Nebalus\Webapi\Value\Module\Referral\ReferralCode;
+use Nebalus\Webapi\Value\Module\Referral\ReferralCollection;
 use Nebalus\Webapi\Value\Module\Referral\ReferralId;
 use Nebalus\Webapi\Value\Module\Referral\ReferralLabel;
-use Nebalus\Webapi\Value\Module\Referral\Referrals;
 use Nebalus\Webapi\Value\Url;
 use Nebalus\Webapi\Value\User\UserId;
 use PDO;
@@ -75,7 +75,7 @@ readonly class MySqlReferralRepository
     /**
      * @throws ApiException
      */
-    public function getReferralClicksFromRange(UserId $ownerId, ReferralCode $code, int $range): ReferralClicks
+    public function getReferralClicksFromRange(UserId $ownerId, ReferralCode $code, int $range): ReferralClickCollection
     {
         $data = [];
         $sql = <<<SQL
@@ -104,7 +104,7 @@ readonly class MySqlReferralRepository
             $data[] = ReferralClick::fromArray($row);
         }
 
-        return ReferralClicks::fromArray(...$data);
+        return ReferralClickCollection::fromObjects(...$data);
     }
 
     public function deleteReferralByCodeFromOwner(UserId $ownerId, ReferralCode $code): bool
@@ -148,13 +148,13 @@ readonly class MySqlReferralRepository
         $stmt->bindValue(':code', $code->asString());
         $stmt->execute();
 
-        return $this->findReferralByCodeFromOwner($ownerId, $code);
+        return $this->findReferralByCode($code);
     }
 
     /**
      * @throws ApiException
      */
-    public function getReferralsFromOwner(UserId $ownerUserId): Referrals
+    public function findReferralsFromOwner(UserId $ownerUserId): ReferralCollection
     {
         $sql = <<<SQL
             SELECT 
@@ -174,7 +174,7 @@ readonly class MySqlReferralRepository
             $data[] = Referral::fromArray($row);
         }
 
-        return Referrals::fromArray(...$data);
+        return ReferralCollection::fromObjects(...$data);
     }
 
     /**
@@ -191,34 +191,6 @@ readonly class MySqlReferralRepository
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':code', $code->asString());
-        $stmt->execute();
-
-        $data = $stmt->fetch();
-
-        if (!$data) {
-            return null;
-        }
-
-        return Referral::fromArray($data);
-    }
-
-    /**
-     * @throws ApiException
-     */
-    public function findReferralByCodeFromOwner(UserId $ownerId, ReferralCode $code): ?Referral
-    {
-        $sql = <<<SQL
-            SELECT 
-                * 
-            FROM referrals
-            WHERE 
-                owner_id = :owner_id
-                AND code = :code
-        SQL;
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':owner_id', $ownerId->asInt());
         $stmt->bindValue(':code', $code->asString());
         $stmt->execute();
 

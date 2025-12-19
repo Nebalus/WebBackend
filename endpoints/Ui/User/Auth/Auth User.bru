@@ -1,0 +1,23 @@
+meta {
+  name: Auth User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{protocol}}://{{host}}/ui/auth
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  let body = res.getBody();
+  bru.setVar("auth_jwt",body.payload.jwt);
+}

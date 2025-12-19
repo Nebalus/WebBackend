@@ -1,0 +1,15 @@
+meta {
+  name: GetAll Other Blog
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

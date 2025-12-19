@@ -1,0 +1,11 @@
+meta {
+  name: Metrics
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/metrics
+  body: none
+  auth: inherit
+}

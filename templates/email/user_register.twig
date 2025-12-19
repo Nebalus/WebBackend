@@ -1,0 +1,9 @@
+{% extends "/email/base_layout.twig" %}
+
+{% block subject %}Welcome to nebalus.dev{% endblock %}
+
+{% block content %}
+    <p>Hello {{ username }},</p>
+
+    <p>Thank you for registering.</p>
+{% endblock %}

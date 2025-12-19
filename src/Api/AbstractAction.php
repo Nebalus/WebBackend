@@ -2,37 +2,28 @@
 
 namespace Nebalus\Webapi\Api;
 
+use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Value\Internal\Result\Result;
-use Psr\Http\Message\ResponseInterface as ResponseInterface;
+use Slim\Http\Interfaces\ResponseInterface;
 use Slim\Http\Response as Response;
 use Slim\Http\ServerRequest as Request;
-use Throwable;
 
 abstract class AbstractAction
 {
+    /**
+     * @throws ApiException
+     */
     public function __invoke(
         Request $request,
         Response $response,
         array $args
     ): ResponseInterface {
-        try {
-            $response = $this->execute($request, $response, $args);
-        } catch (ApiException $exception) {
-            $result = Result::createFromException(
-                $exception,
-                $exception->getCode()
-            );
-            $response->getBody()->write($result->getPayloadAsJson());
-            return $response->withStatus($result->getStatusCode());
-        } catch (Throwable $exception) {
-            $result = Result::createFromException(
-                $exception
-            );
-            $response->getBody()->write($result->getPayloadAsJson());
-            return $response->withStatus($result->getStatusCode());
+        if (isset($args['user_id']) && $args['user_id'] === "self" && $request->getAttribute(AttributeTypes::REQUESTING_USER, null) !== null) {
+            $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
+            $args['user_id'] = $requestingUser->getUserId()->asInt();
         }
-        return $response;
+
+        return $this->execute($request, $response, $args);
     }
 
     /**
@@ -42,5 +33,5 @@ abstract class AbstractAction
         Request $request,
         Response $response,
         array $pathArgs
-    ): Response;
+    ): ResponseInterface;
 }

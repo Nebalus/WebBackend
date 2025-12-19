@@ -1,0 +1,20 @@
+meta {
+  name: Delete Own Referral
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{protocol}}://{{host}}/ui/users/:userId/services/referrals/:code
+  body: none
+  auth: bearer
+}
+
+params:path {
+  code: nSW1Oep4
+  userId: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

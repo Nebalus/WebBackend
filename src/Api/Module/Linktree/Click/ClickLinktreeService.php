@@ -2,16 +2,18 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Click;
 
-use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
+
+use Nebalus\Webapi\Slim\ResultInterface;
 
 readonly class ClickLinktreeService
 {
-    public function __construct()
-    {
+    public function __construct(
+        private ClickLinktreeResponder $view,
+    ) {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(ClickLinktreeValidator $validator): ResultInterface
     {
-        return ClickLinktreeView::render();
+        return $this->view->render();
     }
 }

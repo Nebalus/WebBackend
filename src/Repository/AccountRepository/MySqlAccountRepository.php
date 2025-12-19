@@ -5,8 +5,8 @@ namespace Nebalus\Webapi\Repository\AccountRepository;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Value\Account\AccountId;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
-use Nebalus\Webapi\Value\Account\InvitationToken\InvitationTokens;
-use Nebalus\Webapi\Value\Account\InvitationToken\PureInvitationToken;
+use Nebalus\Webapi\Value\Account\InvitationToken\InvitationTokenCollection;
+use Nebalus\Webapi\Value\Account\InvitationToken\InvitationTokenValue;
 use Nebalus\Webapi\Value\User\UserId;
 use PDO;
 
@@ -53,14 +53,14 @@ readonly class MySqlAccountRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':invited_id', $invitationToken->getInvitedId()->asInt());
         $stmt->bindValue(':used_at', $invitationToken->getUsedAtDate()->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':token', $invitationToken->getPureInvitationToken()->asString());
+        $stmt->bindValue(':token', $invitationToken->getInvitationTokenValue()->asString());
         $stmt->execute();
     }
 
     /**
      * @throws ApiException
      */
-    public function findInvitationTokenByFields(PureInvitationToken $token): ?InvitationToken
+    public function findInvitationTokenByFields(InvitationTokenValue $token): ?InvitationToken
     {
         $sql = <<<SQL
             SELECT 
@@ -86,7 +86,7 @@ readonly class MySqlAccountRepository
     /**
      * @throws ApiException
      */
-    public function getInvitationTokensFromOwnerId(AccountId $ownerId): InvitationTokens
+    public function getInvitationTokensFromOwnerId(AccountId $ownerId): InvitationTokenCollection
     {
         $data = [];
         $sql = <<<SQL
@@ -104,6 +104,6 @@ readonly class MySqlAccountRepository
         while ($row = $stmt->fetch()) {
             $data[] = InvitationToken::fromArray($row);
         }
-        return InvitationTokens::fromArray(...$data);
+        return InvitationTokenCollection::fromObjects(...$data);
     }
 }

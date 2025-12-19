@@ -1,0 +1,26 @@
+meta {
+  name: Create Role
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{protocol}}://{{host}}/ui/admin/roles
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "access_level": 113,
+    "applies_to_everyone": false,
+    "color": "0243ff",
+    "disabled": true,
+    "description": "sdf",
+    "name": "sdss"
+  }
+}

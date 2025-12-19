@@ -1,0 +1,24 @@
+meta {
+  name: Get Own Referral Click History
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/users/:userId/services/referrals/:code/click_history?range=30
+  body: none
+  auth: bearer
+}
+
+params:query {
+  range: 30
+}
+
+params:path {
+  userId: self
+  code: K5w1rfqC
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

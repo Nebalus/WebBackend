@@ -13,8 +13,7 @@ class GeneralConfig
     private Level $logLevel;
     private string $jwtSecret;
     private string $accessControlAllowOrigin;
-    private int $jwtNormalExpirationTime;
-    private int $jwtExtendedExpirationTime;
+    private int $jwtExpirationTime;
 
     public function __construct()
     {
@@ -22,8 +21,7 @@ class GeneralConfig
         $this->isDevelopment = strtolower(getenv("APP_ENV")) === "development";
         $this->logLevel = Level::fromName(getenv("ERROR_LOGLEVEL"));
         $this->jwtSecret = getenv("JWT_SECRET");
-        $this->jwtNormalExpirationTime = (int) getenv('JWT_NORMAL_EXPIRATION_TIME');
-        $this->jwtExtendedExpirationTime = (int) getenv('JWT_EXTENDED_EXPIRATION_TIME');
+        $this->jwtExpirationTime = (int) getenv('JWT_EXPIRATION_TIME');
         $this->accessControlAllowOrigin = getenv("ACCESS_CONTROL_ALLOW_ORIGIN");
     }
 
@@ -47,16 +45,11 @@ class GeneralConfig
         return $this->jwtSecret;
     }
 
-    public function getJwtNormalExpirationTime(): int
+    public function getJwtExpirationTime(): int
     {
-        return $this->jwtNormalExpirationTime;
+        return $this->jwtExpirationTime;
     }
 
-    public function getJwtExtendedExpirationTime(): int
-    {
-        return $this->jwtExtendedExpirationTime;
-    }
-    
     public function getAccessControlAllowOrigin(): string
     {
         return $this->accessControlAllowOrigin;

@@ -1,0 +1,15 @@
+meta {
+  name: Edit Own Blog
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

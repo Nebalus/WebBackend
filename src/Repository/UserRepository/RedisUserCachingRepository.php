@@ -2,6 +2,6 @@
 
 namespace Nebalus\Webapi\Repository\UserRepository;
 
-class RedisUserCachingRepository
+readonly class RedisUserCachingRepository
 {
 }

@@ -4,7 +4,6 @@ namespace Nebalus\Webapi\Config;
 
 class MySqlConfig
 {
-
     private string $mysqlPasswd;
     private string $mysqlHost;
     private string $mysqlPort;
@@ -34,7 +33,6 @@ class MySqlConfig
     {
         return $this->mysqlPort;
     }
-
 
     public function getMySqlDatabase(): string
     {

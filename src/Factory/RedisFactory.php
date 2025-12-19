@@ -2,7 +2,6 @@
 
 namespace Nebalus\Webapi\Factory;
 
-use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Config\RedisConfig;
 use Redis;
 

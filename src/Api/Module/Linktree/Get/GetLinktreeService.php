@@ -2,16 +2,17 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Get;
 
-use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
+use Nebalus\Webapi\Slim\ResultInterface;
 
 readonly class GetLinktreeService
 {
     public function __construct(
+        private GetLinktreeResponder $view,
     ) {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(GetLinktreeValidator $validator): ResultInterface
     {
-        return GetLinktreeView::render();
+        return $this->view->render();
     }
 }

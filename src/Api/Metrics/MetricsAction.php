@@ -12,8 +12,8 @@ use Throwable;
 class MetricsAction extends AbstractAction
 {
     public function __construct(
-        private RenderTextFormat $renderTextFormat,
-        private CollectorRegistry $registry,
+        private readonly RenderTextFormat $renderTextFormat,
+        private readonly CollectorRegistry $registry,
     ) {
     }
 
