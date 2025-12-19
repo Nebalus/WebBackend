@@ -2,7 +2,7 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Click;
 
-use Nebalus\Webapi\Api\Module\Linktree\Create\CreateLinktreeValidator;
+
 use Nebalus\Webapi\Slim\ResultInterface;
 
 readonly class ClickLinktreeService
@@ -12,7 +12,7 @@ readonly class ClickLinktreeService
     ) {
     }
 
-    public function execute(CreateLinktreeValidator $validator): ResultInterface
+    public function execute(ClickLinktreeValidator $validator): ResultInterface
     {
         return $this->view->render();
     }

@@ -4,11 +4,16 @@ namespace Nebalus\Webapi\Api\Admin\User\GetAll;
 
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\User\UserAccount;
 
 class GetAllUserResponder
 {
-    public function render(): ResultInterface
+    /**
+     * @param UserAccount[] $users
+     */
+    public function render(array $users): ResultInterface
     {
-        return Result::createSuccess("GET ALL USER ENDPOINT");
+        $payload = array_map(fn($user) => $user->asArray(), $users);
+        return Result::createSuccess("List of all users", 200, $payload);
     }
 }

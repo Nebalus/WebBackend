@@ -13,6 +13,7 @@ class ClickLinktreeAction extends AbstractAction
 {
     public function __construct(
         private readonly ClickLinktreeService $service,
+        private readonly ClickLinktreeValidator $validator
     ) {
     }
 
@@ -23,8 +24,8 @@ class ClickLinktreeAction extends AbstractAction
 
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
-        $params = $request->getParams() ?? [];
-        $result = $this->service->execute($params);
+        $this->validator->validate($request, $pathArgs);
+        $result = $this->service->execute($this->validator);
         return $response->withJson($result->getPayload(), $result->getStatusCode());
     }
 }

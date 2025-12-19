@@ -231,4 +231,22 @@ readonly class MySqlUserRepository
 
         return $stmt->rowCount() === 1;
     }
+
+    /**
+     * @return UserAccount[]
+     * @throws ApiException
+     */
+    public function getAllUsers(): array
+    {
+        $sql = "SELECT * FROM users";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        $users = [];
+        while ($row = $stmt->fetch()) {
+            $users[] = UserAccount::fromArray($row);
+        }
+
+        return $users;
+    }
 }

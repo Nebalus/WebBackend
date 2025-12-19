@@ -1,0 +1,23 @@
+<?php
+
+namespace UnitTesting\Api\Module\Linktree\Get;
+
+use Nebalus\Webapi\Api\Module\Linktree\Get\GetLinktreeValidator;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+use Slim\Http\ServerRequest;
+
+class GetLinktreeValidatorTest extends TestCase
+{
+    #[Test]
+    public function testValidatePasses(): void
+    {
+        $validator = new GetLinktreeValidator();
+        $request = $this->createMock(ServerRequest::class);
+        $pathArgs = [];
+
+        $validator->validate($request, $pathArgs);
+
+        $this->assertTrue(true); // Should not throw exception
+    }
+}
