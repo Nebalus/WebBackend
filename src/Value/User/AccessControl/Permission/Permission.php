@@ -10,7 +10,7 @@ readonly class Permission
     private function __construct(
         private PermissionId $permissionId,
         private PermissionNode $node,
-        private PermissionDescription $description,
+        private ?PermissionDescription $description,
         private PermissionPrestigeLevel $prestigeLevel,
         private ?PermissionValue $defaultValue
     ) {
@@ -19,7 +19,7 @@ readonly class Permission
     public static function from(
         PermissionId $permissionId,
         PermissionNode $node,
-        PermissionDescription $description,
+        ?PermissionDescription $description,
         PermissionPrestigeLevel $prestigeLevel,
         ?PermissionValue $defaultValue = null
     ): self {
@@ -40,7 +40,7 @@ readonly class Permission
     {
         $permissionId = PermissionId::from($value['permission_id']);
         $node = PermissionNode::from($value['node']);
-        $description = PermissionDescription::from($value['description']);
+        $description = empty($value['description']) ? null : PermissionDescription::from($value['description']);
         $prestigeLevel = PermissionPrestigeLevel::from($value['prestige_level']);
         $defaultValue = empty($value['default_value']) ? null : PermissionValue::from($value['default_value']);
 
@@ -52,7 +52,7 @@ readonly class Permission
         return [
             'permission_id' => $this->permissionId->asInt(),
             'node' => $this->node->asString(),
-            'description' => $this->description->asString(),
+            'description' => $this->description?->asString(),
             'prestige_level' => $this->prestigeLevel->asString(),
             'default_value' => $this->defaultValue?->asInt(),
         ];
@@ -68,7 +68,7 @@ readonly class Permission
         return $this->node;
     }
 
-    public function getDescription(): PermissionDescription
+    public function getDescription(): ?PermissionDescription
     {
         return $this->description;
     }

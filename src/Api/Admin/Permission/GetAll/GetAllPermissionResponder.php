@@ -16,7 +16,7 @@ class GetAllPermissionResponder
             $fields[] = [
                 "permission_id" => $permission->getPermissionId()->asInt(),
                 "node" => $permission->getNode()->asString(),
-                "description" => $permission->getDescription()->asString(),
+                "description" => $permission->getDescription()?->asString(),
                 "default_value" => $permission->getDefaultValue()?->asInt(),
                 "prestige_level" => [
                     "type" => $permission->getPrestigeLevel()->asString(),
