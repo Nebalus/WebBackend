@@ -2,7 +2,6 @@
 
 namespace Nebalus\Webapi\Repository\AccountRepository;
 
-class RedisAccountCachingRepository
+readonly class RedisAccountCachingRepository
 {
-
 }

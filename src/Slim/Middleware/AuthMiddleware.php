@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Slim\Middleware;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Config\GeneralConfig;
+use Nebalus\Webapi\Config\Types\AttributeTypes;
+use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
-use Nebalus\Webapi\Value\Internal\Result\Result;
+use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\User\UserId;
 use Override;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use ReallySimpleJWT\Token;
 use Slim\App;
 
@@ -35,10 +36,21 @@ readonly class AuthMiddleware implements MiddlewareInterface
         $authHeader = $request->getHeader('Authorization');
 
         if (empty($authHeader)) {
-            return $this->denyRequest('Missing "Authorization" header');
+            return $this->denyRequest("Missing 'Authorization' header");
         }
 
-        return $this->processJwt($authHeader[0], $request, $handler);
+        $headerSplit = explode(" ", $authHeader[0]);
+        $headerComponentCount = count($headerSplit);
+
+        if ($headerComponentCount !== 2) {
+            return $this->denyRequest("Invalid 'Authorization' header provided");
+        }
+
+        if ($headerSplit[0] != "Bearer") {
+            return $this->denyRequest("No 'Bearer' JWT provided");
+        }
+
+        return $this->processJwt($headerSplit[1], $request, $handler);
     }
 
     /**
@@ -54,11 +66,11 @@ readonly class AuthMiddleware implements MiddlewareInterface
         }
 
         if (!Token::validate($jwt, $this->env->getJwtSecret())) {
-            return $this->denyRequest('The JWT is not valid');
+            return $this->denyRequest('Your provided JWT is not valid');
         }
 
         if (!Token::validateExpiration($jwt)) {
-            return $this->denyRequest('The JWT has expired');
+            return $this->denyRequest('Your provided JWT has expired');
         }
 
         $payloadParsed = Token::parser($jwt)->parse();
@@ -71,11 +83,11 @@ readonly class AuthMiddleware implements MiddlewareInterface
             $user->isDisabled() ||
             $payloadParsed->getIssuedAt() < $user->getUpdatedAtDate()->getTimestamp()
         ) {
-            return $this->denyRequest("The JWT has expired");
+            return $this->denyRequest("Your provided JWT has expired");
         }
 
-        $request = $request->withAttribute("user", $user);
-        $request = $request->withAttribute("authType", "jwt");
+        $request = $request->withAttribute(AttributeTypes::REQUESTING_USER, $user);
+        $request = $request->withAttribute(AttributeTypes::AUTH_TYPE, "jwt");
 
         return $handler->handle($request);
     }

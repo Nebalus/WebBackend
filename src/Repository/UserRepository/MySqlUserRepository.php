@@ -7,7 +7,10 @@ namespace Nebalus\Webapi\Repository\UserRepository;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\AccountRepository\MySqlAccountRepository;
 use Nebalus\Webapi\Value\Account\InvitationToken\InvitationToken;
-use Nebalus\Webapi\Value\User\User;
+use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
+use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
+use Nebalus\Webapi\Value\User\UserAccount;
 use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\UserId;
 use Nebalus\Webapi\Value\User\Username;
@@ -24,7 +27,7 @@ readonly class MySqlUserRepository
     /**
      * @throws ApiException
      */
-    public function registerUser(User $user, InvitationToken $invitationToken): User
+    public function registerUser(UserAccount $user, InvitationToken $invitationToken): UserAccount
     {
         $this->pdo->beginTransaction();
         $newUser = $this->insertUser($user);
@@ -38,7 +41,7 @@ readonly class MySqlUserRepository
     /**
      * @throws ApiException
      */
-    private function insertUser(User $user): User
+    private function insertUser(UserAccount $user): UserAccount
     {
         $sql = <<<SQL
             INSERT INTO users
@@ -60,20 +63,18 @@ readonly class MySqlUserRepository
         $userToArray = $user->asArray();
         $userToArray["user_id"] = UserId::from($this->pdo->lastInsertId())->asInt();
 
-        return User::fromArray($userToArray);
+        return UserAccount::fromArray($userToArray);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromId(UserId $userId): ?User
+    public function findUserFromId(UserId $userId): ?UserAccount
     {
         $sql = <<<SQL
             SELECT 
                 * 
             FROM users
-            INNER JOIN 
-                accounts ON accounts.user_id = users.user_id 
             WHERE 
                 users.user_id = :user_id
         SQL;
@@ -87,20 +88,18 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromEmail(UserEmail $email): ?User
+    public function findUserFromEmail(UserEmail $email): ?UserAccount
     {
         $sql = <<<SQL
             SELECT 
                 * 
             FROM users 
-            INNER JOIN 
-                accounts ON accounts.user_id = users.user_id
             WHERE
                 users.email = :email
         SQL;
@@ -114,20 +113,18 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
     }
 
     /**
      * @throws ApiException
      */
-    public function findUserFromUsername(Username $username): ?User
+    public function findUserFromUsername(Username $username): ?UserAccount
     {
         $sql = <<<SQL
             SELECT
                 * 
             FROM users
-            INNER JOIN 
-                accounts ON accounts.user_id = users.user_id 
             WHERE 
                 users.username = :username
         SQL;
@@ -141,6 +138,115 @@ readonly class MySqlUserRepository
             return null;
         }
 
-        return User::fromArray($data);
+        return UserAccount::fromArray($data);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function getAllRolesFromUserByUserId(UserId $userId): RoleCollection
+    {
+        $sql = <<<SQL
+            (
+                SELECT
+                    roles.role_id,
+                    roles.name,
+                    roles.description,
+                    HEX(roles.color) AS color,
+                    roles.access_level,
+                    roles.applies_to_everyone,
+                    roles.deletable,
+                    roles.editable,
+                    roles.disabled,
+                    roles.created_at,
+                    roles.updated_at
+                FROM
+                    user_role_map
+                INNER JOIN roles ON roles.role_id = user_role_map.role_id
+                WHERE user_role_map.user_id = :userId
+            )
+            UNION
+            (
+                SELECT
+                    roles.role_id,
+                    roles.name,
+                    roles.description,
+                    HEX(roles.color) AS color,
+                    roles.access_level,
+                    roles.applies_to_everyone,
+                    roles.deletable,
+                    roles.editable,
+                    roles.disabled,
+                    roles.created_at,
+                    roles.updated_at
+                FROM
+                    roles
+                WHERE roles.applies_to_everyone = 1
+            )
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':userId', $userId->asInt(), PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = [];
+
+        while ($row = $stmt->fetch()) {
+            $data[] = Role::fromArray($row);
+        }
+
+        return RoleCollection::fromObjects(...$data);
+    }
+
+    public function insertRoleToUserByRoleId(UserId $userId, RoleId $roleId): bool
+    {
+        $sql = <<<SQL
+            INSERT IGNORE INTO user_role_map
+                (user_id, role_id) 
+            VALUES 
+                (:user_id,:role_id)
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->bindValue(':role_id', $roleId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function removeRoleFromUserByRoleId(UserId $userId, RoleId $roleId): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM user_role_map 
+            WHERE 
+                user_id = :user_id 
+                AND role_id = :role_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->bindValue(':role_id', $roleId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    /**
+     * @return UserAccount[]
+     * @throws ApiException
+     */
+    public function getAllUsers(): array
+    {
+        $sql = "SELECT * FROM users";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        $users = [];
+        while ($row = $stmt->fetch()) {
+            $users[] = UserAccount::fromArray($row);
+        }
+
+        return $users;
     }
 }

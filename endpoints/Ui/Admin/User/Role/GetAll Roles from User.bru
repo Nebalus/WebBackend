@@ -1,0 +1,28 @@
+meta {
+  name: GetAll Roles from User
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/admin/users/:userid/roles/all
+  body: none
+  auth: bearer
+}
+
+params:path {
+  userid: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+vars:pre-request {
+  userid: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

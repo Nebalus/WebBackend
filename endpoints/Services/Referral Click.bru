@@ -1,0 +1,15 @@
+meta {
+  name: Referral Click
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/services/referral/:code
+  body: none
+  auth: inherit
+}
+
+params:path {
+  code: K5w1rfqC
+}

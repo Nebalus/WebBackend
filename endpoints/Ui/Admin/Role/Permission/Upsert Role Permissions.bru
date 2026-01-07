@@ -1,0 +1,29 @@
+meta {
+  name: Upsert Role Permissions
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{protocol}}://{{host}}/ui/admin/roles/:roleId/permissions
+  body: json
+  auth: bearer
+}
+
+params:path {
+  roleId: 4
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  [
+    {
+      "node": "feature",
+      "allow_all_sub_permissions": true,
+      "value": null
+    }
+  ]
+}

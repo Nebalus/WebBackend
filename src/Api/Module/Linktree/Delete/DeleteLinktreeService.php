@@ -2,16 +2,17 @@
 
 namespace Nebalus\Webapi\Api\Module\Linktree\Delete;
 
-use Nebalus\Webapi\Value\Internal\Result\ResultInterface;
+use Nebalus\Webapi\Slim\ResultInterface;
 
 readonly class DeleteLinktreeService
 {
     public function __construct(
+        private DeleteLinktreeResponder $view,
     ) {
     }
 
-    public function execute(array $params): ResultInterface
+    public function execute(DeleteLinktreeValidator $validator): ResultInterface
     {
-        return DeleteLinktreeView::render();
+        return $this->view->render();
     }
 }

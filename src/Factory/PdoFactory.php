@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nebalus\Webapi\Factory;
 
-use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Config\MySqlConfig;
 use PDO;
 

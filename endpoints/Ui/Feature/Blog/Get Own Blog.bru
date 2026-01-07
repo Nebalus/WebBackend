@@ -1,0 +1,15 @@
+meta {
+  name: Get Own Blog
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

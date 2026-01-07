@@ -1,0 +1,33 @@
+{% extends "/email/base_layout.twig" %}
+
+{% block subject %}
+    Administrative Notification
+{% endblock %}
+
+{% block content %}
+    <p>Hello {{ recipient_name }},</p>
+
+    <p>
+        You have received the following message from the administrator:
+    </p>
+
+    <table width="100%" cellpadding="10" cellspacing="0" style="background-color:#f5f5f5; border:1px solid #ddd;">
+        <tr>
+            <td>
+                {{ message }}
+            </td>
+        </tr>
+    </table>
+
+    {% if action_url is defined %}
+        <p>
+            <a href="{{ action_url }}">
+                {{ action_label|default('View details') }}
+            </a>
+        </p>
+    {% endif %}
+
+    <p>
+        If you have questions, please contact support.
+    </p>
+{% endblock %}

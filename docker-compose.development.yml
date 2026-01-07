@@ -23,15 +23,18 @@ services:
       dockerfile: docker/php-fpm/Dockerfile
       target: development
     container_name: nebalus-web-api
-    user: '1001:1001' # Default User ID
+    user: '1000:1000' # Default User ID
     volumes:
       - ./:/var/www:rw
+    env_file:
+      - path: ./.env
+        required: true
     environment:
+      RESEND_API_KEY: ${RESEND_API_KEY}
       APP_ENV: "development"
       ERROR_LOGLEVEL: "Warning"
-      JWT_SECRET: "Fm4}hopm2JGs]#h:!EE1)w0#?b9-8abjGg6PCuk.-j2R7w8OIqSO3D'ev@2]h!"
-      JWT_NORMAL_EXPIRATION_TIME: 86400
-      JWT_EXTENDED_EXPIRATION_TIME: 604800
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_TIME: 86400
       ACCESS_CONTROL_ALLOW_ORIGIN: "*"
       MYSQL_HOST: "nebalus-web-storage-mysql"
       MYSQL_PORT: "3306"

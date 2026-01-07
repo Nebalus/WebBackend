@@ -4,7 +4,6 @@ namespace Nebalus\Webapi\Slim\Middleware;
 
 use Override;
 use Prometheus\CollectorRegistry;
-use Prometheus\Exception\MetricsRegistrationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;

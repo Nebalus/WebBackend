@@ -1,0 +1,14 @@
+{% extends "/email/base_layout.twig" %}
+
+{% block subject %}New Login Detected{% endblock %}
+
+{% block content %}
+    <p>Hello {{ username }},</p>
+
+    <p>A new login was detected:</p>
+
+    <ul>
+        <li>IP address: {{ ip_address }}</li>
+        <li>Time: {{ login_time }}</li>
+    </ul>
+{% endblock %}
