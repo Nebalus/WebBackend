@@ -2,7 +2,9 @@
 
 namespace Nebalus\Webapi\Api\Health;
 
+use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Api\AbstractAction;
+use Nebalus\Webapi\Value\Result\Result;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 use Throwable;
@@ -18,7 +20,10 @@ class HealthAction extends AbstractAction
      */
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
-        $response->getBody()->write("This service is healthy");
-        return $response->withHeader('Content-Type', "text/html");
+        $result = Result::createSuccess("This service is healthy", StatusCodeInterface::STATUS_OK, [
+            "status" => "healthy",
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        return $response->withJson($result->getPayload(), $result->getStatusCode());
     }
 }
