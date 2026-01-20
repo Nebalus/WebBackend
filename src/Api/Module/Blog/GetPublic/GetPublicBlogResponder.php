@@ -1,16 +1,20 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Module\Blog\GetAll;
+namespace Nebalus\Webapi\Api\Module\Blog\GetPublic;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Blog\BlogPostCollection;
 use Nebalus\Webapi\Value\Result\Result;
 
-class GetAllBlogResponder
+class GetPublicBlogResponder
 {
-    public function render(BlogPostCollection $blogs): ResultInterface
-    {
+    public function render(
+        BlogPostCollection $blogs,
+        int $page,
+        int $perPage,
+        int $totalCount
+    ): ResultInterface {
         $fields = [];
         foreach ($blogs as $blog) {
             $fields[] = [
@@ -18,14 +22,23 @@ class GetAllBlogResponder
                 "slug" => $blog->getBlogSlug()->asString(),
                 "title" => $blog->getBlogTitle()->asString(),
                 "excerpt" => $blog->getBlogExcerpt()->asString(),
-                "status" => $blog->getBlogStatus()->value,
                 "is_featured" => $blog->isFeatured(),
                 "published_at" => $blog->getPublishedAt()?->format(DATE_ATOM),
-                "created_at" => $blog->getCreatedAt()->format(DATE_ATOM),
-                "updated_at" => $blog->getUpdatedAt()->format(DATE_ATOM),
             ];
         }
 
-        return Result::createSuccess("List of blogs found", StatusCodeInterface::STATUS_OK, $fields);
+        $totalPages = (int) ceil($totalCount / $perPage);
+
+        $payload = [
+            "blogs" => $fields,
+            "pagination" => [
+                "page" => $page,
+                "per_page" => $perPage,
+                "total_count" => $totalCount,
+                "total_pages" => $totalPages,
+            ]
+        ];
+
+        return Result::createSuccess("Public blogs retrieved", StatusCodeInterface::STATUS_OK, $payload);
     }
 }

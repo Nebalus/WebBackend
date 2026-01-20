@@ -24,6 +24,7 @@ use Nebalus\Webapi\Api\Module\Blog\Delete\DeleteBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Edit\EditBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Get\GetBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\GetAll\GetAllBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\GetPublic\GetPublicBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
@@ -148,6 +149,7 @@ readonly class RouteCollector
         $this->app->group("/services", function (RouteCollectorProxy $group) {
             $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
+            $group->map(["GET"], "/blogs", GetPublicBlogAction::class);
         });
     }
 }
