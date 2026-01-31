@@ -36,9 +36,10 @@ readonly class DefaultErrorHandler implements ErrorHandlerInterface
                 $errorMessage = 'Method not allowed';
                 break;
             case HttpNotFoundException::class:
-                $statusCode = StatusCodeInterface::STATUS_NOT_FOUND;
-                $errorMessage = 'Not found';
-                break;
+                $notFoundResult = Result::createError("This is the API for my website https://www.nebalus.dev", StatusCodeInterface::STATUS_NOT_FOUND);
+                $response = $this->app->getResponseFactory()->createResponse();
+                $response->getBody()->write($notFoundResult->getPayloadAsJson());
+                return $response->withHeader('Content-Type', 'application/json')->withStatus($notFoundResult->getStatusCode());
         }
 
         if ($exception instanceof ApiException) {

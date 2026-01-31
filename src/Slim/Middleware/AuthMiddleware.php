@@ -81,7 +81,7 @@ readonly class AuthMiddleware implements MiddlewareInterface
         if (
             $user === null ||
             $user->isDisabled() ||
-            $payloadParsed->getIssuedAt() < $user->getUpdatedAtDate()->getTimestamp()
+            $payloadParsed->getIssuedAt() < $user->getPasswordUpdatedAtDate()->getTimestamp()
         ) {
             return $this->denyRequest("Your provided JWT has expired");
         }
