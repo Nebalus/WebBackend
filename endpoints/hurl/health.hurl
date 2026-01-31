@@ -5,4 +5,4 @@ GET {{BASE_URL}}/health
 
 HTTP 200
 [Asserts]
-jsonpath "$.status" == "ok"
+jsonpath "$.payload.status" == "healthy"
