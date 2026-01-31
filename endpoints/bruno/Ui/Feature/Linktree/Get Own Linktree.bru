@@ -1,0 +1,15 @@
+meta {
+  name: Get Own Linktree
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/user/self/services/linktree
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

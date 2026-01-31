@@ -1,0 +1,15 @@
+meta {
+  name: Delete Own Blog
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

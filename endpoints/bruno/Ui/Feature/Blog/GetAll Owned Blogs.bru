@@ -1,0 +1,15 @@
+meta {
+  name: GetAll Owned Blogs
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

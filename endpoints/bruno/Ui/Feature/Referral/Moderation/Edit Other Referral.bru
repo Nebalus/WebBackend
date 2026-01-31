@@ -1,0 +1,27 @@
+meta {
+  name: Edit Other Referral
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{protocol}}://{{host}}/ui/users/:userid/services/referrals/:code
+  body: json
+  auth: bearer
+}
+
+params:path {
+  code: ySJ4PuQ1
+  userid: 1
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "url": "https://test.de",
+    "label": "test"
+  }
+}

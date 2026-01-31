@@ -1,0 +1,15 @@
+meta {
+  name: Edit Other Blog
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{protocol}}://{{host}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

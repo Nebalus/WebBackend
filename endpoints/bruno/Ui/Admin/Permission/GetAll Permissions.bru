@@ -1,0 +1,15 @@
+meta {
+  name: GetAll Permissions
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/admin/permissions/all
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

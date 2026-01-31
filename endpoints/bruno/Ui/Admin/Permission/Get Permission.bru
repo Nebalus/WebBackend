@@ -1,0 +1,19 @@
+meta {
+  name: Get Permission
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/admin/permissions/:permissionId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  permissionId: 4
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
