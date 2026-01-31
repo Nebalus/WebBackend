@@ -16,6 +16,7 @@ readonly class BlogPost
         private BlogId $blogId,
         private UserId $ownerId,
         private BlogSlug $blogSlug,
+        private ?int $imageBannerId,
         private BlogExcerpt $blogExcerpt,
         private BlogTitle $blogTitle,
         private BlogContent $blogContent,
@@ -43,6 +44,7 @@ readonly class BlogPost
         $blogId = BlogId::from($data["blog_id"]);
         $ownerId = UserId::from($data["owner_id"]);
         $blogSlug = BlogSlug::from($data["slug"]);
+        $imageBannerId = empty($data["image_banner_id"]) ? null : (int) $data["image_banner_id"];
         $blogExcerpt = BlogExcerpt::from($data["excerpt"]);
         $blogTitle = BlogTitle::from($data["title"]);
         $blogContent = BlogContent::from($data["content"]);
@@ -53,6 +55,7 @@ readonly class BlogPost
             $blogId,
             $ownerId,
             $blogSlug,
+            $imageBannerId,
             $blogExcerpt,
             $blogTitle,
             $blogContent,
@@ -70,6 +73,7 @@ readonly class BlogPost
             "blog_id" => $this->blogId->asInt(),
             "owner_id" => $this->ownerId->asInt(),
             "slug" => $this->blogSlug->asString(),
+            "image_banner_id" => $this->imageBannerId,
             "excerpt" => $this->blogExcerpt->asString(),
             "title" => $this->blogTitle->asString(),
             "content" => $this->blogContent->asString(),
@@ -94,6 +98,11 @@ readonly class BlogPost
     public function getBlogSlug(): BlogSlug
     {
         return $this->blogSlug;
+    }
+
+    public function getImageBannerId(): ?int
+    {
+        return $this->imageBannerId;
     }
 
     public function getBlogExcerpt(): BlogExcerpt

@@ -12,11 +12,13 @@ use Nebalus\Webapi\Value\Module\Blog\BlogSlug;
 use Nebalus\Webapi\Value\Module\Blog\BlogStatus;
 use Nebalus\Webapi\Value\Module\Blog\BlogTitle;
 use Nebalus\Webapi\Value\User\UserId;
+use Nebalus\Sanitizr\Type\NumberType;
 
 class CreateBlogValidator extends AbstractValidator
 {
     private UserId $userId;
     private BlogSlug $slug;
+    private ?int $imageBannerId;
     private BlogTitle $title;
     private BlogContent $content;
     private BlogExcerpt $excerpt;
@@ -31,6 +33,7 @@ class CreateBlogValidator extends AbstractValidator
             ]),
             RequestParamTypes::BODY => S::object([
                 'slug' => BlogSlug::getSchema(),
+                'image_banner_id' => S::number()->optional()->default(null),
                 'title' => BlogTitle::getSchema(),
                 'content' => BlogContent::getSchema(),
                 'excerpt' => BlogExcerpt::getSchema(),
@@ -48,6 +51,7 @@ class CreateBlogValidator extends AbstractValidator
     {
         $this->userId = UserId::from($pathArgsData['user_id']);
         $this->slug = BlogSlug::from($bodyData['slug']);
+        $this->imageBannerId = $bodyData['image_banner_id'];
         $this->title = BlogTitle::from($bodyData['title']);
         $this->content = BlogContent::from($bodyData['content']);
         $this->excerpt = BlogExcerpt::from($bodyData['excerpt']);
@@ -63,6 +67,11 @@ class CreateBlogValidator extends AbstractValidator
     public function getSlug(): BlogSlug
     {
         return $this->slug;
+    }
+
+    public function getImageBannerId(): ?int
+    {
+        return $this->imageBannerId;
     }
 
     public function getTitle(): BlogTitle

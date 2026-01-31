@@ -28,6 +28,7 @@ readonly class CreateBlogService
             $this->blogRepository->insertBlog(
                 $requestingUser->getUserId(),
                 $validator->getSlug(),
+                $validator->getImageBannerId(),
                 $validator->getTitle(),
                 $validator->getContent(),
                 $validator->getExcerpt(),

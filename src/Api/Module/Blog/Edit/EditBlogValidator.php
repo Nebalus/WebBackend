@@ -19,6 +19,7 @@ class EditBlogValidator extends AbstractValidator
     private UserId $userId;
     private BlogId $blogId;
     private BlogSlug $slug;
+    private ?int $imageBannerId;
     private BlogTitle $title;
     private BlogContent $content;
     private BlogExcerpt $excerpt;
@@ -34,6 +35,7 @@ class EditBlogValidator extends AbstractValidator
             ]),
             RequestParamTypes::BODY => S::object([
                 'slug' => BlogSlug::getSchema(),
+                'image_banner_id' => S::number()->optional()->default(null),
                 'title' => BlogTitle::getSchema(),
                 'content' => BlogContent::getSchema(),
                 'excerpt' => BlogExcerpt::getSchema(),
@@ -52,6 +54,7 @@ class EditBlogValidator extends AbstractValidator
         $this->userId = UserId::from($pathArgsData['user_id']);
         $this->blogId = BlogId::from($pathArgsData['blog_id']);
         $this->slug = BlogSlug::from($bodyData['slug']);
+        $this->imageBannerId = $bodyData['image_banner_id'];
         $this->title = BlogTitle::from($bodyData['title']);
         $this->content = BlogContent::from($bodyData['content']);
         $this->excerpt = BlogExcerpt::from($bodyData['excerpt']);
@@ -72,6 +75,11 @@ class EditBlogValidator extends AbstractValidator
     public function getSlug(): BlogSlug
     {
         return $this->slug;
+    }
+
+    public function getImageBannerId(): ?int
+    {
+        return $this->imageBannerId;
     }
 
     public function getTitle(): BlogTitle

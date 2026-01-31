@@ -26,6 +26,7 @@ readonly class MySqlBlogRepository
     public function insertBlog(
         UserId $ownerId,
         BlogSlug $slug,
+        ?int $imageBannerId,
         BlogTitle $title,
         BlogContent $content,
         BlogExcerpt $excerpt,
@@ -34,9 +35,9 @@ readonly class MySqlBlogRepository
     ): bool {
         $sql = <<<SQL
             INSERT INTO blogs
-                (owner_id, slug, title, content, excerpt, status, is_featured, published_at)
+                (owner_id, slug, image_banner_id, title, content, excerpt, status, is_featured, published_at)
             VALUES 
-                (:owner_id, :slug, :title, :content, :excerpt, :status, :is_featured, :published_at)
+                (:owner_id, :slug, :image_banner_id, :title, :content, :excerpt, :status, :is_featured, :published_at)
         SQL;
 
         $publishedAt = $status === BlogStatus::PUBLISHED ? date('Y-m-d H:i:s') : null;
@@ -44,6 +45,7 @@ readonly class MySqlBlogRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':owner_id', $ownerId->asInt());
         $stmt->bindValue(':slug', $slug->asString());
+        $stmt->bindValue(':image_banner_id', $imageBannerId, $imageBannerId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $stmt->bindValue(':title', $title->asString());
         $stmt->bindValue(':content', $content->asString());
         $stmt->bindValue(':excerpt', $excerpt->asString());
@@ -142,6 +144,7 @@ readonly class MySqlBlogRepository
     public function updateBlogFromOwner(
         UserId $ownerId,
         BlogSlug $slug,
+        ?int $imageBannerId,
         BlogTitle $title,
         BlogContent $content,
         BlogExcerpt $excerpt,
@@ -151,6 +154,7 @@ readonly class MySqlBlogRepository
         $sql = <<<SQL
             UPDATE blogs 
             SET 
+                image_banner_id = :image_banner_id,
                 title = :title,
                 content = :content,
                 excerpt = :excerpt,
@@ -163,6 +167,7 @@ readonly class MySqlBlogRepository
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':image_banner_id', $imageBannerId, $imageBannerId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $stmt->bindValue(':title', $title->asString());
         $stmt->bindValue(':content', $content->asString());
         $stmt->bindValue(':excerpt', $excerpt->asString());

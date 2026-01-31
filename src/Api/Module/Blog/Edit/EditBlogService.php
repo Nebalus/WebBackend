@@ -38,6 +38,7 @@ readonly class EditBlogService
             return $this->run(
                 $requestingUser->getUserId(),
                 $validator->getSlug(),
+                $validator->getImageBannerId(),
                 $validator->getTitle(),
                 $validator->getContent(),
                 $validator->getExcerpt(),
@@ -50,6 +51,7 @@ readonly class EditBlogService
             return $this->run(
                 $validator->getUserId(),
                 $validator->getSlug(),
+                $validator->getImageBannerId(),
                 $validator->getTitle(),
                 $validator->getContent(),
                 $validator->getExcerpt(),
@@ -67,13 +69,14 @@ readonly class EditBlogService
     private function run(
         UserId $ownerId,
         BlogSlug $slug,
+        ?int $imageBannerId,
         BlogTitle $title,
         BlogContent $content,
         BlogExcerpt $excerpt,
         BlogStatus $status,
         bool $isFeatured
     ): ResultInterface {
-        $blog = $this->blogRepository->updateBlogFromOwner($ownerId, $slug, $title, $content, $excerpt, $status, $isFeatured);
+        $blog = $this->blogRepository->updateBlogFromOwner($ownerId, $slug, $imageBannerId, $title, $content, $excerpt, $status, $isFeatured);
         if ($blog === null || !$ownerId->equals($blog->getOwnerId())) {
             return Result::createError('Blog does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
