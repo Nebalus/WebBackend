@@ -13,6 +13,7 @@ class GetBlogValidator extends AbstractValidator
 {
     private BlogId $blogId;
     private UserId $userId;
+    private bool $withContent;
 
     public function __construct()
     {
@@ -20,6 +21,9 @@ class GetBlogValidator extends AbstractValidator
             RequestParamTypes::PATH_ARGS => S::object([
                 'blog_id' => BlogId::getSchema(),
                 "user_id" => UserId::getSchema(),
+            ]),
+            RequestParamTypes::QUERY_PARAMS => S::object([
+                "with_content" => S::boolean()->optional()->default(false)->stringable(),
             ])
         ]));
     }
@@ -32,6 +36,7 @@ class GetBlogValidator extends AbstractValidator
     {
         $this->blogId = BlogId::from($pathArgsData['blog_id']);
         $this->userId = UserId::from($pathArgsData["user_id"]);
+        $this->withContent = (bool) $queryParamsData["with_content"];
     }
 
     public function getBlogId(): BlogId
@@ -42,5 +47,10 @@ class GetBlogValidator extends AbstractValidator
     public function getUserId(): UserId
     {
         return $this->userId;
+    }
+
+    public function withContent(): bool
+    {
+        return $this->withContent;
     }
 }

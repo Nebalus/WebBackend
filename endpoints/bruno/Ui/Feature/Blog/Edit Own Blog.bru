@@ -5,11 +5,25 @@ meta {
 }
 
 put {
-  url: {{protocol}}://{{host}}
-  body: none
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs/:blogid
+  body: json
   auth: bearer
+}
+
+params:path {
+  blogid: 12
 }
 
 auth:bearer {
   token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "slug": "drinne-druausdsdsdsen-ssd",
+    "title": "skibididap ",
+    "content": "Skibidi dap dap da pyes yes",
+    "excerpt": "Skibidi Toilete",
+    "status": "PUBLISHED"
+  }
 }

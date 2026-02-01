@@ -31,11 +31,11 @@ readonly class GetBlogService
         $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OWN, true))) {
-            return $this->run($requestingUser->getUserId(), $validator->getBlogId());
+            return $this->run($requestingUser->getUserId(), $validator->getBlogId(), $validator->withContent());
         }
 
         if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OTHER, true))) {
-            return $this->run($validator->getUserId(), $validator->getBlogId());
+            return $this->run($validator->getUserId(), $validator->getBlogId(), $validator->withContent());
         }
 
         return ResultBuilder::buildNoPermissionResult();
@@ -44,12 +44,12 @@ readonly class GetBlogService
     /**
      * @throws ApiException
      */
-    private function run(UserId $ownerId, BlogId $blogId): ResultInterface
+    private function run(UserId $ownerId, BlogId $blogId, bool $withContent): ResultInterface
     {
         $blog = $this->blogRepository->findBlogById($blogId);
         if ($blog === null || !$ownerId->equals($blog->getOwnerId())) {
             return Result::createError('Blog does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }
-        return $this->responder->render($blog);
+        return $this->responder->render($blog, $withContent);
     }
 }

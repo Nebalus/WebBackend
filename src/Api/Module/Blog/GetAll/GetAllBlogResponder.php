@@ -9,7 +9,7 @@ use Nebalus\Webapi\Value\Result\Result;
 
 class GetAllBlogResponder
 {
-    public function render(BlogPostCollection $blogs): ResultInterface
+    public function render(BlogPostCollection $blogs, bool $withContent): ResultInterface
     {
         $fields = [];
         foreach ($blogs as $blog) {
@@ -24,6 +24,10 @@ class GetAllBlogResponder
                 "created_at" => $blog->getCreatedAt()->format(DATE_ATOM),
                 "updated_at" => $blog->getUpdatedAt()->format(DATE_ATOM),
             ];
+
+            if ($withContent) {
+                $fields[count($fields) - 1]["content"] = $blog->getBlogContent()->asString();
+            }
         }
 
         return Result::createSuccess("List of blogs found", StatusCodeInterface::STATUS_OK, $fields);

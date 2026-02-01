@@ -35,12 +35,10 @@ readonly class MySqlBlogRepository
     ): bool {
         $sql = <<<SQL
             INSERT INTO blogs
-                (owner_id, slug, image_banner_id, title, content, excerpt, status, is_featured, published_at)
+                (owner_id, slug, image_banner_id, title, content, excerpt, status, is_featured)
             VALUES 
-                (:owner_id, :slug, :image_banner_id, :title, :content, :excerpt, :status, :is_featured, :published_at)
+                (:owner_id, :slug, :image_banner_id, :title, :content, :excerpt, :status, :is_featured)
         SQL;
-
-        $publishedAt = $status === BlogStatus::PUBLISHED ? date('Y-m-d H:i:s') : null;
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':owner_id', $ownerId->asInt());
@@ -51,7 +49,6 @@ readonly class MySqlBlogRepository
         $stmt->bindValue(':excerpt', $excerpt->asString());
         $stmt->bindValue(':status', $status->value);
         $stmt->bindValue(':is_featured', $isFeatured, PDO::PARAM_BOOL);
-        $stmt->bindValue(':published_at', $publishedAt);
         return $stmt->execute();
     }
 
@@ -143,6 +140,7 @@ readonly class MySqlBlogRepository
      */
     public function updateBlogFromOwner(
         UserId $ownerId,
+        BlogId $blogId,
         BlogSlug $slug,
         ?int $imageBannerId,
         BlogTitle $title,
@@ -160,10 +158,11 @@ readonly class MySqlBlogRepository
                 excerpt = :excerpt,
                 status = :status,
                 is_featured = :is_featured,
+                slug = :slug,
                 updated_at = NOW()
             WHERE 
                 owner_id = :owner_id
-                AND slug = :slug
+                AND blog_id = :blog_id
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
@@ -173,8 +172,9 @@ readonly class MySqlBlogRepository
         $stmt->bindValue(':excerpt', $excerpt->asString());
         $stmt->bindValue(':status', $status->value);
         $stmt->bindValue(':is_featured', $isFeatured, PDO::PARAM_BOOL);
-        $stmt->bindValue(':owner_id', $ownerId->asInt());
         $stmt->bindValue(':slug', $slug->asString());
+        $stmt->bindValue(':owner_id', $ownerId->asInt());
+        $stmt->bindValue(':blog_id', $blogId->asInt());
         $stmt->execute();
 
         return $this->findBlogBySlug($slug);

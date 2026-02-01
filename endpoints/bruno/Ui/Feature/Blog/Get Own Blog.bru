@@ -5,9 +5,17 @@ meta {
 }
 
 get {
-  url: {{protocol}}://{{host}}
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs/:blogid?with_content=false
   body: none
   auth: bearer
+}
+
+params:query {
+  with_content: false
+}
+
+params:path {
+  blogid: 12
 }
 
 auth:bearer {

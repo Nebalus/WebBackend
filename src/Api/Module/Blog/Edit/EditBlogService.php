@@ -9,6 +9,7 @@ use Nebalus\Webapi\Repository\BlogRepository\MySqlBlogRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Blog\BlogContent;
 use Nebalus\Webapi\Value\Module\Blog\BlogExcerpt;
+use Nebalus\Webapi\Value\Module\Blog\BlogId;
 use Nebalus\Webapi\Value\Module\Blog\BlogSlug;
 use Nebalus\Webapi\Value\Module\Blog\BlogStatus;
 use Nebalus\Webapi\Value\Module\Blog\BlogTitle;
@@ -37,6 +38,7 @@ readonly class EditBlogService
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OWN_EDIT, true))) {
             return $this->run(
                 $requestingUser->getUserId(),
+                $validator->getBlogId(),
                 $validator->getSlug(),
                 $validator->getImageBannerId(),
                 $validator->getTitle(),
@@ -50,6 +52,7 @@ readonly class EditBlogService
         if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OTHER_EDIT, true))) {
             return $this->run(
                 $validator->getUserId(),
+                $validator->getBlogId(),
                 $validator->getSlug(),
                 $validator->getImageBannerId(),
                 $validator->getTitle(),
@@ -68,6 +71,7 @@ readonly class EditBlogService
      */
     private function run(
         UserId $ownerId,
+        BlogId $blogId,
         BlogSlug $slug,
         ?int $imageBannerId,
         BlogTitle $title,
@@ -76,7 +80,7 @@ readonly class EditBlogService
         BlogStatus $status,
         bool $isFeatured
     ): ResultInterface {
-        $blog = $this->blogRepository->updateBlogFromOwner($ownerId, $slug, $imageBannerId, $title, $content, $excerpt, $status, $isFeatured);
+        $blog = $this->blogRepository->updateBlogFromOwner($ownerId, $blogId, $slug, $imageBannerId, $title, $content, $excerpt, $status, $isFeatured);
         if ($blog === null || !$ownerId->equals($blog->getOwnerId())) {
             return Result::createError('Blog does not exist', StatusCodeInterface::STATUS_NOT_FOUND);
         }

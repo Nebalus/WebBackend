@@ -28,11 +28,11 @@ readonly class GetAllBlogService
         $isSelfUser = $validator->getUserId()->equals($requestingUser->getUserId());
 
         if ($isSelfUser && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OWN, true))) {
-            return $this->run($requestingUser->getUserId());
+            return $this->run($requestingUser->getUserId(), $validator->withContent());
         }
 
         if ($isSelfUser === false && $userPerms->hasAccessTo(PermissionAccess::from(PermissionNodeTypes::FEATURE_BLOG_OTHER, true))) {
-            return $this->run($validator->getUserId());
+            return $this->run($validator->getUserId(), $validator->withContent());
         }
 
         return ResultBuilder::buildNoPermissionResult();
@@ -41,9 +41,9 @@ readonly class GetAllBlogService
     /**
      * @throws ApiException
      */
-    private function run(UserId $ownerId): ResultInterface
+    private function run(UserId $ownerId, bool $withContent): ResultInterface
     {
         $blogs = $this->blogRepository->findBlogsFromOwner($ownerId);
-        return $this->responder->render($blogs);
+        return $this->responder->render($blogs, $withContent);
     }
 }
