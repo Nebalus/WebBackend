@@ -13,7 +13,7 @@ class BlogSlug
     use SanitizrValueObjectTrait;
 
     public const int MAX_LENGTH = 256;
-    public const string REGEX = '/^[a-zA-Z_]*$/';
+    public const string REGEX = '/^[a-zA-Z_\-]*$/';
 
     private function __construct(
         private readonly string $blogSlug,

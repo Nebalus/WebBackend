@@ -5,11 +5,21 @@ meta {
 }
 
 post {
-  url: {{protocol}}://{{host}}
-  body: none
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "slug": "drinne-druausen-sskalts",
+    "title": "skibididap",
+    "content": "Skibidi dap dap da pyes yes",
+    "excerpt": "Skibidi Toilete",
+    "status": "DRAFT"
+  }
 }
