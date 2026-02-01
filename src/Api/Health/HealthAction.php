@@ -21,7 +21,7 @@ class HealthAction extends AbstractAction
     protected function execute(Request $request, Response $response, array $pathArgs): Response
     {
         $result = Result::createSuccess("This service is healthy", StatusCodeInterface::STATUS_OK, [
-            "status" => "healthy",
+            "status" => "HEALTHY",
             'timestamp' => date('Y-m-d H:i:s')
         ]);
         return $response->withJson($result->getPayload(), $result->getStatusCode());
