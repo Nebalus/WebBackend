@@ -25,4 +25,5 @@ FROM base AS production
 COPY ./docker/php-fpm/production.ini $PHP_INI_DIR/conf.d/custom.php.ini
 COPY ./src ./src
 COPY ./public ./public
+COPY ./templates ./templates
 COPY --from=composerinstaller /composer/vendor ./vendor
