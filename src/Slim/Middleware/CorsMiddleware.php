@@ -38,7 +38,7 @@ readonly class CorsMiddleware implements MiddlewareInterface
         return $response
             ->withHeader('Access-Control-Allow-Origin', $this->env->getAccessControlAllowOrigin())
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
-            ->withHeader('Access-Control-Allow-Headers', 'Authorization')
+            ->withHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, Accept, Origin')
             ->withHeader('Access-Control-Max-Age', '86400');
     }
 }

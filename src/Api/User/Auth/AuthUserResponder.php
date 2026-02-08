@@ -15,6 +15,7 @@ class AuthUserResponder
         $fields = [
             "jwt" => $jwt->getToken(),
             "user" => [
+                "user_id" => $user->getUserID()->asInt(),
                 "username" => $user->getUsername()->asString(),
                 "email" => $user->getEmail()->asString(),
                 "disabled" => $user->isDisabled(),
