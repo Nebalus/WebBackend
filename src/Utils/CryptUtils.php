@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\WebAPI\S;
+namespace Nebalus\Webapi\Utils;
 
 class CryptUtils
 {
