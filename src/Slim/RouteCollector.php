@@ -45,6 +45,8 @@ use Nebalus\Webapi\Slim\Middleware\AuthMiddleware;
 use Nebalus\Webapi\Slim\Middleware\CorsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\MetricsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\PermissionMiddleware;
+use Nebalus\Webapi\Slim\Middleware\RateLimitMiddleware;
+use Nebalus\Webapi\Slim\Middleware\SecurityHeadersMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -63,6 +65,7 @@ readonly class RouteCollector
         $this->app->add(MetricsMiddleware::class);
         $this->app->addBodyParsingMiddleware();
         $this->app->add(CorsMiddleware::class);
+        $this->app->add(SecurityHeadersMiddleware::class);
         $this->initRoutes();
     }
 
@@ -75,8 +78,8 @@ readonly class RouteCollector
     private function initRoutes(): void
     {
         $this->app->group("/ui", function (RouteCollectorProxy $group) {
-            $group->map(["POST"], "/auth", AuthUserAction::class);
-            $group->map(["POST"], "/register", RegisterUserAction::class);
+            $group->map(["POST"], "/auth", AuthUserAction::class)->add(RateLimitMiddleware::class);
+            $group->map(["POST"], "/register", RegisterUserAction::class)->add(RateLimitMiddleware::class);
             $group->group("/admin", function (RouteCollectorProxy $group) {
                 $group->group("/permissions", function (RouteCollectorProxy $group) {
                     $group->map(["GET"], "/all", GetAllPermissionAction::class);
@@ -143,13 +146,13 @@ readonly class RouteCollector
             })->add(PermissionMiddleware::class)->add(AuthMiddleware::class);
         });
 
-        $this->app->map(["GET"], "/metrics", MetricsAction::class);
-        $this->app->map(["GET"], "/health", HealthAction::class);
+        $this->app->map(["GET"], "/metrics", MetricsAction::class)->add(RateLimitMiddleware::class);
+        $this->app->map(["GET"], "/health", HealthAction::class)->add(RateLimitMiddleware::class);
 
         $this->app->group("/services", function (RouteCollectorProxy $group) {
             $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
             $group->map(["GET"], "/blogs", GetPublicBlogAction::class);
-        });
+        })->add(RateLimitMiddleware::class);
     }
 }
