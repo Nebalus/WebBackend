@@ -19,7 +19,7 @@ use Slim\App;
 readonly class RateLimitMiddleware implements MiddlewareInterface
 {
     private const int MAX_REQUESTS = 10;
-    private const int WINDOW_SECONDS = 60;
+    private const int WINDOW_SECONDS = 180;
     private const string KEY_PREFIX = 'rate_limit:';
 
     public function __construct(
