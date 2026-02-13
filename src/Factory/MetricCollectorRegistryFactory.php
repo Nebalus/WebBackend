@@ -19,6 +19,7 @@ readonly class MetricCollectorRegistryFactory
      */
     public function __invoke(): CollectorRegistry
     {
+        echo $this->redis->isConnected();
         $redisAdapter = RedisAdapter::fromExistingConnection($this->redis);
         return new CollectorRegistry($redisAdapter);
     }
