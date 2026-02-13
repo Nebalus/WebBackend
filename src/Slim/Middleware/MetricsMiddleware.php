@@ -36,8 +36,7 @@ readonly class MetricsMiddleware implements MiddlewareInterface
                 $route->getPattern(),
                 $response->getStatusCode()
             ]);
-        } catch (Throwable $exception) {
-            echo $exception->getMessage();
+        } catch (Throwable) {
         }
 
         return $response;

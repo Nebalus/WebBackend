@@ -61,9 +61,9 @@ readonly class RouteCollector
 
     public function init(): void
     {
+        $this->app->add(MetricsMiddleware::class); // Metrics Middleware should be as early as possible to track all requests, even the ones that fail in the middleware stack
         $this->app->addRoutingMiddleware();
         $this->registerErrorHandler();
-        $this->app->add(MetricsMiddleware::class);
         $this->app->addBodyParsingMiddleware();
         $this->app->add(IdentityResolverMiddleware::class);
         $this->app->add(CorsMiddleware::class);
