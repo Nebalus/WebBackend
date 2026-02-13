@@ -47,13 +47,13 @@ readonly class MySqlReferralRepository
     {
         $sql = <<<SQL
             INSERT INTO referral_click_metric (referral_id, anonymous_identity_hash) 
-            VALUES (:referral_id, 0x:anonymous_identity_hash)
+            VALUES (:referral_id, :anonymous_identity_hash)
         SQL;
 
         echo $anonymousIdentityHash->asString();
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':referral_id', $referralId->asInt());
-        $stmt->bindValue(':anonymous_identity_hash', $anonymousIdentityHash->asString());
+        $stmt->bindValue(':anonymous_identity_hash', $anonymousIdentityHash->asString(), PDO::PARAM_LOB);
         return $stmt->execute();
     }
 
