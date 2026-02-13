@@ -50,10 +50,9 @@ readonly class MySqlReferralRepository
             VALUES (:referral_id, :anonymous_identity_hash)
         SQL;
 
-        echo $anonymousIdentityHash->asString();
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':referral_id', $referralId->asInt());
-        $stmt->bindValue(':anonymous_identity_hash', $anonymousIdentityHash->asString(), PDO::PARAM_LOB);
+        $stmt->bindValue(':anonymous_identity_hash', $anonymousIdentityHash->asBinary(), PDO::PARAM_LOB);
         return $stmt->execute();
     }
 

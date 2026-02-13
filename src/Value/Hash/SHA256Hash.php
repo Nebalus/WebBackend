@@ -18,4 +18,9 @@ readonly class SHA256Hash
     {
         return $this->hash;
     }
+
+    public function asBinary(): string
+    {
+        return hex2bin($this->hash);
+    }
 }
