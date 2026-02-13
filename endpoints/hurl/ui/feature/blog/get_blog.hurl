@@ -6,5 +6,5 @@ Authorization: Bearer {{AUTH_JWT}}
 
 HTTP 200
 [Asserts]
-jsonpath "$.payload.id" exists
+jsonpath "$.payload.blog_id" exists
 jsonpath "$.payload.title" exists

@@ -14,5 +14,5 @@ Content-Type: application/json
 
 HTTP 201
 [Asserts]
-jsonpath "$.payload.id" exists
+jsonpath "$.payload.blog_id" exists
 jsonpath "$.payload.title" == "My Test Blog Post"
