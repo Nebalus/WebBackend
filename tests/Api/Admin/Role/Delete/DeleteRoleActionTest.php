@@ -36,7 +36,7 @@ class DeleteRoleActionTest extends TestCase
 
         $request->expects($this->once())
             ->method('getAttribute')
-            ->with(AttributeTypes::USER_PERMISSION_INDEX)
+            ->with(AttributeTypes::CLIENT_USER_PERMISSION_INDEX)
             ->willReturn($userPerms);
 
         $this->validator->expects($this->once())

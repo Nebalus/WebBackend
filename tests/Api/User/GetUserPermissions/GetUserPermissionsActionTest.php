@@ -45,8 +45,8 @@ class GetUserPermissionsActionTest extends TestCase
         $request->expects($this->exactly(2))
             ->method('getAttribute')
             ->willReturnMap([
-                [AttributeTypes::REQUESTING_USER, null, $requestingUser],
-                [AttributeTypes::USER_PERMISSION_INDEX, null, $userPerms],
+                [AttributeTypes::CLIENT_USER, null, $requestingUser],
+                [AttributeTypes::CLIENT_USER_PERMISSION_INDEX, null, $userPerms],
             ]);
 
         $this->service->expects($this->once())

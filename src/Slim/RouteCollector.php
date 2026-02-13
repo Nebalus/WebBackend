@@ -43,6 +43,7 @@ use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Slim\Handler\DefaultErrorHandler;
 use Nebalus\Webapi\Slim\Middleware\AuthMiddleware;
 use Nebalus\Webapi\Slim\Middleware\CorsMiddleware;
+use Nebalus\Webapi\Slim\Middleware\IdentityResolverMiddleware;
 use Nebalus\Webapi\Slim\Middleware\MetricsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\PermissionMiddleware;
 use Nebalus\Webapi\Slim\Middleware\RateLimitMiddleware;
@@ -64,6 +65,7 @@ readonly class RouteCollector
         $this->registerErrorHandler();
         $this->app->add(MetricsMiddleware::class);
         $this->app->addBodyParsingMiddleware();
+        $this->app->add(IdentityResolverMiddleware::class);
         $this->app->add(CorsMiddleware::class);
         $this->app->add(SecurityHeadersMiddleware::class);
         $this->initRoutes();

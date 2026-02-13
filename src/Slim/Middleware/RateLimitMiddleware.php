@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Slim\Middleware;
 
 use Fig\Http\Message\StatusCodeInterface;
+use Nebalus\Webapi\Config\Types\AttributeTypes;
+use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Result\Result;
 use Override;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -22,13 +24,13 @@ readonly class RateLimitMiddleware implements MiddlewareInterface
 
     public function __construct(
         private App $app,
-        private Redis $redis,
+        private Redis $redis
     ) {
     }
 
     #[Override] public function process(Request $request, RequestHandler $handler): Response
     {
-        $clientIp = $this->getClientIp($request);
+        $clientIp = $request->getAttribute(AttributeTypes::CLIENT_IP);
         $path = $request->getUri()->getPath();
         $key = self::KEY_PREFIX . $clientIp . ':' . $path;
 
@@ -48,22 +50,6 @@ readonly class RateLimitMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle($request);
-    }
-
-    private function getClientIp(Request $request): string
-    {
-        $serverParams = $request->getServerParams();
-
-        if (!empty($serverParams['HTTP_X_FORWARDED_FOR'])) {
-            $ips = explode(',', $serverParams['HTTP_X_FORWARDED_FOR']);
-            return trim($ips[0]);
-        }
-
-        if (!empty($serverParams['HTTP_X_REAL_IP'])) {
-            return $serverParams['HTTP_X_REAL_IP'];
-        }
-
-        return $serverParams['REMOTE_ADDR'] ?? '0.0.0.0';
     }
 
     private function createRateLimitResponse(int $retryAfter): Response

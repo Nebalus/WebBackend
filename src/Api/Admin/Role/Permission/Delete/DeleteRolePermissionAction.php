@@ -20,7 +20,7 @@ class DeleteRolePermissionAction extends AbstractAction
     {
         $this->validator->validate($request, $pathArgs);
 
-        $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
+        $userPerms = $request->getAttribute(AttributeTypes::CLIENT_USER_PERMISSION_INDEX);
         $result = $this->service->execute($this->validator, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());

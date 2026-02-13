@@ -26,12 +26,12 @@ readonly class PermissionMiddleware implements MiddlewareInterface
      */
     #[Override] public function process(Request $request, RequestHandler $handler): Response
     {
-        $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
+        $requestingUser = $request->getAttribute(AttributeTypes::CLIENT_USER);
         if ($requestingUser instanceof UserAccount === false) {
             return $handler->handle($request);
         }
         $userPermissionIndex = $this->roleRepository->getPermissionIndexFromUserId($requestingUser->getUserId());
-        $request = $request->withAttribute(AttributeTypes::USER_PERMISSION_INDEX, $userPermissionIndex);
+        $request = $request->withAttribute(AttributeTypes::CLIENT_USER_PERMISSION_INDEX, $userPermissionIndex);
         return $handler->handle($request);
     }
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Nebalus\Webapi\Utils;
 
+use Nebalus\Webapi\Value\Hash\SHA256Hash;
+
 class CryptUtils
 {
-    public function generateAnonymousId(string $ipAddress, string $userAgent): string
+    public function generateAnonymousIdentityHash(string $ipAddress, string $userAgent): SHA256Hash
     {
         $dailySalt = date('Y-m-d');
-        return hash('sha256', $ipAddress . $userAgent . $dailySalt);
+        return SHA256Hash::from($ipAddress . $userAgent . $dailySalt);
     }
 }

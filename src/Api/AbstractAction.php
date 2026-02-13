@@ -18,8 +18,8 @@ abstract class AbstractAction
         Response $response,
         array $args
     ): ResponseInterface {
-        if (isset($args['user_id']) && $args['user_id'] === "self" && $request->getAttribute(AttributeTypes::REQUESTING_USER, null) !== null) {
-            $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
+        if (isset($args['user_id']) && $args['user_id'] === "self" && $request->getAttribute(AttributeTypes::CLIENT_USER, null) !== null) {
+            $requestingUser = $request->getAttribute(AttributeTypes::CLIENT_USER);
             $args['user_id'] = $requestingUser->getUserId()->asInt();
         }
 
