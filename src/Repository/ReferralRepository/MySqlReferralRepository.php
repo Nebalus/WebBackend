@@ -47,7 +47,7 @@ readonly class MySqlReferralRepository
     {
         $sql = <<<SQL
             INSERT INTO referral_click_metric (referral_id, anonymous_identity_hash) 
-            VALUES (:referral_id, :anonymous_identity_hash)
+            VALUES (:referral_id, 0x:anonymous_identity_hash)
         SQL;
 
         echo $anonymousIdentityHash->asString();
