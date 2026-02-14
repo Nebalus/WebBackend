@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Repository\ReferralRepository;
 
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Hash\SHA256Hash;
 use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClick;
 use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClickCollection;

@@ -3,7 +3,6 @@
 namespace Nebalus\Webapi\Value\User\AccessControl\Permission;
 
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Value\Range;
 
 readonly class PermissionAccess
 {

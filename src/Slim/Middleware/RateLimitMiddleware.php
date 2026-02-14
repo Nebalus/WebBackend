@@ -6,7 +6,6 @@ namespace Nebalus\Webapi\Slim\Middleware;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
-use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Result\Result;
 use Override;
 use Psr\Http\Message\ResponseInterface as Response;

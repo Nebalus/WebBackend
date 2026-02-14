@@ -1,13 +1,15 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Module\Blog\GetPublic;
+declare(strict_types=1);
+
+namespace Nebalus\Webapi\Api\Module\Blog\Public\GetAll;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Blog\BlogPostCollection;
 use Nebalus\Webapi\Value\Result\Result;
 
-class GetPublicBlogResponder
+class GetAllPublicBlogResponder
 {
     public function render(
         BlogPostCollection $blogs,

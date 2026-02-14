@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Edit;
+namespace Nebalus\Webapi\Api\Module\Blog\Analytics\GetPublicDetail;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Blog\BlogPost;
 use Nebalus\Webapi\Value\Result\Result;
 
-class EditBlogResponder
+readonly class GetDetailPublicBlogResponder
 {
     public function render(BlogPost $blog): ResultInterface
     {
-        $fields = [
-            "blog_id" => $blog->getBlogId()->asInt(),
+        $payload = [
+            "blog_id" => $blog->getBlogId()->asString(),
             "slug" => $blog->getBlogSlug()->asString(),
             "title" => $blog->getBlogTitle()->asString(),
             "excerpt" => $blog->getBlogExcerpt()->asString(),
@@ -26,6 +26,6 @@ class EditBlogResponder
             "updated_at" => $blog->getUpdatedAt()->format(DATE_ATOM),
         ];
 
-        return Result::createSuccess("Blog Updated", StatusCodeInterface::STATUS_OK, $fields);
+        return Result::createSuccess("Blog fetched successfully", StatusCodeInterface::STATUS_OK, $payload);
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Module\Blog\GetPublic;
+declare(strict_types=1);
+
+namespace Nebalus\Webapi\Api\Module\Blog\Public\GetAll;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
 use Nebalus\Webapi\Api\AbstractValidator;
 use Nebalus\Webapi\Config\Types\RequestParamTypes;
 
-class GetPublicBlogValidator extends AbstractValidator
+class GetAllPublicBlogValidator extends AbstractValidator
 {
     private int $page;
     private int $perPage;

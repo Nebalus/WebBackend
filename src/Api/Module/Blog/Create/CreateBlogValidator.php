@@ -14,7 +14,6 @@ use Nebalus\Webapi\Value\Module\Blog\BlogSlug;
 use Nebalus\Webapi\Value\Module\Blog\BlogStatus;
 use Nebalus\Webapi\Value\Module\Blog\BlogTitle;
 use Nebalus\Webapi\Value\User\UserId;
-use Nebalus\Sanitizr\Type\NumberType;
 
 class CreateBlogValidator extends AbstractValidator
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nebalus\Webapi\Api\Module\Blog\Delete;
 
 use Fig\Http\Message\StatusCodeInterface;

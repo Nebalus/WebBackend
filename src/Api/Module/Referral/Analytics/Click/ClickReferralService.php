@@ -6,8 +6,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\ReferralRepository\MySqlReferralRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
-use Nebalus\Webapi\Utils\CryptUtils;
-use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Hash\SHA256Hash;
 use Nebalus\Webapi\Value\Result\Result;
 

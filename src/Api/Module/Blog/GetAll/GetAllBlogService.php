@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nebalus\Webapi\Api\Module\Blog\GetAll;
 
 use Nebalus\Webapi\Config\Types\PermissionNodeTypes;
