@@ -155,7 +155,7 @@ readonly class RouteCollector
         $this->app->group("/services", function (RouteCollectorProxy $group) {
             $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
-            $this->app->group("/blogs", function (RouteCollectorProxy $group) {
+            $group->group("/blogs", function (RouteCollectorProxy $group) {
                 $group->map(["GET"], "", GetAllPublicBlogAction::class);
                 $group->map(["GET"], "/{slug}", GetDetailPublicBlogAction::class);
             });
