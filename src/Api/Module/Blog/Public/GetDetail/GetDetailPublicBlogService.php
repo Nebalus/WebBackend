@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Analytics\GetPublicDetail;
+namespace Nebalus\Webapi\Api\Module\Blog\Public\GetDetail;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Exception\ApiException;

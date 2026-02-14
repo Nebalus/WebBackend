@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Analytics\GetPublicDetail;
+namespace Nebalus\Webapi\Api\Module\Blog\Public\GetDetail;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Slim\Http\Response;

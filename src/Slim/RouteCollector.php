@@ -19,7 +19,7 @@ use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
-use Nebalus\Webapi\Api\Module\Blog\Analytics\GetPublicDetail\GetDetailPublicBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Public\GetDetail\GetDetailPublicBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Delete\DeleteBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Edit\EditBlogAction;
