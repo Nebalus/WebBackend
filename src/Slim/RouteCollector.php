@@ -153,12 +153,12 @@ readonly class RouteCollector
         $this->app->map(["GET"], "/health", HealthAction::class)->add(RateLimitMiddleware::class);
 
         $this->app->group("/services", function (RouteCollectorProxy $group) {
-            $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
+            $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class)->add(RateLimitMiddleware::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
             $group->group("/blogs", function (RouteCollectorProxy $group) {
                 $group->map(["GET"], "", GetAllPublicBlogAction::class);
                 $group->map(["GET"], "/{slug}", GetDetailPublicBlogAction::class);
             });
-        })->add(RateLimitMiddleware::class);
+        });
     }
 }
