@@ -14,7 +14,7 @@ readonly class GetDetailPublicBlogResponder
     public function render(BlogPost $blog): ResultInterface
     {
         $payload = [
-            "blog_id" => $blog->getBlogId()->asString(),
+            "blog_id" => (int) $blog->getBlogId()->asInt(),
             "slug" => $blog->getBlogSlug()->asString(),
             "title" => $blog->getBlogTitle()->asString(),
             "excerpt" => $blog->getBlogExcerpt()->asString(),
