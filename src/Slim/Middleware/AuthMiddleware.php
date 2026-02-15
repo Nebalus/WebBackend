@@ -10,7 +10,9 @@ use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Value\Result\Result;
+use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\UserId;
+use Nebalus\Webapi\Value\User\Username;
 use Override;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -76,11 +78,16 @@ readonly class AuthMiddleware implements MiddlewareInterface
         $payloadParsed = Token::parser($jwt)->parse();
         $payload = $payloadParsed->getPayload();
         $userId = UserId::from($payload["sub"]);
+        $userEmail = UserEmail::from($payload["email"]);
+        $username = Username::from("username");
+
         $user = $this->userRepository->findUserFromId(($userId));
 
         if (
             $user === null ||
             $user->isDisabled() ||
+            $userEmail === $user->getEmail() ||
+            $username === $user->getUsername() ||
             $payloadParsed->getIssuedAt() < $user->getPasswordUpdatedAtDate()->getTimestamp()
         ) {
             return $this->denyRequest("Your provided JWT has expired");
