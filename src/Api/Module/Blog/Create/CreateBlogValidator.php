@@ -1,8 +1,102 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nebalus\Webapi\Api\Module\Blog\Create;
 
-class CreateBlogValidator
-{
+use Nebalus\Sanitizr\SanitizrStatic as S;
+use Nebalus\Webapi\Api\AbstractValidator;
+use Nebalus\Webapi\Config\Types\RequestParamTypes;
+use Nebalus\Webapi\Exception\ApiException;
+use Nebalus\Webapi\Value\Module\Blog\BlogContent;
+use Nebalus\Webapi\Value\Module\Blog\BlogExcerpt;
+use Nebalus\Webapi\Value\Module\Blog\BlogSlug;
+use Nebalus\Webapi\Value\Module\Blog\BlogStatus;
+use Nebalus\Webapi\Value\Module\Blog\BlogTitle;
+use Nebalus\Webapi\Value\User\UserId;
 
+class CreateBlogValidator extends AbstractValidator
+{
+    private UserId $userId;
+    private BlogSlug $slug;
+    private ?int $imageBannerId;
+    private BlogTitle $title;
+    private BlogContent $content;
+    private BlogExcerpt $excerpt;
+    private BlogStatus $status;
+    private bool $isFeatured;
+
+    public function __construct()
+    {
+        parent::__construct(S::object([
+            RequestParamTypes::PATH_ARGS => S::object([
+                "user_id" => UserId::getSchema(),
+            ]),
+            RequestParamTypes::BODY => S::object([
+                'slug' => BlogSlug::getSchema(),
+                'image_banner_id' => S::number()->optional()->default(null),
+                'title' => BlogTitle::getSchema(),
+                'content' => BlogContent::getSchema(),
+                'excerpt' => BlogExcerpt::getSchema(),
+                'status' => S::string()->optional()->default(BlogStatus::DRAFT->value),
+                'is_featured' => S::boolean()->optional()->default(false),
+            ]),
+        ]));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws ApiException
+     */
+    protected function onValidate(array $bodyData, array $queryParamsData, array $pathArgsData): void
+    {
+        $this->userId = UserId::from($pathArgsData['user_id']);
+        $this->slug = BlogSlug::from($bodyData['slug']);
+        $this->imageBannerId = $bodyData['image_banner_id'];
+        $this->title = BlogTitle::from($bodyData['title']);
+        $this->content = BlogContent::from($bodyData['content']);
+        $this->excerpt = BlogExcerpt::from($bodyData['excerpt']);
+        $this->status = BlogStatus::from($bodyData['status']);
+        $this->isFeatured = $bodyData['is_featured'];
+    }
+
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+
+    public function getSlug(): BlogSlug
+    {
+        return $this->slug;
+    }
+
+    public function getImageBannerId(): ?int
+    {
+        return $this->imageBannerId;
+    }
+
+    public function getTitle(): BlogTitle
+    {
+        return $this->title;
+    }
+
+    public function getContent(): BlogContent
+    {
+        return $this->content;
+    }
+
+    public function getExcerpt(): BlogExcerpt
+    {
+        return $this->excerpt;
+    }
+
+    public function getStatus(): BlogStatus
+    {
+        return $this->status;
+    }
+
+    public function isFeatured(): bool
+    {
+        return $this->isFeatured;
+    }
 }

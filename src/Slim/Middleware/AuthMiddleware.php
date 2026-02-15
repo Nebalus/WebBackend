@@ -46,7 +46,7 @@ readonly class AuthMiddleware implements MiddlewareInterface
             return $this->denyRequest("Invalid 'Authorization' header provided");
         }
 
-        if ($headerSplit[0] != "Bearer") {
+        if ($headerSplit[0] !== "Bearer") {
             return $this->denyRequest("No 'Bearer' JWT provided");
         }
 
@@ -81,12 +81,12 @@ readonly class AuthMiddleware implements MiddlewareInterface
         if (
             $user === null ||
             $user->isDisabled() ||
-            $payloadParsed->getIssuedAt() < $user->getUpdatedAtDate()->getTimestamp()
+            $payloadParsed->getIssuedAt() < $user->getPasswordUpdatedAtDate()->getTimestamp()
         ) {
             return $this->denyRequest("Your provided JWT has expired");
         }
 
-        $request = $request->withAttribute(AttributeTypes::REQUESTING_USER, $user);
+        $request = $request->withAttribute(AttributeTypes::CLIENT_USER, $user);
         $request = $request->withAttribute(AttributeTypes::AUTH_TYPE, "jwt");
 
         return $handler->handle($request);

@@ -16,12 +16,17 @@ readonly class UserAccount
     private function __construct(
         private ?UserId $userId,
         private Username $username,
+        private ?int $profileImageId,
         private UserEmail $email,
         private UserPassword $password,
         private TOTPSecretKey $totpSecretKey,
+        private bool $emailVerified,
         private bool $disabled,
+        private ?UserId $disabledBy,
+        private ?string $disabledReason,
+        private ?DateTimeImmutable $disabledAt,
         private DateTimeImmutable $createdAtDate,
-        private DateTimeImmutable $updatedAtDate,
+        private DateTimeImmutable $passwordUpdatedAtDate,
     ) {
     }
 
@@ -35,21 +40,26 @@ readonly class UserAccount
     ): self {
         $totpSecretKey = TOTPSecretKey::create();
         $createdAtDate = new DateTimeImmutable();
-        $updatedAtDate = new DateTimeImmutable();
-        return self::from(null, $username, $email, $password, $totpSecretKey, false, $createdAtDate, $updatedAtDate);
+        $passwordUpdatedAtDate = new DateTimeImmutable();
+        return self::from(null, $username, null, $email, $password, $totpSecretKey, false, false, null, null, null, $createdAtDate, $passwordUpdatedAtDate);
     }
 
     public static function from(
         ?UserId $userId,
         Username $username,
+        ?int $profileImageId,
         UserEmail $email,
         UserPassword $password,
         TOTPSecretKey $totpSecretKey,
+        bool $emailVerified,
         bool $disabled,
+        ?UserId $disabledBy,
+        ?string $disabledReason,
+        ?DateTimeImmutable $disabledAt,
         DateTimeImmutable $createdAtDate,
-        DateTimeImmutable $updatedAtDate
+        DateTimeImmutable $passwordUpdatedAtDate
     ): self {
-        return new self($userId, $username, $email, $password, $totpSecretKey, $disabled, $createdAtDate, $updatedAtDate);
+        return new self($userId, $username, $profileImageId, $email, $password, $totpSecretKey, $emailVerified, $disabled, $disabledBy, $disabledReason, $disabledAt, $createdAtDate, $passwordUpdatedAtDate);
     }
 
     /**
@@ -59,16 +69,22 @@ readonly class UserAccount
     {
         try {
             $createdAtDate = new DateTimeImmutable($data['created_at']);
-            $updatedAtDate = new DateTimeImmutable($data['updated_at']);
+            $passwordUpdatedAtDate = new DateTimeImmutable($data['password_updated_at']);
+            $disabledAt = empty($data['disabled_at']) ? null : new DateTimeImmutable($data['disabled_at']);
             return new self(
                 empty($data['user_id']) ? null : UserId::from($data['user_id']),
                 Username::from($data['username']),
+                empty($data['profile_image_id']) ? null : (int) $data['profile_image_id'],
                 UserEmail::from($data['email']),
                 UserPassword::fromHash($data['password']),
                 TOTPSecretKey::from($data['totp_secret_key']),
+                (bool) $data['email_verified'],
                 (bool) $data['disabled'],
+                empty($data['disabled_by']) ? null : UserId::from($data['disabled_by']),
+                empty($data['disabled_reason']) ? null : (string) $data['disabled_reason'],
+                $disabledAt,
                 $createdAtDate,
-                $updatedAtDate
+                $passwordUpdatedAtDate
             );
         } catch (DateMalformedStringException $exception) {
             throw new ApiDateMalformedStringException($exception);
@@ -80,12 +96,17 @@ readonly class UserAccount
         return [
             'user_id' => $this->userId?->asInt(),
             'username' => $this->username->asString(),
+            'profile_image_id' => $this->profileImageId,
             'email' => $this->email->asString(),
             'password' => $this->password->asString(),
             'totp_secret_key' => $this->totpSecretKey->asString(),
+            'email_verified' => $this->emailVerified,
             'disabled' => $this->disabled,
+            'disabled_by' => $this->disabledBy?->asInt(),
+            'disabled_reason' => $this->disabledReason,
+            'disabled_at' => $this->disabledAt?->format(DATE_ATOM),
             'created_at' => $this->createdAtDate->format(DATE_ATOM),
-            'updated_at' => $this->updatedAtDate->format(DATE_ATOM),
+            'password_updated_at' => $this->passwordUpdatedAtDate->format(DATE_ATOM),
         ];
     }
 
@@ -119,13 +140,38 @@ readonly class UserAccount
         return $this->disabled;
     }
 
+    public function getProfileImageId(): ?int
+    {
+        return $this->profileImageId;
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->emailVerified;
+    }
+
+    public function getDisabledBy(): ?UserId
+    {
+        return $this->disabledBy;
+    }
+
+    public function getDisabledReason(): ?string
+    {
+        return $this->disabledReason;
+    }
+
+    public function getDisabledAt(): ?DateTimeImmutable
+    {
+        return $this->disabledAt;
+    }
+
     public function getCreatedAtDate(): DateTimeImmutable
     {
         return $this->createdAtDate;
     }
 
-    public function getUpdatedAtDate(): DateTimeImmutable
+    public function getPasswordUpdatedAtDate(): DateTimeImmutable
     {
-        return $this->updatedAtDate;
+        return $this->passwordUpdatedAtDate;
     }
 }

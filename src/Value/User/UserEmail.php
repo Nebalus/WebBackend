@@ -19,7 +19,7 @@ class UserEmail
 
     protected static function defineSchema(): AbstractSanitizrSchema
     {
-        return S::string()->email();
+        return S::string()->email()->toLowerCase();
     }
 
     /**

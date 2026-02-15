@@ -29,7 +29,7 @@ readonly class MetricsMiddleware implements MiddlewareInterface
                 "backend",
                 "api_endpoint",
                 "Total number of requests handled by the API",
-                ["scheme", "methode", "path", "code"]
+                ["scheme", "method", "path", "code"]
             )->inc([
                 $request->getUri()->getScheme(),
                 $request->getMethod(),

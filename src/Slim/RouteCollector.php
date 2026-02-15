@@ -19,11 +19,13 @@ use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
+use Nebalus\Webapi\Api\Module\Blog\Public\GetDetail\GetDetailPublicBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Delete\DeleteBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Edit\EditBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Get\GetBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\GetAll\GetAllBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
@@ -42,8 +44,11 @@ use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Slim\Handler\DefaultErrorHandler;
 use Nebalus\Webapi\Slim\Middleware\AuthMiddleware;
 use Nebalus\Webapi\Slim\Middleware\CorsMiddleware;
+use Nebalus\Webapi\Slim\Middleware\IdentityResolverMiddleware;
 use Nebalus\Webapi\Slim\Middleware\MetricsMiddleware;
 use Nebalus\Webapi\Slim\Middleware\PermissionMiddleware;
+use Nebalus\Webapi\Slim\Middleware\RateLimitMiddleware;
+use Nebalus\Webapi\Slim\Middleware\SecurityHeadersMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -57,11 +62,13 @@ readonly class RouteCollector
 
     public function init(): void
     {
+        $this->app->add(MetricsMiddleware::class); // Metrics Middleware should be as early as possible to track all requests, even the ones that fail in the middleware stack
         $this->app->addRoutingMiddleware();
         $this->registerErrorHandler();
-        $this->app->add(MetricsMiddleware::class);
         $this->app->addBodyParsingMiddleware();
+        $this->app->add(IdentityResolverMiddleware::class);
         $this->app->add(CorsMiddleware::class);
+        $this->app->add(SecurityHeadersMiddleware::class);
         $this->initRoutes();
     }
 
@@ -74,8 +81,8 @@ readonly class RouteCollector
     private function initRoutes(): void
     {
         $this->app->group("/ui", function (RouteCollectorProxy $group) {
-            $group->map(["POST"], "/auth", AuthUserAction::class);
-            $group->map(["POST"], "/register", RegisterUserAction::class);
+            $group->map(["POST"], "/auth", AuthUserAction::class)->add(RateLimitMiddleware::class);
+            $group->map(["POST"], "/register", RegisterUserAction::class)->add(RateLimitMiddleware::class);
             $group->group("/admin", function (RouteCollectorProxy $group) {
                 $group->group("/permissions", function (RouteCollectorProxy $group) {
                     $group->map(["GET"], "/all", GetAllPermissionAction::class);
@@ -142,12 +149,16 @@ readonly class RouteCollector
             })->add(PermissionMiddleware::class)->add(AuthMiddleware::class);
         });
 
-        $this->app->map(["GET"], "/metrics", MetricsAction::class);
-        $this->app->map(["GET"], "/health", HealthAction::class);
+        $this->app->map(["GET"], "/metrics", MetricsAction::class)->add(RateLimitMiddleware::class);
+        $this->app->map(["GET"], "/health", HealthAction::class)->add(RateLimitMiddleware::class);
 
         $this->app->group("/services", function (RouteCollectorProxy $group) {
-            $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class);
+            $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class)->add(RateLimitMiddleware::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
+            $group->group("/blogs", function (RouteCollectorProxy $group) {
+                $group->map(["GET"], "", GetAllPublicBlogAction::class);
+                $group->map(["GET"], "/{slug}", GetDetailPublicBlogAction::class);
+            });
         });
     }
 }

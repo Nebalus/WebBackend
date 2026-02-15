@@ -4,6 +4,8 @@ namespace Nebalus\Webapi\Config;
 
 class MySqlConfig
 {
+    use ConfigTrait;
+
     private string $mysqlPasswd;
     private string $mysqlHost;
     private string $mysqlPort;
@@ -12,11 +14,11 @@ class MySqlConfig
 
     public function __construct()
     {
-        $this->mysqlPasswd = getenv("MYSQL_PASSWORD");
-        $this->mysqlHost = getenv("MYSQL_HOST");
-        $this->mysqlPort = getenv("MYSQL_PORT");
-        $this->mysqlDatabase = getenv("MYSQL_DATABASE");
-        $this->mysqlUser = getenv("MYSQL_USER");
+        $this->mysqlPasswd = self::requireEnv("MYSQL_PASSWORD");
+        $this->mysqlHost = self::requireEnv("MYSQL_HOST");
+        $this->mysqlPort = self::requireEnv("MYSQL_PORT");
+        $this->mysqlDatabase = self::requireEnv("MYSQL_DATABASE");
+        $this->mysqlUser = self::requireEnv("MYSQL_USER");
     }
 
     public function getMySqlPasswd(): string

@@ -3,7 +3,6 @@
 namespace Nebalus\Webapi\Api\Module\Linktree\Create;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
-
 use Nebalus\Webapi\Api\AbstractValidator;
 
 class CreateLinktreeValidator extends AbstractValidator

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Nebalus\Webapi\Repository\ReferralRepository;
 
 use Nebalus\Webapi\Exception\ApiException;
-use Nebalus\Webapi\Utils\IpUtils;
+use Nebalus\Webapi\Value\Hash\SHA256Hash;
 use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClick;
 use Nebalus\Webapi\Value\Module\Referral\Click\ReferralClickCollection;
 use Nebalus\Webapi\Value\Module\Referral\Referral;
@@ -20,8 +20,7 @@ use PDO;
 readonly class MySqlReferralRepository
 {
     public function __construct(
-        private PDO $pdo,
-        private IpUtils $ipUtils
+        private PDO $pdo
     ) {
     }
 
@@ -43,32 +42,16 @@ readonly class MySqlReferralRepository
         return $stmt->execute();
     }
 
-    public function insertReferralClickEntry(ReferralId $referralId): bool
+    public function insertReferralClickEntry(ReferralId $referralId, SHA256Hash $anonymousIdentityHash): bool
     {
-        $ipAddress = $this->ipUtils->getClientIP();
-
         $sql = <<<SQL
-            INSERT INTO referral_click_metric (referral_id, ip_address) 
-            VALUES (:referral_id, NULL)
+            INSERT INTO referral_click_metric (referral_id, anonymous_identity_hash) 
+            VALUES (:referral_id, :anonymous_identity_hash)
         SQL;
-
-        if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $sql = <<<SQL
-                INSERT INTO referral_click_metric (referral_id, ip_address) 
-                VALUES (:referral_id, INET_ATON(:ip_address))
-            SQL;
-        }
-
-        if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $sql = <<<SQL
-                INSERT INTO referral_click_metric (referral_id, ip_address) 
-                VALUES (:referral_id, INET6_ATON(:ip_address))
-            SQL;
-        }
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':referral_id', $referralId->asInt());
-        $stmt->bindValue(':ip_address', $ipAddress);
+        $stmt->bindValue(':anonymous_identity_hash', $anonymousIdentityHash->asBinary(), PDO::PARAM_LOB);
         return $stmt->execute();
     }
 
@@ -81,7 +64,7 @@ readonly class MySqlReferralRepository
         $sql = <<<SQL
             SELECT
                 DATE(referral_click_metric.clicked_at) AS clicked_at, COUNT(clicked_at) AS click_count,
-                COUNT(DISTINCT referral_click_metric.ip_address) AS unique_visitors
+                COUNT(DISTINCT referral_click_metric.anonymous_identity_hash) AS unique_visitors
             FROM referral_click_metric
             INNER JOIN referrals 
                 ON referrals.referral_id = referral_click_metric.referral_id

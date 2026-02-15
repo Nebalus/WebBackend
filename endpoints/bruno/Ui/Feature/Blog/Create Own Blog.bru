@@ -1,0 +1,25 @@
+meta {
+  name: Create Own Blog
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "slug": "drinne-druausens-sskalts",
+    "title": "skibididap",
+    "content": "Skibidi dap dap da pyes yes",
+    "excerpt": "Skibidi Toilete",
+    "status": "DRAFT"
+  }
+}

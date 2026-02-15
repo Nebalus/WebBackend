@@ -57,7 +57,7 @@ class AuthUserResponderTest extends TestCase
             ->willReturn($date);
 
         $user->expects($this->once())
-            ->method('getUpdatedAtDate')
+            ->method('getPasswordUpdatedAtDate')
             ->willReturn($date);
 
         $result = $this->responder->render($jwt, $user);
@@ -74,7 +74,7 @@ class AuthUserResponderTest extends TestCase
                     'email' => 'test@example.com',
                     'disabled' => false,
                     'created_at' => $date->format(DATE_ATOM),
-                    'updated_at' => $date->format(DATE_ATOM),
+                    'password_updated_at' => $date->format(DATE_ATOM),
                 ]
             ]
         ], $result->getPayload());

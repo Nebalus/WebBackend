@@ -1,0 +1,19 @@
+meta {
+  name: GetAll Owned Blogs
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs/all?with_content=true
+  body: none
+  auth: bearer
+}
+
+params:query {
+  with_content: true
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}

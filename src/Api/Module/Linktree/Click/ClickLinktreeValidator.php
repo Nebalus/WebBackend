@@ -3,7 +3,6 @@
 namespace Nebalus\Webapi\Api\Module\Linktree\Click;
 
 use Nebalus\Sanitizr\SanitizrStatic as S;
-
 use Nebalus\Webapi\Api\AbstractValidator;
 
 class ClickLinktreeValidator extends AbstractValidator

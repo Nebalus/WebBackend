@@ -45,19 +45,24 @@ readonly class MySqlUserRepository
     {
         $sql = <<<SQL
             INSERT INTO users
-                (username, email, password, totp_secret_key, disabled, created_at, updated_at) 
+                (username, profile_image_id, email, password, totp_secret_key, email_verified, disabled, disabled_by, disabled_reason, disabled_at, created_at, password_updated_at) 
             VALUES 
-                (:username,:email,:password,:totp_secret_key,:disabled,:created_at,:updated_at)
+                (:username, :profile_image_id, :email, :password, :totp_secret_key, :email_verified, :disabled, :disabled_by, :disabled_reason, :disabled_at, :created_at, :password_updated_at)
         SQL;
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':username', $user->getUsername()->asString());
+        $stmt->bindValue(':profile_image_id', $user->getProfileImageId(), $user->getProfileImageId() === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $stmt->bindValue(':email', $user->getEmail()->asString());
         $stmt->bindValue(':password', $user->getPassword()->asString());
         $stmt->bindValue(':totp_secret_key', $user->getTotpSecretKey()->asString());
+        $stmt->bindValue(':email_verified', $user->isEmailVerified());
         $stmt->bindValue(':disabled', $user->isDisabled());
+        $stmt->bindValue(':disabled_by', $user->getDisabledBy()?->asInt(), $user->getDisabledBy() === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(':disabled_reason', $user->getDisabledReason(), $user->getDisabledReason() === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':disabled_at', $user->getDisabledAt()?->format("Y-m-d H:i:s"), $user->getDisabledAt() === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
         $stmt->bindValue(':created_at', $user->getCreatedAtDate()->format("Y-m-d H:i:s"));
-        $stmt->bindValue(':updated_at', $user->getUpdatedAtDate()->format("Y-m-d H:i:s"));
+        $stmt->bindValue(':password_updated_at', $user->getPasswordUpdatedAtDate()->format("Y-m-d H:i:s"));
         $stmt->execute();
 
         $userToArray = $user->asArray();

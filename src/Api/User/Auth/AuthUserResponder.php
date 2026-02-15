@@ -15,11 +15,12 @@ class AuthUserResponder
         $fields = [
             "jwt" => $jwt->getToken(),
             "user" => [
+                "user_id" => $user->getUserID()->asInt(),
                 "username" => $user->getUsername()->asString(),
                 "email" => $user->getEmail()->asString(),
                 "disabled" => $user->isDisabled(),
                 "created_at" => $user->getCreatedAtDate()->format(DATE_ATOM),
-                "updated_at" => $user->getUpdatedAtDate()->format(DATE_ATOM),
+                "password_updated_at" => $user->getPasswordUpdatedAtDate()->format(DATE_ATOM)
             ]
         ];
 

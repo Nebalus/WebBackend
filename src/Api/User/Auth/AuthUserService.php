@@ -12,7 +12,6 @@ use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Exception\ApiException;
 use Nebalus\Webapi\Repository\UserRepository\MySqlUserRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
-use Nebalus\Webapi\Utils\IpUtils;
 use Nebalus\Webapi\Value\Result\Result;
 use ReallySimpleJWT\Exception\BuildException;
 use ReallySimpleJWT\Token;
@@ -27,7 +26,6 @@ readonly class AuthUserService
         private AuthUserResponder $responder,
         private ResendClient $resendClient,
         private TwigEnvironment $twig,
-        private IpUtils $ipUtils,
         private Logger $logger,
     ) {
     }
@@ -35,7 +33,7 @@ readonly class AuthUserService
     /**
      * @throws ApiException|BuildException
      */
-    public function execute(AuthUserValidator $validator): ResultInterface
+    public function execute(AuthUserValidator $validator, string $clientIp): ResultInterface
     {
         $user = $this->mySqlUserRepository->findUserFromUsername($validator->getUsername());
 
@@ -51,7 +49,7 @@ readonly class AuthUserService
                 'subject' => 'Login Confirmation',
                 'html' => $this->twig->render("/email/user_login.twig", [
                     "username" => $user->getUsername()->asString(),
-                    "ip_address" => $this->ipUtils->getClientIP(),
+                    "ip_address" => $clientIp,
                     "login_time" => $currentDateTime->format("Y-m-d H:i:s"),
                 ]),
             ]);

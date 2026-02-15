@@ -1,0 +1,29 @@
+meta {
+  name: Edit Own Blog
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs/:blogid
+  body: json
+  auth: bearer
+}
+
+params:path {
+  blogid: 12
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "slug": "drinne-druausdsdsdsen-ssd",
+    "title": "skibididap ",
+    "content": "Skibidi dap dap da pyes yes",
+    "excerpt": "Skibidi Toilete",
+    "status": "PUBLISHED"
+  }
+}

@@ -21,8 +21,8 @@ class CreateReferralAction extends AbstractAction
     {
         $this->validator->validate($request, $pathArgs);
 
-        $requestingUser = $request->getAttribute(AttributeTypes::REQUESTING_USER);
-        $userPerms = $request->getAttribute(AttributeTypes::USER_PERMISSION_INDEX);
+        $requestingUser = $request->getAttribute(AttributeTypes::CLIENT_USER);
+        $userPerms = $request->getAttribute(AttributeTypes::CLIENT_USER_PERMISSION_INDEX);
         $result = $this->service->execute($this->validator, $requestingUser, $userPerms);
 
         return $response->withJson($result->getPayload(), $result->getStatusCode());

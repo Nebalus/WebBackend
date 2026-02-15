@@ -1,0 +1,23 @@
+meta {
+  name: Get Own Blog
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/users/self/services/blogs/:blogid?with_content=false
+  body: none
+  auth: bearer
+}
+
+params:query {
+  with_content: false
+}
+
+params:path {
+  blogid: 12
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
