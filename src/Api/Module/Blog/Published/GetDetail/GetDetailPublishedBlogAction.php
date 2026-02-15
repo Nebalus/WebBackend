@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Public\GetDetail;
+namespace Nebalus\Webapi\Api\Module\Blog\Published\GetDetail;
 
 use Nebalus\Webapi\Api\AbstractAction;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 
-class GetDetailPublicBlogAction extends AbstractAction
+class GetDetailPublishedBlogAction extends AbstractAction
 {
     public function __construct(
-        private readonly GetDetailPublicBlogService $service
+        private readonly GetDetailPublishedBlogService $service
     ) {
     }
 

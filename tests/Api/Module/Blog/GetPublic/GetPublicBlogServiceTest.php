@@ -2,9 +2,9 @@
 
 namespace UnitTesting\Api\Module\Blog\GetPublic;
 
-use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogResponder;
-use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogService;
-use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogValidator;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetAll\GetAllPublishedBlogsResponder;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetAll\GetAllPublishedBlogsService;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetAll\GetAllPublishedBlogsValidator;
 use Nebalus\Webapi\Repository\BlogRepository\MySqlBlogRepository;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Module\Blog\BlogPostCollection;
@@ -14,16 +14,16 @@ use PHPUnit\Framework\TestCase;
 class GetPublicBlogServiceTest extends TestCase
 {
     private MySqlBlogRepository $blogRepository;
-    private GetAllPublicBlogResponder $responder;
-    private GetAllPublicBlogService $service;
-    private GetAllPublicBlogValidator $validator;
+    private GetAllPublishedBlogsResponder $responder;
+    private GetAllPublishedBlogsService $service;
+    private GetAllPublishedBlogsValidator $validator;
 
     protected function setUp(): void
     {
         $this->blogRepository = $this->createMock(MySqlBlogRepository::class);
-        $this->responder = $this->createMock(GetAllPublicBlogResponder::class);
-        $this->service = new GetAllPublicBlogService($this->blogRepository, $this->responder);
-        $this->validator = $this->createMock(GetAllPublicBlogValidator::class);
+        $this->responder = $this->createMock(GetAllPublishedBlogsResponder::class);
+        $this->service = new GetAllPublishedBlogsService($this->blogRepository, $this->responder);
+        $this->validator = $this->createMock(GetAllPublishedBlogsValidator::class);
     }
 
     #[Test]

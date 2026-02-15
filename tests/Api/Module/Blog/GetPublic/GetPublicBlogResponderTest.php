@@ -3,7 +3,7 @@
 namespace UnitTesting\Api\Module\Blog\GetPublic;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogResponder;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetAll\GetAllPublishedBlogsResponder;
 use Nebalus\Webapi\Value\Module\Blog\BlogExcerpt;
 use Nebalus\Webapi\Value\Module\Blog\BlogId;
 use Nebalus\Webapi\Value\Module\Blog\BlogPost;
@@ -18,7 +18,7 @@ class GetPublicBlogResponderTest extends TestCase
     #[Test]
     public function testRenderReturnsPaginatedResponse(): void
     {
-        $responder = new GetAllPublicBlogResponder();
+        $responder = new GetAllPublishedBlogsResponder();
 
         $blog = $this->createMock(BlogPost::class);
 
@@ -63,7 +63,7 @@ class GetPublicBlogResponderTest extends TestCase
     #[Test]
     public function testRenderReturnsEmptyBlogsWithPagination(): void
     {
-        $responder = new GetAllPublicBlogResponder();
+        $responder = new GetAllPublishedBlogsResponder();
         $blogs = BlogPostCollection::fromObjects();
 
         $result = $responder->render($blogs, 1, 10, 0);

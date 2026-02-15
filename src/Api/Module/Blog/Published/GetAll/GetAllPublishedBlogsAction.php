@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Public\GetAll;
+namespace Nebalus\Webapi\Api\Module\Blog\Published\GetAll;
 
 use Nebalus\Webapi\Exception\ApiException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Response as Response;
 use Slim\Http\ServerRequest as Request;
 
-readonly class GetAllPublicBlogAction
+readonly class GetAllPublishedBlogsAction
 {
     public function __construct(
-        private GetAllPublicBlogService $service,
-        private GetAllPublicBlogValidator $validator
+        private GetAllPublishedBlogsService $service,
+        private GetAllPublishedBlogsValidator $validator
     ) {
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nebalus\Webapi\Api\Module\Blog\Public\GetDetail;
+namespace Nebalus\Webapi\Api\Module\Blog\Published\GetDetail;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Exception\ApiException;
@@ -12,11 +12,11 @@ use Nebalus\Webapi\Value\Module\Blog\BlogSlug;
 use Nebalus\Webapi\Value\Module\Blog\BlogStatus;
 use Nebalus\Webapi\Value\Result\Result;
 
-readonly class GetDetailPublicBlogService
+readonly class GetDetailPublishedBlogService
 {
     public function __construct(
         private MySqlBlogRepository $blogRepository,
-        private GetDetailPublicBlogResponder $responder
+        private GetDetailPublishedBlogResponder $responder
     ) {
     }
 

@@ -19,13 +19,13 @@ use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
 use Nebalus\Webapi\Api\Health\HealthAction;
 use Nebalus\Webapi\Api\Metrics\MetricsAction;
-use Nebalus\Webapi\Api\Module\Blog\Public\GetDetail\GetDetailPublicBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetDetail\GetDetailPublishedBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Create\CreateBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Delete\DeleteBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Edit\EditBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\Get\GetBlogAction;
 use Nebalus\Webapi\Api\Module\Blog\GetAll\GetAllBlogAction;
-use Nebalus\Webapi\Api\Module\Blog\Public\GetAll\GetAllPublicBlogAction;
+use Nebalus\Webapi\Api\Module\Blog\Published\GetAll\GetAllPublishedBlogsAction;
 use Nebalus\Webapi\Api\Module\Linktree\Click\ClickLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Delete\DeleteLinktreeAction;
 use Nebalus\Webapi\Api\Module\Linktree\Edit\EditLinktreeAction;
@@ -156,8 +156,8 @@ readonly class RouteCollector
             $group->map(["GET"], "/referral/{referral_code}", ClickReferralAction::class)->add(RateLimitMiddleware::class);
             $group->map(["GET"], "/linktree/{username}", ClickLinktreeAction::class);
             $group->group("/blogs", function (RouteCollectorProxy $group) {
-                $group->map(["GET"], "", GetAllPublicBlogAction::class);
-                $group->map(["GET"], "/{slug}", GetDetailPublicBlogAction::class);
+                $group->map(["GET"], "", GetAllPublishedBlogsAction::class);
+                $group->map(["GET"], "/{slug}", GetDetailPublishedBlogAction::class);
             });
         });
     }
