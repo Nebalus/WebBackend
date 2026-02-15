@@ -1,0 +1,1489 @@
+openapi: 3.0.3
+info:
+  title: Nebalus Web API
+  description: |
+    RESTful API for the Nebalus Web platform.
+    All endpoints return a standard envelope: `{ success, message, status_code, payload }`.
+  version: 1.0.0
+  contact:
+    name: Nebalus
+    url: https://nebalus.dev
+
+servers:
+  - url: https://api.nebalus.dev
+    description: Production
+  - url: http://localhost:8080
+    description: Local Development
+
+tags:
+  - name: System
+    description: Health & metrics
+  - name: Auth
+    description: Authentication & registration
+  - name: User
+    description: User account operations
+  - name: Admin – Permissions
+    description: Permission management (admin)
+  - name: Admin – Roles
+    description: Role management (admin)
+  - name: Admin – Role Permissions
+    description: Role-permission link management (admin)
+  - name: Admin – User Roles
+    description: User-role assignment (admin)
+  - name: Blogs
+    description: Blog management (authenticated)
+  - name: Blogs – Public
+    description: Public blog access
+  - name: Referrals
+    description: Referral link management (authenticated)
+  - name: Referral Analytics
+    description: Referral click tracking & analytics
+  - name: Linktree
+    description: Linktree management (authenticated)
+  - name: Linktree – Public
+    description: Public linktree access
+
+# ──────────────────────────────────────────────
+# Paths
+# ──────────────────────────────────────────────
+paths:
+
+  # ── System ──────────────────────────────────
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health check
+      tags: [System]
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: HEALTHY
+                          timestamp:
+                            type: string
+                            format: date-time
+                            example: "2026-02-16 00:00:00"
+
+  /metrics:
+    get:
+      operationId: getMetrics
+      summary: Prometheus metrics
+      tags: [System]
+      responses:
+        "200":
+          description: Metrics payload (Prometheus text format)
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  # ── Auth & Registration ─────────────────────
+  /ui/auth:
+    post:
+      operationId: authUser
+      summary: Authenticate a user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                  example: nebalus
+                password:
+                  type: string
+                  format: password
+                remember_me:
+                  type: boolean
+                  default: false
+                totp:
+                  type: string
+                  description: Optional TOTP code
+      responses:
+        "200":
+          description: Successfully authenticated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/AuthPayload"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /ui/register:
+    post:
+      operationId: registerUser
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [invitation_token, email, username, password]
+              properties:
+                invitation_token:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  # ── User Permissions ────────────────────────
+  /ui/users/{user_id}/permissions:
+    get:
+      operationId: getUserPermissions
+      summary: Get permissions for a user
+      tags: [User]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: List of user permissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: object
+                        properties:
+                          user_id:
+                            type: integer
+                          permissions:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/UserPermission"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Admin – Permissions ─────────────────────
+  /ui/admin/permissions/all:
+    get:
+      operationId: getAllPermissions
+      summary: Get all permissions
+      tags: [Admin – Permissions]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of all permissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Permission"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/admin/permissions/{permission_id}:
+    get:
+      operationId: getPermission
+      summary: Get a single permission
+      tags: [Admin – Permissions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/permissionId"
+      responses:
+        "200":
+          description: Permission details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Permission"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Admin – Roles ───────────────────────────
+  /ui/admin/roles:
+    post:
+      operationId: createRole
+      summary: Create a new role
+      tags: [Admin – Roles]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "201":
+          description: Role created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Role"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/admin/roles/all:
+    get:
+      operationId: getAllRoles
+      summary: Get all roles
+      tags: [Admin – Roles]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of all roles
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Role"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/admin/roles/{role_id}:
+    get:
+      operationId: getRole
+      summary: Get a single role
+      tags: [Admin – Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: Role details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Role"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      operationId: editRole
+      summary: Update a role
+      tags: [Admin – Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "200":
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Role"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: deleteRole
+      summary: Delete a role
+      tags: [Admin – Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: Role deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Admin – Role Permissions ────────────────
+  /ui/admin/roles/{role_id}/permissions/all:
+    get:
+      operationId: getAllRolePermissions
+      summary: Get all permissions linked to a role
+      tags: [Admin – Role Permissions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: List of permission-role links
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PermissionRoleLink"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/admin/roles/{role_id}/permissions:
+    put:
+      operationId: upsertRolePermissions
+      summary: Upsert permissions for a role
+      tags: [Admin – Role Permissions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionRoleLinkInput"
+      responses:
+        "200":
+          description: Permissions upserted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    post:
+      operationId: upsertRolePermissionsPost
+      summary: Upsert permissions for a role (POST)
+      tags: [Admin – Role Permissions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionRoleLinkInput"
+      responses:
+        "200":
+          description: Permissions upserted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    delete:
+      operationId: deleteRolePermissions
+      summary: Delete permissions from a role
+      tags: [Admin – Role Permissions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: Permissions removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Admin – User Roles ──────────────────────
+  /ui/admin/users/{user_id}/roles/all:
+    get:
+      operationId: getAllRolesFromUser
+      summary: Get all roles for a user
+      tags: [Admin – User Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: List of user roles
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/RoleSummary"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/admin/users/{user_id}/roles/{role_id}:
+    post:
+      operationId: addRoleToUser
+      summary: Assign a role to a user
+      tags: [Admin – User Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: Role assigned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    delete:
+      operationId: removeRoleFromUser
+      summary: Remove a role from a user
+      tags: [Admin – User Roles]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: Role removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Blogs (authenticated) ───────────────────
+  /ui/users/{user_id}/services/blogs:
+    post:
+      operationId: createBlog
+      summary: Create a new blog post
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogInput"
+      responses:
+        "201":
+          description: Blog created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/BlogPost"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/users/{user_id}/services/blogs/all:
+    get:
+      operationId: getAllBlogs
+      summary: Get all blog posts for a user
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/BlogPost"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/users/{user_id}/services/blogs/{blog_id}:
+    get:
+      operationId: getBlog
+      summary: Get a single blog post
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/blogId"
+      responses:
+        "200":
+          description: Blog details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/BlogPost"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      operationId: editBlog
+      summary: Update a blog post
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/blogId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogInput"
+      responses:
+        "200":
+          description: Blog updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/BlogPost"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: deleteBlog
+      summary: Delete a blog post
+      tags: [Blogs]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/blogId"
+      responses:
+        "200":
+          description: Blog deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Blogs (public) ──────────────────────────
+  /services/blogs:
+    get:
+      operationId: getAllPublicBlogs
+      summary: Get all published blog posts (public)
+      tags: [Blogs – Public]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Paginated list of public blog posts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: object
+                        properties:
+                          blogs:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/PublicBlogSummary"
+                          pagination:
+                            $ref: "#/components/schemas/Pagination"
+
+  /services/blogs/{slug}:
+    get:
+      operationId: getPublicBlogDetail
+      summary: Get a published blog post by slug (public)
+      tags: [Blogs – Public]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Blog post detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/BlogPost"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Referrals (authenticated) ───────────────
+  /ui/users/{user_id}/services/referrals:
+    post:
+      operationId: createReferral
+      summary: Create a new referral link
+      tags: [Referrals]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReferralInput"
+      responses:
+        "201":
+          description: Referral created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Referral"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/users/{user_id}/services/referrals/all:
+    get:
+      operationId: getAllReferrals
+      summary: Get all referral links for a user
+      tags: [Referrals]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: List of referrals
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Referral"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /ui/users/{user_id}/services/referrals/{referral_code}:
+    get:
+      operationId: getReferral
+      summary: Get a single referral link
+      tags: [Referrals]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/referralCode"
+      responses:
+        "200":
+          description: Referral details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Referral"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      operationId: editReferral
+      summary: Update a referral link
+      tags: [Referrals]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/referralCode"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReferralInput"
+      responses:
+        "200":
+          description: Referral updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/Referral"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: deleteReferral
+      summary: Delete a referral link
+      tags: [Referrals]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/referralCode"
+      responses:
+        "200":
+          description: Referral deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /ui/users/{user_id}/services/referrals/{referral_code}/click_history:
+    get:
+      operationId: getReferralClickHistory
+      summary: Get click history for a referral
+      tags: [Referral Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/referralCode"
+      responses:
+        "200":
+          description: Click history
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                          history:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/ReferralClickEntry"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Referral Click (public) ─────────────────
+  /services/referral/{referral_code}:
+    get:
+      operationId: clickReferral
+      summary: Track a referral click and get redirect URL
+      tags: [Referral Analytics]
+      parameters:
+        - $ref: "#/components/parameters/referralCode"
+      responses:
+        "200":
+          description: Referral URL returned
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            format: uri
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Linktree (authenticated) ────────────────
+  /ui/users/{user_id}/services/linktree:
+    get:
+      operationId: getLinktree
+      summary: Get user's linktree configuration
+      tags: [Linktree]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: Linktree data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    put:
+      operationId: editLinktree
+      summary: Update user's linktree configuration
+      tags: [Linktree]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: Linktree updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    delete:
+      operationId: deleteLinktree
+      summary: Delete user's linktree configuration
+      tags: [Linktree]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: Linktree deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEnvelope"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Linktree (public) ──────────────────────
+  /services/linktree/{username}:
+    get:
+      operationId: clickLinktree
+      summary: Get a user's public linktree page
+      tags: [Linktree – Public]
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Linktree page data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessEnvelope"
+                  - type: object
+                    properties:
+                      payload:
+                        $ref: "#/components/schemas/LinktreePublic"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+# ──────────────────────────────────────────────
+# Components
+# ──────────────────────────────────────────────
+components:
+
+  # ── Security Schemes ────────────────────────
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # ── Parameters ──────────────────────────────
+  parameters:
+    userId:
+      name: user_id
+      in: path
+      required: true
+      description: User ID (integer) or the literal `self` to refer to the authenticated user
+      schema:
+        oneOf:
+          - type: integer
+          - type: string
+            enum: [self]
+
+    blogId:
+      name: blog_id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+    roleId:
+      name: role_id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+    permissionId:
+      name: permission_id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+    referralCode:
+      name: referral_code
+      in: path
+      required: true
+      schema:
+        type: string
+
+  # ── Reusable Responses ──────────────────────
+  responses:
+    Unauthorized:
+      description: Authentication required or credentials invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+  # ── Schemas ─────────────────────────────────
+  schemas:
+
+    # ── Envelope ──
+    SuccessEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          nullable: true
+        status_code:
+          type: integer
+          example: 200
+        payload:
+          type: object
+      required: [success, message, status_code, payload]
+
+    ErrorEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          nullable: true
+        status_code:
+          type: integer
+        payload:
+          type: object
+      required: [success, message, status_code, payload]
+
+    # ── Auth ──
+    AuthPayload:
+      type: object
+      properties:
+        jwt:
+          type: string
+          description: JSON Web Token
+        user:
+          type: object
+          properties:
+            user_id:
+              type: integer
+            username:
+              type: string
+            email:
+              type: string
+              format: email
+            disabled:
+              type: boolean
+            created_at:
+              type: string
+              format: date-time
+            password_updated_at:
+              type: string
+              format: date-time
+
+    # ── User Permission ──
+    UserPermission:
+      type: object
+      description: A single permission entry for a user (structure depends on permission type)
+
+    # ── Permissions ──
+    Permission:
+      type: object
+      properties:
+        permission_id:
+          type: integer
+        node:
+          type: string
+          description: Dot-separated permission node path
+        description:
+          type: string
+          nullable: true
+        default_value:
+          type: integer
+          nullable: true
+        prestige_level:
+          type: object
+          properties:
+            type:
+              type: string
+            value:
+              type: integer
+
+    PermissionRoleLink:
+      type: object
+      properties:
+        node:
+          type: string
+        allow_all_sub_permissions:
+          type: boolean
+        value:
+          type: integer
+          nullable: true
+
+    PermissionRoleLinkInput:
+      type: object
+      required: [node]
+      properties:
+        node:
+          type: string
+        allow_all_sub_permissions:
+          type: boolean
+          default: false
+        value:
+          type: integer
+          nullable: true
+
+    # ── Roles ──
+    Role:
+      type: object
+      properties:
+        role_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        color:
+          type: string
+          description: Hex color code (e.g. `#FF5733`)
+        access_level:
+          type: integer
+        applies_to_everyone:
+          type: boolean
+        deletable:
+          type: boolean
+        editable:
+          type: boolean
+        disabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RoleSummary:
+      type: object
+      properties:
+        role_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        color:
+          type: string
+        access_level:
+          type: integer
+        applies_to_everyone:
+          type: boolean
+
+    RoleInput:
+      type: object
+      required: [name, color, access_level, applies_to_everyone, disabled]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        color:
+          type: string
+          description: Hex color code
+        access_level:
+          type: integer
+        applies_to_everyone:
+          type: boolean
+        disabled:
+          type: boolean
+
+    # ── Blogs ──
+    BlogPost:
+      type: object
+      properties:
+        blog_id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+          description: Full blog content (may be omitted in list responses)
+        status:
+          type: string
+          enum: [draft, published, archived]
+        is_featured:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PublicBlogSummary:
+      type: object
+      properties:
+        blog_id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        excerpt:
+          type: string
+        is_featured:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    BlogInput:
+      type: object
+      required: [slug, title, content, excerpt]
+      properties:
+        slug:
+          type: string
+        image_banner_id:
+          type: integer
+          nullable: true
+        title:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        status:
+          type: string
+          enum: [draft, published, archived]
+          default: draft
+        is_featured:
+          type: boolean
+          default: false
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_count:
+          type: integer
+        total_pages:
+          type: integer
+
+    # ── Referrals ──
+    Referral:
+      type: object
+      properties:
+        code:
+          type: string
+        url:
+          type: string
+          format: uri
+        label:
+          type: string
+        disabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ReferralInput:
+      type: object
+      required: [label, url]
+      properties:
+        label:
+          type: string
+        url:
+          type: string
+          format: uri
+        disabled:
+          type: boolean
+          default: false
+
+    ReferralClickEntry:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        count:
+          type: integer
+        unique_visitors:
+          type: integer
+
+    # ── Linktree ──
+    LinktreePublic:
+      type: object
+      properties:
+        description:
+          type: string
+        entrys:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: integer
+              label:
+                type: string
+              url:
+                type: string
+                format: uri
