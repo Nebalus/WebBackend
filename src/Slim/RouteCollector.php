@@ -38,8 +38,14 @@ use Nebalus\Webapi\Api\Module\Referral\Edit\EditReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\Get\GetReferralAction;
 use Nebalus\Webapi\Api\Module\Referral\GetAll\GetAllReferralAction;
 use Nebalus\Webapi\Api\User\Auth\AuthUserAction;
+use Nebalus\Webapi\Api\User\ChangeEmail\Request\RequestChangeEmailAction;
+use Nebalus\Webapi\Api\User\ChangeEmail\Verify\VerifyChangeEmailAction;
+use Nebalus\Webapi\Api\User\ChangeUsername\ChangeUsernameAction;
 use Nebalus\Webapi\Api\User\GetUserPermissions\GetUserPermissionsAction;
 use Nebalus\Webapi\Api\User\Register\RegisterUserAction;
+use Nebalus\Webapi\Api\User\ResetPassword\Request\RequestResetPasswordAction;
+use Nebalus\Webapi\Api\User\ResetPassword\Verify\VerifyResetPasswordAction;
+use Nebalus\Webapi\Api\User\UploadProfilePicture\UploadProfilePictureAction;
 use Nebalus\Webapi\Config\GeneralConfig;
 use Nebalus\Webapi\Slim\Handler\DefaultErrorHandler;
 use Nebalus\Webapi\Slim\Middleware\AuthMiddleware;
@@ -83,6 +89,12 @@ readonly class RouteCollector
         $this->app->group("/ui", function (RouteCollectorProxy $group) {
             $group->map(["POST"], "/auth", AuthUserAction::class)->add(RateLimitMiddleware::class);
             $group->map(["POST"], "/register", RegisterUserAction::class)->add(RateLimitMiddleware::class);
+            $group->map(["POST"], "/reset-password", RequestResetPasswordAction::class)
+                ->add(RateLimitMiddleware::withConfig(maxRequests: 3, windowSeconds: 300));
+            $group->map(["POST"], "/reset-password/{token}", VerifyResetPasswordAction::class)
+                ->add(RateLimitMiddleware::withConfig(maxRequests: 5, windowSeconds: 300));
+            $group->map(["GET"], "/verify/email/{token}", VerifyChangeEmailAction::class)
+                ->add(RateLimitMiddleware::withConfig(maxRequests: 5, windowSeconds: 300));
             $group->group("/admin", function (RouteCollectorProxy $group) {
                 $group->group("/permissions", function (RouteCollectorProxy $group) {
                     $group->map(["GET"], "/all", GetAllPermissionAction::class);
@@ -118,6 +130,9 @@ readonly class RouteCollector
             })->add(PermissionMiddleware::class)->add(AuthMiddleware::class);
             $group->group("/users/{user_id}", function (RouteCollectorProxy $group) {
                 $group->map(["GET"], "/permissions", GetUserPermissionsAction::class);
+                $group->map(["PUT"], "/username", ChangeUsernameAction::class);
+                $group->map(["PUT"], "/email", RequestChangeEmailAction::class);
+                $group->map(["POST"], "/profile-picture", UploadProfilePictureAction::class);
                 $group->group("/services", function (RouteCollectorProxy $group) {
                     $group->group("/invitation_tokens", function (RouteCollectorProxy $group) {
                     });

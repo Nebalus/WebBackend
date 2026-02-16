@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Nebalus\Webapi\Slim\Middleware;
 
+use Closure;
+use DI\Container;
 use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Config\Types\AttributeTypes;
 use Nebalus\Webapi\Value\Result\Result;
@@ -17,14 +19,28 @@ use Slim\App;
 
 readonly class RateLimitMiddleware implements MiddlewareInterface
 {
-    private const int MAX_REQUESTS = 10;
-    private const int WINDOW_SECONDS = 180;
+    private const int DEFAULT_MAX_REQUESTS = 10;
+    private const int DEFAULT_WINDOW_SECONDS = 180;
     private const string KEY_PREFIX = 'rate_limit:';
 
     public function __construct(
         private App $app,
-        private Redis $redis
+        private Redis $redis,
+        private int $maxRequests = self::DEFAULT_MAX_REQUESTS,
+        private int $windowSeconds = self::DEFAULT_WINDOW_SECONDS,
     ) {
+    }
+
+    public static function withConfig(int $maxRequests, int $windowSeconds): Closure
+    {
+        return function (Container $container) use ($maxRequests, $windowSeconds): self {
+            return new self(
+                $container->get(App::class),
+                $container->get(Redis::class),
+                $maxRequests,
+                $windowSeconds,
+            );
+        };
     }
 
     #[Override] public function process(Request $request, RequestHandler $handler): Response
@@ -37,12 +53,12 @@ readonly class RateLimitMiddleware implements MiddlewareInterface
             $count = $this->redis->incr($key);
 
             if ($count === 1) {
-                $this->redis->expire($key, self::WINDOW_SECONDS);
+                $this->redis->expire($key, $this->windowSeconds);
             }
 
-            if ($count > self::MAX_REQUESTS) {
+            if ($count > $this->maxRequests) {
                 $ttl = $this->redis->ttl($key);
-                return $this->createRateLimitResponse($ttl > 0 ? $ttl : self::WINDOW_SECONDS);
+                return $this->createRateLimitResponse($ttl > 0 ? $ttl : $this->windowSeconds);
             }
         } catch (\Throwable) {
             // If Redis is unavailable, allow the request through
@@ -64,7 +80,7 @@ readonly class RateLimitMiddleware implements MiddlewareInterface
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Retry-After', (string) $retryAfter)
-            ->withHeader('X-RateLimit-Limit', (string) self::MAX_REQUESTS)
+            ->withHeader('X-RateLimit-Limit', (string) $this->maxRequests)
             ->withHeader('X-RateLimit-Reset', (string) $retryAfter)
             ->withStatus(StatusCodeInterface::STATUS_TOO_MANY_REQUESTS);
     }

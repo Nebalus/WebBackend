@@ -41,4 +41,11 @@ class PermissionNodeTypes
     public const string FEATURE_LINKTREE = 'feature.linktree';
     public const string FEATURE_LINKTREE_OWN = 'feature.linktree';
 
+    public const string FEATURE_ACCOUNT = 'feature.account';
+    public const string FEATURE_ACCOUNT_OWN = 'feature.account.own';
+    public const string FEATURE_ACCOUNT_OWN_CHANGE_USERNAME = 'feature.account.own.change_username';
+    public const string FEATURE_ACCOUNT_OWN_CHANGE_EMAIL = 'feature.account.own.change_email';
+    public const string FEATURE_ACCOUNT_OWN_CHANGE_PASSWORD = 'feature.account.own.change_password';
+    public const string FEATURE_ACCOUNT_OWN_UPLOAD_PROFILE_PICTURE = 'feature.account.own.upload_profile_picture';
+
 }

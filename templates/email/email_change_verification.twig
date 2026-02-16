@@ -1,0 +1,17 @@
+{% extends "/email/base_layout.twig" %}
+
+{% block subject %}Verify Your New Email Address{% endblock %}
+
+{% block content %}
+    <p>Hello {{ username }},</p>
+
+    <p>You requested to change your email address. Please click the link below to verify your new email:</p>
+
+    <p>
+        <a href="https://api.nebalus.dev/ui/verify/email/{{ token }}" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            Verify Email
+        </a>
+    </p>
+
+    <p>This link will expire in 15 minutes. If you did not request this change, you can safely ignore this email.</p>
+{% endblock %}

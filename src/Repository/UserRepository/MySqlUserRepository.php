@@ -11,6 +11,7 @@ use Nebalus\Webapi\Value\User\AccessControl\Role\Role;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleCollection;
 use Nebalus\Webapi\Value\User\AccessControl\Role\RoleId;
 use Nebalus\Webapi\Value\User\UserAccount;
+use Nebalus\Webapi\Value\User\Authentication\UserPassword;
 use Nebalus\Webapi\Value\User\UserEmail;
 use Nebalus\Webapi\Value\User\UserId;
 use Nebalus\Webapi\Value\User\Username;
@@ -253,5 +254,69 @@ readonly class MySqlUserRepository
         }
 
         return $users;
+    }
+
+    public function updateUsername(UserId $userId, Username $username): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET username = :username 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':username', $username->asString());
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function updateEmail(UserId $userId, UserEmail $email): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET email = :email, email_verified = 0 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':email', $email->asString());
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function updatePassword(UserId $userId, UserPassword $password): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET password = :password, password_updated_at = NOW() 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':password', $password->asString());
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function updateProfileImageId(UserId $userId, int $profileImageId): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET profile_image_id = :profile_image_id 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':profile_image_id', $profileImageId, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
     }
 }
