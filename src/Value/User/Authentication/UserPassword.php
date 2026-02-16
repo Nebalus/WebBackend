@@ -15,7 +15,7 @@ class UserPassword
     use SanitizrValueObjectTrait;
 
     public const int MIN_LENGTH = 8;
-    public const int MAX_LENGTH = 64;
+    public const int MAX_LENGTH = 256;
 
     private function __construct(
         private readonly string $passwordHash
