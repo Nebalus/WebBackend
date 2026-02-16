@@ -6,6 +6,9 @@ class PermissionNodeTypes
 {
     public const string ADMIN = 'admin';
     public const string ADMIN_USER = 'admin.user';
+    public const string ADMIN_USER_EDIT = 'admin.user.edit';
+    public const string ADMIN_USER_DELETE = 'admin.user.delete';
+    public const string ADMIN_USER_DISABLE = 'admin.user.disable';
     public const string ADMIN_USER_ROLE = 'admin.user.role';
     public const string ADMIN_USER_ROLE_ADD = 'admin.user.role.add';
     public const string ADMIN_USER_ROLE_REMOVE = 'admin.user.role.remove';

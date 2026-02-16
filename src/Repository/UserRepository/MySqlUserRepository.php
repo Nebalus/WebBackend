@@ -319,4 +319,66 @@ readonly class MySqlUserRepository
 
         return $stmt->rowCount() === 1;
     }
+
+    public function disableUser(UserId $userId, UserId $disabledBy, string $reason): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET disabled = 1, disabled_by = :disabled_by, disabled_reason = :disabled_reason, disabled_at = NOW() 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':disabled_by', $disabledBy->asInt());
+        $stmt->bindValue(':disabled_reason', $reason);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function enableUser(UserId $userId): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET disabled = 0, disabled_by = NULL, disabled_reason = NULL, disabled_at = NULL 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function deleteUser(UserId $userId): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM users 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public function updateEmailVerified(UserId $userId, bool $emailVerified): bool
+    {
+        $sql = <<<SQL
+            UPDATE users 
+            SET email_verified = :email_verified 
+            WHERE user_id = :user_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':email_verified', $emailVerified, PDO::PARAM_BOOL);
+        $stmt->bindValue(':user_id', $userId->asInt());
+        $stmt->execute();
+
+        return $stmt->rowCount() === 1;
+    }
 }

@@ -1,19 +1,17 @@
 <?php
 
-namespace Nebalus\Webapi\Api\Admin\User\GetAll;
+namespace Nebalus\Webapi\Api\Admin\User\Edit;
 
+use Fig\Http\Message\StatusCodeInterface;
 use Nebalus\Webapi\Slim\ResultInterface;
 use Nebalus\Webapi\Value\Result\Result;
 use Nebalus\Webapi\Value\User\UserAccount;
 
-class GetAllUserResponder
+class EditUserResponder
 {
-    /**
-     * @param UserAccount[] $users
-     */
-    public function render(array $users): ResultInterface
+    public function render(UserAccount $user): ResultInterface
     {
-        $payload = array_map(fn(UserAccount $user) => [
+        $fields = [
             'user_id' => $user->getUserId()?->asInt(),
             'username' => $user->getUsername()->asString(),
             'profile_image_id' => $user->getProfileImageId(),
@@ -25,8 +23,8 @@ class GetAllUserResponder
             'disabled_at' => $user->getDisabledAt()?->format(DATE_ATOM),
             'created_at' => $user->getCreatedAtDate()->format(DATE_ATOM),
             'password_updated_at' => $user->getPasswordUpdatedAtDate()->format(DATE_ATOM),
-        ], $users);
-        return Result::createSuccess("List of all users", 200, $payload);
+        ];
+
+        return Result::createSuccess("User Updated", StatusCodeInterface::STATUS_OK, $fields);
     }
 }
-

@@ -1,0 +1,20 @@
+meta {
+  name: GetAll Users
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{protocol}}://{{host}}/ui/admin/users/all
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

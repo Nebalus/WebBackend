@@ -1,0 +1,35 @@
+meta {
+  name: Disable User
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{protocol}}://{{host}}/ui/admin/users/:userid/disable
+  body: json
+  auth: bearer
+}
+
+params:path {
+  userid: self
+}
+
+auth:bearer {
+  token: {{auth_jwt}}
+}
+
+body:json {
+  {
+    "disabled": true,
+    "reason": "Test disable"
+  }
+}
+
+vars:pre-request {
+  userid: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

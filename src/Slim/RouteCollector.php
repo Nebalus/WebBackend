@@ -14,6 +14,11 @@ use Nebalus\Webapi\Api\Admin\Role\GetAll\GetAllRoleAction;
 use Nebalus\Webapi\Api\Admin\Role\Permission\Delete\DeleteRolePermissionAction;
 use Nebalus\Webapi\Api\Admin\Role\Permission\GetAll\GetAllRolePermissionAction;
 use Nebalus\Webapi\Api\Admin\Role\Permission\Upsert\UpsertRolePermissionAction;
+use Nebalus\Webapi\Api\Admin\User\Delete\DeleteUserAction;
+use Nebalus\Webapi\Api\Admin\User\Disable\DisableUserAction;
+use Nebalus\Webapi\Api\Admin\User\Edit\EditUserAction;
+use Nebalus\Webapi\Api\Admin\User\Get\GetUserAction;
+use Nebalus\Webapi\Api\Admin\User\GetAll\GetAllUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Add\AddRoleToUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\GetAll\GetAllRoleFromUserAction;
 use Nebalus\Webapi\Api\Admin\User\Role\Remove\RemoveRoleFromUserAction;
@@ -103,9 +108,12 @@ readonly class RouteCollector
                     });
                 });
                 $group->group("/users", function (RouteCollectorProxy $group) {
-                    $group->map(["GET"], "/all", GetAllPermissionAction::class); // TODO get all users
+                    $group->map(["GET"], "/all", GetAllUserAction::class);
                     $group->group("/{user_id}", function (RouteCollectorProxy $group) {
-                        $group->map(["GET"], "", GetPermissionAction::class); // TODO get user information
+                        $group->map(["GET"], "", GetUserAction::class);
+                        $group->map(["PUT"], "", EditUserAction::class);
+                        $group->map(["DELETE"], "", DeleteUserAction::class);
+                        $group->map(["PUT"], "/disable", DisableUserAction::class);
                         $group->group("/roles", function (RouteCollectorProxy $group) {
                             $group->map(["GET"], "/all", GetAllRoleFromUserAction::class);
                             $group->map(["POST"], "/{role_id}", AddRoleToUserAction::class);
