@@ -40,9 +40,8 @@ class PermissionNodeTypes
     public const string FEATURE_BLOG_OTHER_DELETE = 'feature.blog.other.delete';
     public const string FEATURE_BLOG_OTHER_EDIT = 'feature.blog.other.edit';
 
-
     public const string FEATURE_LINKTREE = 'feature.linktree';
-    public const string FEATURE_LINKTREE_OWN = 'feature.linktree';
+    public const string FEATURE_LINKTREE_OWN = 'feature.linktree.own';
 
     public const string FEATURE_ACCOUNT = 'feature.account';
     public const string FEATURE_ACCOUNT_OWN = 'feature.account.own';
