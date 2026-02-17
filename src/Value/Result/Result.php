@@ -26,8 +26,9 @@ readonly class Result implements ResultInterface
 
         $payload = [
             'success' => $success,
-            'message' => $message,
             'status_code' => $statusCode,
+            'message_code' => "UNKNOWN",
+            'message' => $message,
             'payload' => $fields,
         ];
 
